@@ -4,7 +4,7 @@ from agents.identity_agent import IdentityAgent
 from agents.literature_agent import LiteratureAgent
 from agents.collateral_agent import CollateralAgent
 from agents.qa_compliance_agent import QAComplianceAgent
-from tools.pptx_generator import PPTXGenerator
+from tools.pptx_generator_professional import ProfessionalPPTXGenerator as PPTXGenerator
 from tools.visual_enhancement import VisualEnhancementEngine
 from tools.advanced_export_engine import AdvancedExportEngine
 from typing import Dict
@@ -217,8 +217,8 @@ class BrandBookOrchestrator:
         )
         
         # Enhanced PowerPoint
-        print("  Generating enhanced PowerPoint presentation...")
-        enhanced_pptx_path = self._create_enhanced_pptx(
+        print("  Generating professional PowerPoint presentation...")
+        enhanced_pptx_path = self._create_professional_pptx(
             company_name, identity_data, literature_data, brand_essence, visual_system
         )
         
@@ -403,26 +403,17 @@ class BrandBookOrchestrator:
             f.write(dict_to_markdown(qa_report))
         print(f"📄 Complete markdown saved: {md_path}")
     
-    def _create_enhanced_pptx(self, company_name: str, identity_data: dict,
-                             literature_data: dict, brand_essence: dict, visual_system: dict) -> str:
-        """Create enhanced PowerPoint with visual improvements"""
-        print("  Applying visual enhancements to presentation...")
+    def _create_professional_pptx(self, company_name: str, identity_data: dict,
+                                 literature_data: dict, brand_essence: dict, visual_system: dict) -> str:
+        """Create professional PowerPoint matching top agency standards"""
+        print("  Creating professional-grade presentation design...")
         
-        # Generate enhanced PPTX
-        pptx_path = self.pptx_generator.create_pptx(
+        # Generate professional PPTX
+        pptx_path = self.pptx_generator.create_professional_pptx(
             company_name, identity_data, literature_data, brand_essence
         )
         
-        # Apply visual enhancements if possible
-        try:
-            from pptx import Presentation
-            prs = Presentation(pptx_path)
-            enhanced_prs = self.visual_engine.apply_visual_enhancements_to_pptx(prs, visual_system)
-            enhanced_prs.save(pptx_path)  # Overwrite with enhanced version
-            print("  ✨ Visual enhancements applied to presentation")
-        except Exception as e:
-            print(f"  ⚠️ Visual enhancement skipped: {e}")
-        
+        print("  ✨ Professional presentation created with agency-level design")
         return pptx_path
     
     def _display_final_summary(self, company_name: str, export_results: dict, 
