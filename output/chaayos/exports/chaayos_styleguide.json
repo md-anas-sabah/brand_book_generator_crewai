@@ -1,0 +1,60 @@
+{
+  "company": "Chaayos",
+  "version": "1.0",
+  "colors": {
+    "primary": "#DC2626",
+    "secondary": "#059669",
+    "accent": "#2563EB",
+    "supporting": [
+      "#E5E7EB",
+      "#9CA3AF"
+    ],
+    "hex_codes": [
+      "#DC2626",
+      "#059669",
+      "#2563EB",
+      "#E5E7EB",
+      "#9CA3AF"
+    ]
+  },
+  "typography": {
+    "primary": "Inter",
+    "secondary": "Source Sans Pro",
+    "hierarchy": [
+      "H1: Inter Bold 34px",
+      "H2: Inter Medium 25px",
+      "Body: Source Sans Pro Regular 16px"
+    ],
+    "description": "Contemporary, highly legible fonts optimized for digital interfaces"
+  },
+  "spacing": {
+    "scale": "1.25",
+    "base": "1rem",
+    "sizes": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "1rem",
+      "lg": "1.5rem",
+      "xl": "2rem",
+      "2xl": "3rem",
+      "3xl": "4rem"
+    },
+    "components": {
+      "button_padding": "0.75rem 1.5rem",
+      "card_padding": "2rem",
+      "section_margin": "4rem 0"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": {
+        "background": "var(--accent-color)",
+        "color": "white"
+      },
+      "secondary": {
+        "background": "transparent",
+        "border": "1px solid var(--accent-color)"
+      }
+    }
+  }
+}

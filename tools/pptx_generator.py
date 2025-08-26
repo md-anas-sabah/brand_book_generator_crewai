@@ -2,6 +2,8 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
+from pptx.enum.dml import MSO_THEME_COLOR
+from pptx.enum.text import MSO_AUTO_SIZE
 import os
 import re
 
@@ -10,10 +12,264 @@ class PPTXGenerator:
     Assembles brand assets and literature into a PowerPoint brand book.
     """
 
-    def _add_title_slide(self, prs, company_name):
-        slide = prs.slides.add_slide(prs.slide_layouts[0])
-        slide.shapes.title.text = f"{company_name} Brand Book"
-        slide.placeholders[1].text = "A comprehensive guide to your brand identity"
+    def _add_title_slide(self, prs, company_name, identity_data=None, brand_essence=None):
+        # Use blank layout for complete creative control
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+        
+        # Get brand colors
+        palette = identity_data.get("palette", {}) if identity_data else {}
+        primary_color = self._get_brand_color(palette, "primary", "#2E86AB")
+        accent_color = self._get_brand_color(palette, "accent", "#A23B72") 
+        secondary_color = self._get_brand_color(palette, "secondary", "#F18F01")
+        
+        # Create gradient background
+        self._create_gradient_background(slide, primary_color, accent_color)
+        
+        # Add geometric design elements
+        self._add_geometric_elements(slide, accent_color, secondary_color)
+        
+        # Company name - large and bold
+        self._add_hero_text(slide, company_name, primary="#FFFFFF", size=48, 
+                           top=Inches(2), left=Inches(1), width=Inches(8))
+        
+        # Subtitle with modern styling
+        self._add_hero_text(slide, "Brand Book", primary="#FFFFFF", size=28, 
+                           top=Inches(3), left=Inches(1), width=Inches(8), opacity=0.9)
+        
+        # Get brand keywords from brand essence
+        brand_keywords = self._extract_brand_keywords(brand_essence, identity_data)
+        
+        # Add brand keywords with stylish layout
+        self._add_brand_keywords(slide, brand_keywords, accent_color)
+        
+        # Add company logo if available
+        self._add_hero_logo(slide, identity_data)
+        
+        # Add decorative bottom element
+        self._add_bottom_decoration(slide, secondary_color)
+
+    def _add_index_slide(self, prs, sections):
+        slide = prs.slides.add_slide(prs.slide_layouts[1])
+        slide.shapes.title.text = "Table of Contents"
+        
+        # Create index content
+        content_lines = []
+        for i, section in enumerate(sections, 1):
+            content_lines.append(f"{i}. {section}")
+        
+        slide.placeholders[1].text = "\n".join(content_lines)
+
+    def _get_brand_color(self, palette, color_name, default):
+        """Extract color from palette safely"""
+        if not palette:
+            return default
+        color = palette.get(color_name, default)
+        if isinstance(color, list):
+            return color[0] if color else default
+        return color if color else default
+    
+    def _hex_to_rgb(self, hex_color):
+        """Convert hex color to RGB tuple"""
+        hex_color = hex_color.lstrip('#')
+        if len(hex_color) == 3:
+            hex_color = ''.join([c*2 for c in hex_color])
+        try:
+            return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        except:
+            return (46, 134, 171)  # Default blue
+    
+    def _create_gradient_background(self, slide, primary_color, accent_color):
+        """Create a modern gradient background"""
+        # Create a rectangle that covers the entire slide
+        bg_shape = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE,
+            0, 0, 
+            Inches(10), Inches(7.5)
+        )
+        
+        # Set gradient fill
+        fill = bg_shape.fill
+        fill.gradient()
+        fill.gradient_angle = 45  # Diagonal gradient
+        
+        # Set gradient stops
+        gradient = fill.gradient_stops
+        gradient[0].color.rgb = RGBColor(*self._hex_to_rgb(primary_color))
+        gradient[1].color.rgb = RGBColor(*self._hex_to_rgb(accent_color))
+        
+        # Remove border
+        bg_shape.line.fill.background()
+    
+    def _add_geometric_elements(self, slide, accent_color, secondary_color):
+        """Add modern geometric design elements"""
+        # Large circle - top right
+        circle1 = slide.shapes.add_shape(
+            MSO_SHAPE.OVAL,
+            Inches(7), Inches(0.5),
+            Inches(2.5), Inches(2.5)
+        )
+        fill = circle1.fill
+        fill.solid()
+        fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(secondary_color))
+        circle1.fill.transparency = 0.3
+        circle1.line.fill.background()
+        
+        # Small circle - bottom left  
+        circle2 = slide.shapes.add_shape(
+            MSO_SHAPE.OVAL,
+            Inches(0.5), Inches(5.5),
+            Inches(1.5), Inches(1.5)
+        )
+        fill = circle2.fill
+        fill.solid()
+        fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(accent_color))
+        circle2.fill.transparency = 0.4
+        circle2.line.fill.background()
+        
+        # Rectangle accent
+        rect = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE,
+            Inches(8.5), Inches(6),
+            Inches(1), Inches(0.3)
+        )
+        fill = rect.fill
+        fill.solid()
+        fill.fore_color.rgb = RGBColor(255, 255, 255)
+        rect.fill.transparency = 0.2
+        rect.line.fill.background()
+    
+    def _add_hero_text(self, slide, text, primary="#FFFFFF", size=48, top=Inches(2), 
+                      left=Inches(1), width=Inches(8), opacity=1.0):
+        """Add styled hero text"""
+        textbox = slide.shapes.add_textbox(left, top, width, Inches(1))
+        text_frame = textbox.text_frame
+        text_frame.text = text
+        text_frame.word_wrap = True
+        text_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
+        
+        # Style the paragraph
+        paragraph = text_frame.paragraphs[0]
+        paragraph.font.name = "Montserrat"
+        paragraph.font.size = Pt(size)
+        paragraph.font.bold = True
+        paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(primary))
+        
+        # Add transparency if needed
+        if opacity < 1.0:
+            textbox.fill.solid()
+            textbox.fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(primary))
+            textbox.fill.transparency = 1.0 - opacity
+    
+    def _extract_brand_keywords(self, brand_essence, identity_data):
+        """Extract key brand words from essence and identity"""
+        keywords = []
+        
+        if brand_essence:
+            # From brand positioning
+            if brand_essence.get("brand_positioning", {}).get("brand_personality"):
+                keywords.extend(brand_essence["brand_positioning"]["brand_personality"][:3])
+            
+            # From company profile values
+            if brand_essence.get("company_profile", {}).get("core_values"):
+                keywords.extend(brand_essence["company_profile"]["core_values"][:2])
+        
+        # From visual style if available
+        if identity_data and identity_data.get("visual_style"):
+            style_words = identity_data["visual_style"].split(",")[:2]
+            keywords.extend([word.strip().title() for word in style_words])
+        
+        # Default keywords if none found
+        if not keywords:
+            keywords = ["Professional", "Innovative", "Trusted", "Modern"]
+        
+        return keywords[:4]  # Limit to 4 keywords
+    
+    def _add_brand_keywords(self, slide, keywords, accent_color):
+        """Add brand keywords in a stylish layout"""
+        if not keywords:
+            return
+            
+        # Position keywords in a modern layout
+        positions = [
+            (Inches(1), Inches(4.5)),
+            (Inches(3), Inches(4.8)), 
+            (Inches(5), Inches(4.2)),
+            (Inches(7), Inches(4.6))
+        ]
+        
+        for i, keyword in enumerate(keywords[:4]):
+            if i >= len(positions):
+                break
+                
+            left, top = positions[i]
+            
+            # Create keyword box
+            textbox = slide.shapes.add_textbox(left, top, Inches(1.8), Inches(0.5))
+            text_frame = textbox.text_frame
+            text_frame.text = keyword
+            text_frame.word_wrap = False
+            
+            # Style the text
+            paragraph = text_frame.paragraphs[0]
+            paragraph.font.name = "Montserrat"
+            paragraph.font.size = Pt(14)
+            paragraph.font.bold = True
+            paragraph.font.color.rgb = RGBColor(255, 255, 255)
+            
+            # Add background shape
+            bg_shape = slide.shapes.add_shape(
+                MSO_SHAPE.ROUNDED_RECTANGLE,
+                left - Inches(0.1), top - Inches(0.05),
+                Inches(2), Inches(0.6)
+            )
+            fill = bg_shape.fill
+            fill.solid()
+            fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(accent_color))
+            bg_shape.fill.transparency = 0.8
+            bg_shape.line.fill.background()
+            
+            # Send background behind text
+            bg_shape.element.getparent().remove(bg_shape.element)
+            slide.shapes._spTree.insert(2, bg_shape.element)
+    
+    def _add_hero_logo(self, slide, identity_data):
+        """Add company logo to hero section if available"""
+        if not identity_data or not identity_data.get("logos"):
+            return
+            
+        logos = identity_data["logos"]
+        logo_path = None
+        
+        # Find the first existing logo
+        for logo in logos:
+            if isinstance(logo, str) and os.path.exists(logo):
+                logo_path = logo
+                break
+        
+        if logo_path:
+            try:
+                # Add logo in top right corner
+                slide.shapes.add_picture(
+                    logo_path, 
+                    Inches(7.5), Inches(1),
+                    width=Inches(1.5)
+                )
+            except Exception as e:
+                print(f"Could not add logo to title slide: {e}")
+    
+    def _add_bottom_decoration(self, slide, secondary_color):
+        """Add decorative element at bottom of slide"""
+        # Add a subtle bottom accent line
+        line_shape = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE,
+            Inches(1), Inches(6.8),
+            Inches(8), Inches(0.1)
+        )
+        fill = line_shape.fill
+        fill.solid()
+        fill.fore_color.rgb = RGBColor(255, 255, 255)
+        line_shape.fill.transparency = 0.3
+        line_shape.line.fill.background()
 
     def _add_logo_slide(self, prs, logos):
         slide = prs.slides.add_slide(prs.slide_layouts[5])
@@ -262,8 +518,35 @@ Competitive Advantage:
     def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None):
         prs = Presentation()
 
-        # Title Slide
-        self._add_title_slide(prs, company_name)
+        # Title Slide with modern design
+        self._add_title_slide(prs, company_name, identity_data, brand_essence)
+        
+        # Create table of contents sections list
+        sections = [
+            "Table of Contents"
+        ]
+        
+        if brand_essence:
+            sections.extend([
+                "Company Profile",
+                "Market Analysis & Insights", 
+                "Brand Positioning"
+            ])
+            
+        sections.extend([
+            "Logo Variations",
+            "Color Palette", 
+            "Typography",
+            "Visual & Photography Guidelines",
+            "Brand Story & Mission",
+            "Brand Voice & Tone",
+            "Messaging & Value Propositions",
+            "Marketing Copy",
+            "Brand Collateral Templates"
+        ])
+        
+        # Add Table of Contents slide
+        self._add_index_slide(prs, sections)
         
         # Brand Essence & Market Analysis (if available)
         if brand_essence:

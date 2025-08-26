@@ -1,0 +1,39 @@
+{
+  "company": "Chaayos",
+  "assets": {
+    "logos": [],
+    "colors": {
+      "primary": "#DC2626",
+      "secondary": "#059669",
+      "accent": "#2563EB",
+      "supporting": [
+        "#E5E7EB",
+        "#9CA3AF"
+      ],
+      "hex_codes": [
+        "#DC2626",
+        "#059669",
+        "#2563EB",
+        "#E5E7EB",
+        "#9CA3AF"
+      ]
+    },
+    "typography": {
+      "primary": "Inter",
+      "secondary": "Source Sans Pro",
+      "hierarchy": [
+        "H1: Inter Bold 34px",
+        "H2: Inter Medium 25px",
+        "Body: Source Sans Pro Regular 16px"
+      ],
+      "description": "Contemporary, highly legible fonts optimized for digital interfaces"
+    },
+    "collateral": []
+  },
+  "formats": [
+    "PNG",
+    "SVG",
+    "PDF"
+  ],
+  "usage_rights": "Internal use only"
+}
