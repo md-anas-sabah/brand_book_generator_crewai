@@ -4,7 +4,7 @@ from agents.identity_agent import IdentityAgent
 from agents.literature_agent import LiteratureAgent
 from agents.collateral_agent import CollateralAgent
 from agents.qa_compliance_agent import QAComplianceAgent
-from tools.pptx_generator_professional import ProfessionalPPTXGenerator as PPTXGenerator
+from tools.pptx_generator import PPTXGenerator
 from tools.visual_enhancement import VisualEnhancementEngine
 from tools.advanced_export_engine import AdvancedExportEngine
 from typing import Dict
@@ -408,8 +408,8 @@ class BrandBookOrchestrator:
         """Create professional PowerPoint matching top agency standards"""
         print("  Creating professional-grade presentation design...")
         
-        # Generate professional PPTX
-        pptx_path = self.pptx_generator.create_professional_pptx(
+        # Generate comprehensive PPTX with black background and proper text colors
+        pptx_path = self.pptx_generator.create_pptx(
             company_name, identity_data, literature_data, brand_essence
         )
         

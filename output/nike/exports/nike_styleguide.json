@@ -2,19 +2,19 @@
   "company": "Nike",
   "version": "1.0",
   "colors": {
-    "primary": "#2563EB",
-    "secondary": "#4B5563",
-    "accent": "#FCD34D",
+    "primary": "#F59E0B",
+    "secondary": "#1E40AF",
+    "accent": "#374151",
     "supporting": [
       "#D97706",
-      "#0EA5E9"
+      "#1E40AF"
     ],
     "hex_codes": [
-      "#2563EB",
-      "#4B5563",
-      "#FCD34D",
+      "#F59E0B",
+      "#1E40AF",
+      "#374151",
       "#D97706",
-      "#0EA5E9"
+      "#1E40AF"
     ]
   },
   "typography": {

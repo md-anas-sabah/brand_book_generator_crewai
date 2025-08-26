@@ -49,19 +49,23 @@ class PPTXGenerator:
         self._add_bottom_decoration(slide, secondary_color)
 
     def _add_index_slide(self, prs, sections, identity_data=None):
-        slide = prs.slides.add_slide(prs.slide_layouts[1])
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Use blank layout
         
-        # Get contrasting text color that will be visible on brand background
+        # Add black background
+        self._add_black_background(slide)
+        
+        # Get text color for black background (brand primary color)
         palette = identity_data.get("palette", {}) if identity_data else {}
-        text_color = self._get_contrasting_text_color(palette)
+        text_color = self._get_text_color_for_black_bg(palette)
         text_rgb = self._hex_to_rgb(text_color)
         
-        # Set title text and color
-        slide.shapes.title.text = "Table of Contents"
-        # Apply contrasting color to title for visibility
-        for paragraph in slide.shapes.title.text_frame.paragraphs:
-            paragraph.font.color.rgb = RGBColor(*text_rgb)
-            paragraph.font.size = Pt(32)
+        # Add title textbox since we're using blank layout
+        title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Table of Contents"
+        title_frame.paragraphs[0].font.size = Pt(32)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
         
         # Create index content with pagination (50 words per slide)
         content_lines = []
@@ -71,28 +75,38 @@ class PPTXGenerator:
         # Split content if too many sections (more than 8 sections = new slide)
         if len(content_lines) <= 8:
             # Single slide
-            content_placeholder = slide.placeholders[1]
-            content_placeholder.text = "\n".join(content_lines)
-            # Set text color to contrasting color for visibility
-            for paragraph in content_placeholder.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
+            content_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(5))
+            content_frame = content_textbox.text_frame
+            content_frame.text = "\n".join(content_lines)
+            content_frame.word_wrap = True
+            # Apply brand color text
+            self._apply_text_color_to_textbox(content_textbox, text_color)
+            for paragraph in content_frame.paragraphs:
                 paragraph.font.size = Pt(16)
         else:
             # Multiple slides - split into chunks of 8
             for chunk_idx, start_idx in enumerate(range(0, len(content_lines), 8)):
                 if chunk_idx > 0:
                     # Create new slide for continuation
-                    slide = prs.slides.add_slide(prs.slide_layouts[1])
-                    slide.shapes.title.text = f"Table of Contents ({chunk_idx + 1})"
-                    for paragraph in slide.shapes.title.text_frame.paragraphs:
-                        paragraph.font.color.rgb = RGBColor(*text_rgb)
-                        paragraph.font.size = Pt(32)
+                    slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+                    self._add_black_background(slide)
+                    
+                    # Add title textbox
+                    title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+                    title_frame = title_textbox.text_frame
+                    title_frame.text = f"Table of Contents ({chunk_idx + 1})"
+                    title_frame.paragraphs[0].font.size = Pt(32)
+                    title_frame.paragraphs[0].font.bold = True
+                    title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
                 
                 chunk_lines = content_lines[start_idx:start_idx + 8]
-                content_placeholder = slide.placeholders[1]
-                content_placeholder.text = "\n".join(chunk_lines)
-                for paragraph in content_placeholder.text_frame.paragraphs:
-                    paragraph.font.color.rgb = RGBColor(*text_rgb)
+                content_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(5))
+                content_frame = content_textbox.text_frame
+                content_frame.text = "\n".join(chunk_lines)
+                content_frame.word_wrap = True
+                # Apply brand color text
+                self._apply_text_color_to_textbox(content_textbox, text_color)
+                for paragraph in content_frame.paragraphs:
                     paragraph.font.size = Pt(16)
 
     def _get_brand_color(self, palette, color_name, default):
@@ -104,33 +118,24 @@ class PPTXGenerator:
             return color[0] if color else default
         return color if color else default
     
-    def _get_contrasting_text_color(self, palette):
-        """Get a contrasting color for text that will be visible on gradient background"""
+    def _get_text_color_for_black_bg(self, palette):
+        """Get appropriate text color for black background - use brand primary color"""
+        # For black background, use the primary brand color for text
         primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
-        accent_color = self._get_brand_color(palette, "accent", "#A23B72")
         
         try:
-            # Calculate brightness for both gradient colors
-            def calculate_brightness(hex_color):
-                hex_color = hex_color.lstrip('#')
-                r = int(hex_color[0:2], 16)
-                g = int(hex_color[2:4], 16) 
-                b = int(hex_color[4:6], 16)
-                return (r * 299 + g * 587 + b * 114) / 1000
+            # Calculate brightness to ensure it's not too dark on black
+            hex_color = primary_color.lstrip('#')
+            r = int(hex_color[0:2], 16)
+            g = int(hex_color[2:4], 16) 
+            b = int(hex_color[4:6], 16)
+            brightness = (r * 299 + g * 587 + b * 114) / 1000
             
-            primary_brightness = calculate_brightness(primary_color)
-            accent_brightness = calculate_brightness(accent_color)
-            
-            # Use the darker of the two colors as reference for better contrast
-            min_brightness = min(primary_brightness, accent_brightness)
-            max_brightness = max(primary_brightness, accent_brightness)
-            avg_brightness = (min_brightness + max_brightness) / 2
-            
-            # For gradients, we need higher contrast threshold
-            if avg_brightness < 140:  # Darker gradient - use white text
+            # If primary color is too dark, use white instead
+            if brightness < 80:  # Very dark colors
                 return "#FFFFFF"
-            else:  # Lighter gradient - use dark text
-                return "#1F2937"
+            else:
+                return primary_color  # Use brand primary color
                 
         except (ValueError, IndexError):
             # Fallback to white text
@@ -147,12 +152,28 @@ class PPTXGenerator:
             return (46, 134, 171)  # Default blue
     
     def _apply_text_color_to_textbox(self, textbox, color_hex):
-        """Apply text color to all paragraphs and runs in a textbox"""
+        """Apply text color to all paragraphs and runs in a textbox - AGGRESSIVELY"""
         color_rgb = self._hex_to_rgb(color_hex)
+        
+        # Force color on ALL paragraphs
         for paragraph in textbox.text_frame.paragraphs:
+            # Set paragraph-level color first
+            paragraph.font.color.rgb = RGBColor(*color_rgb)
+            
+            # Then set run-level color for existing runs
             for run in paragraph.runs:
-                if run.text.strip():  # Only apply to non-empty runs
-                    run.font.color.rgb = RGBColor(*color_rgb)
+                run.font.color.rgb = RGBColor(*color_rgb)
+            
+            # If paragraph has no runs but has text, create a run
+            if not paragraph.runs and paragraph.text.strip():
+                paragraph.text = paragraph.text  # This creates a run
+                paragraph.runs[0].font.color.rgb = RGBColor(*color_rgb)
+        
+        # Also set text_frame level defaults if available
+        try:
+            textbox.text_frame.paragraphs[0].font.color.rgb = RGBColor(*color_rgb)
+        except:
+            pass
     
     def _paginate_text(self, text, words_per_slide=50):
         """Split text into chunks for pagination"""
@@ -206,6 +227,27 @@ class PPTXGenerator:
         
         # Remove border
         bg_shape.line.fill.background()
+    
+    def _add_black_background(self, slide):
+        """Add consistent black background to any slide"""
+        # Create a rectangle that covers the entire slide
+        bg_shape = slide.shapes.add_shape(
+            MSO_SHAPE.RECTANGLE,
+            0, 0, 
+            Inches(10), Inches(7.5)
+        )
+        
+        # Set solid black fill
+        fill = bg_shape.fill
+        fill.solid()
+        fill.fore_color.rgb = RGBColor(0, 0, 0)  # Pure black
+        
+        # Remove border
+        bg_shape.line.fill.background()
+        
+        # Move background to back
+        bg_shape.element.getparent().remove(bg_shape.element)
+        slide.shapes._spTree.insert(1, bg_shape.element)
     
     def _add_geometric_elements(self, slide, accent_color, secondary_color):
         """Add modern geometric design elements"""
@@ -379,40 +421,71 @@ class PPTXGenerator:
         line_shape.line.fill.background()
 
     def _add_logo_slide(self, prs, logos, identity_data=None):
-        slide = prs.slides.add_slide(prs.slide_layouts[5])
-        slide.shapes.title.text = "Logo Variations"
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+        self._add_black_background(slide)
         
-        # Get contrasting text color for visibility
-        if identity_data:
-            palette = identity_data.get("palette", {})
-            text_color = self._get_contrasting_text_color(palette)
-            text_rgb = self._hex_to_rgb(text_color)
-            # Apply contrasting color to title for visibility
-            for paragraph in slide.shapes.title.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
-                paragraph.font.size = Pt(28)
+        # Get brand text color for black background
+        palette = identity_data.get("palette", {}) if identity_data else {}
+        text_color = self._get_text_color_for_black_bg(palette)
+        text_rgb = self._hex_to_rgb(text_color)
+        
+        # Add title textbox
+        title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+        title_frame = title_textbox.text_frame
+        title_frame.text = f"Logo Variations ({len(logos)} designs)"
+        title_frame.paragraphs[0].font.size = Pt(28)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
         
         left = Inches(1)
-        top = Inches(1.5)
-        width = Inches(2)
+        top = Inches(2.5)
+        width = Inches(2.2)
+        height = Inches(2.2)
+        
+        print(f"Processing {len(logos)} logo variations...")
+        
         for i, logo_path in enumerate(logos):
             if os.path.exists(logo_path):
-                slide.shapes.add_picture(logo_path, left, top, width=width)
-                left += width + Inches(0.3)
+                print(f"  Adding logo {i+1} with black background: {os.path.basename(logo_path)}")
+                
+                # Add black background rectangle for each logo
+                logo_bg = slide.shapes.add_shape(
+                    MSO_SHAPE.RECTANGLE,
+                    left - Inches(0.15), top - Inches(0.15),
+                    width + Inches(0.3), height + Inches(0.3)
+                )
+                logo_bg.fill.solid()
+                logo_bg.fill.fore_color.rgb = RGBColor(0, 0, 0)  # Pure black
+                logo_bg.line.fill.background()
+                
+                # Add logo on top of black background
+                try:
+                    slide.shapes.add_picture(logo_path, left, top, width=width, height=height)
+                    print(f"  ✅ Logo {i+1} added successfully with black background")
+                except Exception as e:
+                    print(f"  ❌ Error adding logo {i+1}: {e}")
+                
+                # Move to next position
+                left += width + Inches(0.4)
+            else:
+                print(f"  ❌ Logo file not found: {logo_path}")
 
     def _add_palette_slide(self, prs, palette, identity_data=None):
-        slide = prs.slides.add_slide(prs.slide_layouts[5])
-        slide.shapes.title.text = "Color Palette"
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+        self._add_black_background(slide)
         
-        # Get contrasting text color for visibility
-        if identity_data:
-            brand_palette = identity_data.get("palette", {})
-            text_color = self._get_contrasting_text_color(brand_palette)
-            text_rgb = self._hex_to_rgb(text_color)
-            # Apply contrasting color to title for visibility
-            for paragraph in slide.shapes.title.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
-                paragraph.font.size = Pt(28)
+        # Get brand text color for black background
+        brand_palette = identity_data.get("palette", {}) if identity_data else {}
+        text_color = self._get_text_color_for_black_bg(brand_palette)
+        text_rgb = self._hex_to_rgb(text_color)
+        
+        # Add title textbox
+        title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Color Palette"
+        title_frame.paragraphs[0].font.size = Pt(28)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
         
         left = Inches(1)
         top = Inches(1.5)
@@ -451,18 +524,21 @@ class PPTXGenerator:
                 p.font.color.rgb = RGBColor(255, 255, 255)
 
     def _add_typography_slide(self, prs, typography, identity_data=None):
-        slide = prs.slides.add_slide(prs.slide_layouts[5])
-        slide.shapes.title.text = "Typography"
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+        self._add_black_background(slide)
         
-        # Get contrasting text color that will be visible on brand background
+        # Get brand text color for black background
         palette = identity_data.get("palette", {}) if identity_data else {}
-        text_color = self._get_contrasting_text_color(palette)
+        text_color = self._get_text_color_for_black_bg(palette)
         text_rgb = self._hex_to_rgb(text_color)
         
-        # Apply contrasting color to title for visibility
-        for paragraph in slide.shapes.title.text_frame.paragraphs:
-            paragraph.font.color.rgb = RGBColor(*text_rgb)
-            paragraph.font.size = Pt(28)
+        # Add title textbox
+        title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Typography"
+        title_frame.paragraphs[0].font.size = Pt(28)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
         
         left = Inches(1)
         top = Inches(1.5)
@@ -479,20 +555,24 @@ class PPTXGenerator:
     def _add_brand_essence_slides(self, prs, brand_essence, identity_data=None):
         """Add slides for brand essence and market analysis"""
         
-        # Get contrasting text color for visibility
+        # Get brand text color for black background
         palette = identity_data.get("palette", {}) if identity_data else {}
-        text_color = self._get_contrasting_text_color(palette)
+        text_color = self._get_text_color_for_black_bg(palette)
         text_rgb = self._hex_to_rgb(text_color)
         
         # Company Profile Slide
         if brand_essence.get("company_profile"):
             profile = brand_essence["company_profile"]
-            slide = prs.slides.add_slide(prs.slide_layouts[1])
-            slide.shapes.title.text = "Company Profile"
-            # Apply contrasting color to title for visibility
-            for paragraph in slide.shapes.title.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
-                paragraph.font.size = Pt(28)
+            slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+            self._add_black_background(slide)
+            
+            # Add title textbox
+            title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+            title_frame = title_textbox.text_frame
+            title_frame.text = "Company Profile"
+            title_frame.paragraphs[0].font.size = Pt(28)
+            title_frame.paragraphs[0].font.bold = True
+            title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
             content = f"""
 Company: {profile.get('name', 'N/A')}
 Industry: {profile.get('industry', 'N/A')}
@@ -501,22 +581,31 @@ Target Audience: {profile.get('target_audience', 'N/A')}
 Core Values:
 {chr(10).join(['• ' + value for value in profile.get('core_values', [])])}
             """.strip()
-            content_placeholder = slide.placeholders[1]
-            content_placeholder.text = content
-            # Set text color to contrasting color for visibility
-            for paragraph in content_placeholder.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
+            # Add content textbox
+            content_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(5))
+            content_frame = content_textbox.text_frame
+            content_frame.text = content
+            content_frame.word_wrap = True
+            # Apply brand text color to all content
+            self._apply_text_color_to_textbox(content_textbox, text_color)
+            text_rgb = self._hex_to_rgb(text_color)
+            for paragraph in content_frame.paragraphs:
                 paragraph.font.size = Pt(14)
+                paragraph.font.color.rgb = RGBColor(*text_rgb)
         
         # Market Analysis Slide
         if brand_essence.get("market_analysis"):
             analysis = brand_essence["market_analysis"]
-            slide = prs.slides.add_slide(prs.slide_layouts[1])
-            slide.shapes.title.text = "Market Analysis & Insights"
-            # Apply contrasting color to title for visibility
-            for paragraph in slide.shapes.title.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
-                paragraph.font.size = Pt(28)
+            slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+            self._add_black_background(slide)
+            
+            # Add title textbox
+            title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+            title_frame = title_textbox.text_frame
+            title_frame.text = "Market Analysis & Insights"
+            title_frame.paragraphs[0].font.size = Pt(28)
+            title_frame.paragraphs[0].font.bold = True
+            title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
             
             content_parts = []
             
@@ -535,22 +624,31 @@ Core Values:
                 styles = analysis["design_trends"]["design_styles"][:4]
                 content_parts.append(f"Popular Design Styles: {', '.join(styles)}")
             
-            content_placeholder = slide.placeholders[1]
-            content_placeholder.text = '\n'.join(content_parts)
-            # Set text color to contrasting color for visibility
-            for paragraph in content_placeholder.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
+            # Add content textbox
+            content_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(5))
+            content_frame = content_textbox.text_frame
+            content_frame.text = '\n'.join(content_parts)
+            content_frame.word_wrap = True
+            # Apply brand text color to all content
+            self._apply_text_color_to_textbox(content_textbox, text_color)
+            text_rgb = self._hex_to_rgb(text_color)
+            for paragraph in content_frame.paragraphs:
                 paragraph.font.size = Pt(14)
+                paragraph.font.color.rgb = RGBColor(*text_rgb)
         
         # Brand Positioning Slide
         if brand_essence.get("brand_positioning"):
             positioning = brand_essence["brand_positioning"]
-            slide = prs.slides.add_slide(prs.slide_layouts[1])
-            slide.shapes.title.text = "Brand Positioning"
-            # Apply contrasting color to title for visibility
-            for paragraph in slide.shapes.title.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
-                paragraph.font.size = Pt(28)
+            slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+            self._add_black_background(slide)
+            
+            # Add title textbox
+            title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+            title_frame = title_textbox.text_frame
+            title_frame.text = "Brand Positioning"
+            title_frame.paragraphs[0].font.size = Pt(28)
+            title_frame.paragraphs[0].font.bold = True
+            title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
             
             content = f"""
 Unique Value Proposition:
@@ -565,26 +663,34 @@ Brand Personality:
 Competitive Advantage:
 {positioning.get('competitive_advantage', 'N/A')}
             """.strip()
-            content_placeholder = slide.placeholders[1]
-            content_placeholder.text = content
-            # Set text color to contrasting color for visibility
-            for paragraph in content_placeholder.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
+            # Add content textbox
+            content_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(5))
+            content_frame = content_textbox.text_frame
+            content_frame.text = content
+            content_frame.word_wrap = True
+            # Apply brand text color to all content
+            self._apply_text_color_to_textbox(content_textbox, text_color)
+            text_rgb = self._hex_to_rgb(text_color)
+            for paragraph in content_frame.paragraphs:
                 paragraph.font.size = Pt(14)
+                paragraph.font.color.rgb = RGBColor(*text_rgb)
 
     def _add_visual_style_slide(self, prs, visual_style, photography_style, identity_data=None):
-        slide = prs.slides.add_slide(prs.slide_layouts[5])
-        slide.shapes.title.text = "Visual & Photography Guidelines"
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+        self._add_black_background(slide)
         
-        # Get contrasting text color for visibility
+        # Get brand text color for black background
         palette = identity_data.get("palette", {}) if identity_data else {}
-        text_color = self._get_contrasting_text_color(palette)
+        text_color = self._get_text_color_for_black_bg(palette)
         text_rgb = self._hex_to_rgb(text_color)
         
-        # Apply contrasting color to title for visibility
-        for paragraph in slide.shapes.title.text_frame.paragraphs:
-            paragraph.font.color.rgb = RGBColor(*text_rgb)
-            paragraph.font.size = Pt(28)
+        # Add title textbox
+        title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Visual & Photography Guidelines"
+        title_frame.paragraphs[0].font.size = Pt(28)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
         
         left = Inches(1)
         top = Inches(1.5)
@@ -613,18 +719,21 @@ Competitive Advantage:
             self._add_multislide_section(prs, "Brand Story & Mission", story, 900, identity_data)
 
     def _add_bullet_slide(self, prs, title, content, identity_data=None):
-        slide = prs.slides.add_slide(prs.slide_layouts[5])
-        slide.shapes.title.text = title
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+        self._add_black_background(slide)
         
-        # Get contrasting text color for visibility
+        # Get brand text color for black background
         palette = identity_data.get("palette", {}) if identity_data else {}
-        text_color = self._get_contrasting_text_color(palette)
+        text_color = self._get_text_color_for_black_bg(palette)
         text_rgb = self._hex_to_rgb(text_color)
         
-        # Apply contrasting color to title for visibility
-        for paragraph in slide.shapes.title.text_frame.paragraphs:
-            paragraph.font.color.rgb = RGBColor(*text_rgb)
-            paragraph.font.size = Pt(28)
+        # Add title textbox
+        title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+        title_frame = title_textbox.text_frame
+        title_frame.text = title
+        title_frame.paragraphs[0].font.size = Pt(28)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
         
         left, top, width, height = Inches(1), Inches(1.5), Inches(7), Inches(3)
         textbox = slide.shapes.add_textbox(left, top, width, height)
@@ -637,8 +746,14 @@ Competitive Advantage:
                 p.text = item.strip()
                 p.level = 0
                 p.font.size = Pt(18)
-            # Apply contrasting text color to all content
+            # Apply contrasting text color to all content AGGRESSIVELY
             self._apply_text_color_to_textbox(textbox, text_color)
+            text_rgb = self._hex_to_rgb(text_color)
+            # Force color on every paragraph and run
+            for p in tf.paragraphs:
+                p.font.color.rgb = RGBColor(*text_rgb)
+                for run in p.runs:
+                    run.font.color.rgb = RGBColor(*text_rgb)
         else:
             # Try to split numbered/bulleted/commas
             items = []
@@ -659,35 +774,51 @@ Competitive Advantage:
                 p.text = item.strip()
                 p.level = 0
                 p.font.size = Pt(18)
-            # Apply contrasting text color to all content
+            # Apply contrasting text color to all content AGGRESSIVELY
             self._apply_text_color_to_textbox(textbox, text_color)
+            text_rgb = self._hex_to_rgb(text_color)
+            # Force color on every paragraph and run
+            for p in tf.paragraphs:
+                p.font.color.rgb = RGBColor(*text_rgb)
+                for run in p.runs:
+                    run.font.color.rgb = RGBColor(*text_rgb)
 
     def _add_multislide_section(self, prs, title, content, max_chars=800, identity_data=None):
         """Splits long text content into multiple slides if needed."""
         
         # Get contrasting text color for visibility
         palette = identity_data.get("palette", {}) if identity_data else {}
-        text_color = self._get_contrasting_text_color(palette)
+        text_color = self._get_text_color_for_black_bg(palette)
         text_rgb = self._hex_to_rgb(text_color)
         
         # Use centralized pagination logic
         chunks = self._paginate_text(content, 50)
         for idx, chunk in enumerate(chunks):
-            slide = prs.slides.add_slide(prs.slide_layouts[5])
-            slide.shapes.title.text = f"{title} ({idx+1})" if len(chunks) > 1 else title
-            # Apply contrasting color to title for visibility
-            for paragraph in slide.shapes.title.text_frame.paragraphs:
-                paragraph.font.color.rgb = RGBColor(*text_rgb)
-                paragraph.font.size = Pt(28)
+            slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
+            self._add_black_background(slide)
+            
+            # Add title textbox
+            title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
+            title_frame = title_textbox.text_frame
+            title_frame.text = f"{title} ({idx+1})" if len(chunks) > 1 else title
+            title_frame.paragraphs[0].font.size = Pt(28)
+            title_frame.paragraphs[0].font.bold = True
+            title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
             left, top, width, height = Inches(1), Inches(1.5), Inches(7), Inches(3)
             textbox = slide.shapes.add_textbox(left, top, width, height)
             tf = textbox.text_frame
             tf.word_wrap = True
             tf.text = chunk
-            # Apply contrasting text color to all content
+            # Apply contrasting text color to all content AGGRESSIVELY
             self._apply_text_color_to_textbox(textbox, text_color)
+            text_rgb = self._hex_to_rgb(text_color)
             for p in tf.paragraphs:
                 p.font.size = Pt(18 if len(chunk) < 300 else 16)
+                # Force color at paragraph level
+                p.font.color.rgb = RGBColor(*text_rgb)
+                # Force color at run level
+                for run in p.runs:
+                    run.font.color.rgb = RGBColor(*text_rgb)
 
     def _add_voice_slide(self, prs, voice_tone, identity_data=None):
         self._add_multislide_section(prs, "Brand Voice & Tone", voice_tone, max_chars=750, identity_data=identity_data)

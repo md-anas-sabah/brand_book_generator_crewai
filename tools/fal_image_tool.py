@@ -26,8 +26,8 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
                 prompt = (
                     f"Professional logo design for {company_name}, {industry} industry. "
                     f"Style: {style}. Clean, modern, minimalistic design. "
-                    f"High-resolution, transparent background, corporate branding, "
-                    f"vector-style illustration, simple and memorable design"
+                    f"Black background, high-resolution, corporate branding, "
+                    f"vector-style illustration, simple and memorable design, logo on black background"
                 )
                 
                 # Submit request to Ideogram V2A (matching first code pattern)
@@ -136,8 +136,8 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                 prompt = (
                     f"Professional logo design for {company_name}, {industry} industry. "
                     f"Style: {style}. Clean, modern, minimalistic design. "
-                    f"High-resolution, transparent background, corporate branding, "
-                    f"vector-style illustration, simple and memorable design"
+                    f"Black background, high-resolution, corporate branding, "
+                    f"vector-style illustration, simple and memorable design, logo on black background"
                 )
                 
                 result = fal.run(
