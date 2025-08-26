@@ -57,46 +57,62 @@ class AdvancedExportEngine:
         
         export_results = {}
         
+        # 1. Professional PDF with vector graphics
         try:
-            # 1. Professional PDF with vector graphics
             print("  Creating professional PDF...")
             pdf_path = self._create_vector_pdf(
                 company_name, brand_essence, identity_data, 
                 literature_data, visual_system
             )
             export_results["pdf"] = pdf_path
-            
-            # 2. Interactive HTML with CSS styling
+            print(f"  ✅ PDF created: {pdf_path}")
+        except Exception as e:
+            print(f"  ❌ PDF creation failed: {e}")
+        
+        # 2. Interactive HTML with CSS styling
+        try:
             print("  Creating interactive HTML...")
             html_path = self._create_interactive_html(
                 company_name, brand_essence, identity_data,
                 literature_data, visual_system
             )
             export_results["html"] = html_path
-            
-            # 3. Print-ready PDF with CMYK
+            print(f"  ✅ HTML created: {html_path}")
+        except Exception as e:
+            print(f"  ❌ HTML creation failed: {e}")
+        
+        # 3. Print-ready PDF with CMYK
+        try:
             print("  Creating print-ready PDF...")
             print_pdf_path = self._create_print_ready_pdf(
                 company_name, identity_data, literature_data, visual_system
             )
             export_results["print_pdf"] = print_pdf_path
-            
-            # 4. Brand assets package
+            print(f"  ✅ Print PDF created: {print_pdf_path}")
+        except Exception as e:
+            print(f"  ❌ Print PDF creation failed: {e}")
+        
+        # 4. Brand assets package
+        try:
             print("  Creating brand assets package...")
             assets_path = self._create_assets_package(
                 company_name, identity_data, collateral_data
             )
             export_results["assets_package"] = assets_path
-            
-            # 5. Digital style guide JSON
+            print(f"  ✅ Assets package created: {assets_path}")
+        except Exception as e:
+            print(f"  ❌ Assets package creation failed: {e}")
+        
+        # 5. Digital style guide JSON
+        try:
             print("  Creating digital style guide...")
             styleguide_path = self._create_digital_styleguide(
                 company_name, identity_data, visual_system
             )
             export_results["digital_styleguide"] = styleguide_path
-            
+            print(f"  ✅ Style guide created: {styleguide_path}")
         except Exception as e:
-            print(f"  Warning: Some export formats failed: {e}")
+            print(f"  ❌ Style guide creation failed: {e}")
         
         # Export summary
         export_summary = {
