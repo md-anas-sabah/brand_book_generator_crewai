@@ -28,9 +28,9 @@ class IdentityAgent:
         print(f"Generating typography for {company_name}...")
         if brand_essence and brand_essence.get('visual_direction'):
             style_hint = brand_essence['visual_direction'].get('recommended_style', logo_style)
-            typography = get_typography(industry, style_hint)
+            typography = get_typography(industry, style_hint, brand_essence)
         else:
-            typography = get_typography(industry, logo_style)
+            typography = get_typography(industry, logo_style, brand_essence)
         
         # 4. Visual style / moodboard description
         print(f"Generating visual style guidelines for {company_name}...")

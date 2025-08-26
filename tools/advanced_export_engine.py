@@ -181,14 +181,17 @@ class AdvancedExportEngine:
         return filepath
     
     def _create_pdf_styles(self, palette: Dict) -> Dict:
-        """Create professional PDF styles"""
+        """Create professional PDF styles using dynamic brand colors"""
         styles = getSampleStyleSheet()
         
-        # Get brand colors
-        primary_color = self._get_color_from_palette(palette, "primary", "#333333")
-        accent_color = self._get_color_from_palette(palette, "accent", "#0066CC")
+        # Get brand colors - use primary color for all text elements for consistency
+        primary_color = self._get_color_from_palette(palette, "primary", "#FFFFFF")  # Default to white for visibility
+        accent_color = self._get_color_from_palette(palette, "accent", primary_color)  # Use primary as fallback
         
-        # Custom styles
+        # Ensure good contrast - if primary is too dark, use a lighter variant for body text
+        body_color = self._get_readable_text_color(primary_color)
+        
+        # Custom styles using dynamic brand colors
         styles.add(ParagraphStyle(
             name='CustomTitle',
             parent=styles['Heading1'],
@@ -225,7 +228,7 @@ class AdvancedExportEngine:
             fontSize=12,
             spaceBefore=6,
             spaceAfter=6,
-            textColor=HexColor("#555555"),
+            textColor=HexColor(body_color),  # Use dynamic color instead of hardcoded #555555
             fontName='Helvetica',
             leading=18
         ))
@@ -495,7 +498,7 @@ class AdvancedExportEngine:
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: var(--secondary-color);
+            color: var(--primary-color);  /* Use primary brand color for body text */
             background: var(--gradient-section);
         }}
         
@@ -765,6 +768,35 @@ class AdvancedExportEngine:
             return color[0] if color[0].startswith('#') else default
         
         return default
+    
+    def _get_readable_text_color(self, primary_color: str) -> str:
+        """Get a readable text color based on primary color brightness"""
+        try:
+            # Remove # if present
+            hex_color = primary_color.lstrip('#')
+            
+            # Convert to RGB
+            r = int(hex_color[0:2], 16)
+            g = int(hex_color[2:4], 16) 
+            b = int(hex_color[4:6], 16)
+            
+            # Calculate brightness (0-255)
+            brightness = (r * 299 + g * 587 + b * 114) / 1000
+            
+            # If color is too dark (< 128), use a lighter version for body text
+            # If color is light enough, use the original color
+            if brightness < 128:
+                # Create a lighter version by adding to each RGB component
+                lighter_r = min(255, r + 80)
+                lighter_g = min(255, g + 80) 
+                lighter_b = min(255, b + 80)
+                return f"#{lighter_r:02x}{lighter_g:02x}{lighter_b:02x}"
+            else:
+                return primary_color
+                
+        except (ValueError, IndexError):
+            # Fallback to a safe readable color
+            return "#444444"
     
     def _get_export_specifications(self) -> Dict:
         """Get technical specifications for all export formats"""

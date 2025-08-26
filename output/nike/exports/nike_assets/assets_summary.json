@@ -1,0 +1,39 @@
+{
+  "company": "Nike",
+  "assets": {
+    "logos": [],
+    "colors": {
+      "primary": "#2563EB",
+      "secondary": "#4B5563",
+      "accent": "#FCD34D",
+      "supporting": [
+        "#D97706",
+        "#0EA5E9"
+      ],
+      "hex_codes": [
+        "#2563EB",
+        "#4B5563",
+        "#FCD34D",
+        "#D97706",
+        "#0EA5E9"
+      ]
+    },
+    "typography": {
+      "primary": "Archivo",
+      "secondary": "Work Sans",
+      "hierarchy": [
+        "H1: Archivo Bold 32px",
+        "H2: Archivo Medium 24px",
+        "Body: Work Sans Regular 16px"
+      ],
+      "description": "Research-driven bold selection"
+    },
+    "collateral": []
+  },
+  "formats": [
+    "PNG",
+    "SVG",
+    "PDF"
+  ],
+  "usage_rights": "Internal use only"
+}

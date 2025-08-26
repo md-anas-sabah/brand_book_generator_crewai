@@ -43,81 +43,193 @@ def get_color_palette(industry, style, color_hints=None):
     return base_palette
 
 def _generate_palette_from_hints(color_hints, style):
-    """Generate palette from research-based color hints"""
-    color_map = {
-        "blue": "#2563EB", "red": "#DC2626", "green": "#059669", "yellow": "#F59E0B",
-        "purple": "#7C3AED", "pink": "#EC4899", "orange": "#EA580C", "teal": "#0891B2",
-        "gray": "#6B7280", "black": "#1F2937", "white": "#F9FAFB"
+    """Generate dynamic palette from research-based color hints"""
+    # Enhanced color map with multiple variations per color
+    color_variations = {
+        "blue": ["#2563EB", "#3B82F6", "#1D4ED8", "#1E40AF", "#0EA5E9"],
+        "red": ["#DC2626", "#EF4444", "#F87171", "#BE185D", "#E11D48"],
+        "green": ["#059669", "#10B981", "#34D399", "#047857", "#065F46"],
+        "yellow": ["#F59E0B", "#FBBF24", "#FCD34D", "#D97706", "#B45309"],
+        "purple": ["#7C3AED", "#8B5CF6", "#A855F7", "#6D28D9", "#5B21B6"],
+        "pink": ["#EC4899", "#F472B6", "#FB7185", "#DB2777", "#BE185D"],
+        "orange": ["#EA580C", "#F97316", "#FB923C", "#C2410C", "#9A3412"],
+        "teal": ["#0891B2", "#06B6D4", "#22D3EE", "#0E7490", "#155E75"],
+        "gray": ["#6B7280", "#4B5563", "#374151", "#1F2937", "#111827"],
+        "grey": ["#6B7280", "#4B5563", "#374151", "#1F2937", "#111827"],
+        "black": ["#1F2937", "#111827", "#0F172A", "#030712", "#000000"],
+        "white": ["#F9FAFB", "#F3F4F6", "#E5E7EB", "#D1D5DB", "#FFFFFF"],
+        "navy": ["#1E40AF", "#1D4ED8", "#2563EB", "#1E3A8A", "#172554"],
+        "burgundy": ["#7F1D1D", "#991B1B", "#B91C1C", "#DC2626", "#EF4444"],
+        "coral": ["#FB7185", "#F472B6", "#EC4899", "#DB2777", "#BE185D"],
+        "mint": ["#6EE7B7", "#34D399", "#10B981", "#059669", "#047857"],
+        "sage": ["#84CC16", "#65A30D", "#4D7C0F", "#365314", "#1A2E05"]
     }
     
     if not color_hints:
         return None
     
-    primary_color = color_map.get(color_hints[0].lower(), "#333333")
-    secondary_color = color_map.get(color_hints[1].lower() if len(color_hints) > 1 else "gray", "#6B7280")
-    accent_color = color_map.get(color_hints[2].lower() if len(color_hints) > 2 else "blue", "#2563EB")
+    import random
+    
+    # Shuffle color hints to avoid always picking the same first color
+    shuffled_hints = color_hints.copy()
+    random.shuffle(shuffled_hints)
+    
+    # Get dynamic color variations based on research
+    def get_color_variation(color_name, position=0):
+        variations = color_variations.get(color_name.lower(), color_variations["blue"])
+        # Use position to get different shades (primary=darker, secondary=medium, accent=brighter)
+        # Also add some randomization within the position range
+        base_index = min(position, len(variations) - 1)
+        # Add slight randomization (±1) within bounds
+        index = max(0, min(len(variations) - 1, base_index + random.randint(-1, 1)))
+        return variations[index]
+    
+    # Use shuffled hints to ensure variety
+    primary_color = get_color_variation(shuffled_hints[0], 0)  # Darker shade
+    secondary_color = get_color_variation(shuffled_hints[1] if len(shuffled_hints) > 1 else "gray", 2)  # Medium shade
+    accent_color = get_color_variation(shuffled_hints[2] if len(shuffled_hints) > 2 else shuffled_hints[0], 1)  # Brighter shade
+    
+    # Generate supporting colors that complement the palette
+    supporting_colors = [
+        get_color_variation(color_hints[0], 3) if len(color_hints) > 0 else "#E5E7EB",
+        get_color_variation(color_hints[1] if len(color_hints) > 1 else "gray", 4)
+    ]
     
     return {
         "primary": primary_color,
         "secondary": secondary_color, 
         "accent": accent_color,
-        "supporting": ["#E5E7EB", "#9CA3AF"],
-        "hex_codes": [primary_color, secondary_color, accent_color, "#E5E7EB", "#9CA3AF"]
+        "supporting": supporting_colors,
+        "hex_codes": [primary_color, secondary_color, accent_color] + supporting_colors
     }
 
-def get_typography(industry, style):
-    """Generate typography recommendations with enhanced options"""
+def get_typography(industry, style, brand_essence=None):
+    """Generate dynamic typography recommendations based on research and trends"""
     
-    style_typography = {
-        "minimalistic": {
-            "primary": "Montserrat", 
-            "secondary": "Lato",
-            "hierarchy": ["H1: Montserrat Bold 32px", "H2: Montserrat Medium 24px", "Body: Lato Regular 16px"],
-            "description": "Clean, geometric sans-serif pairing for modern minimalist brands"
-        },
-        "colourful": {
-            "primary": "Poppins", 
-            "secondary": "Raleway",
-            "hierarchy": ["H1: Poppins Bold 36px", "H2: Poppins Medium 26px", "Body: Raleway Regular 16px"],
-            "description": "Friendly, approachable fonts perfect for vibrant, energetic brands"
-        },
-        "modern": {
-            "primary": "Inter", 
-            "secondary": "Source Sans Pro",
-            "hierarchy": ["H1: Inter Bold 34px", "H2: Inter Medium 25px", "Body: Source Sans Pro Regular 16px"],
-            "description": "Contemporary, highly legible fonts optimized for digital interfaces"
-        },
-        "elegant": {
-            "primary": "Playfair Display", 
-            "secondary": "Source Sans Pro",
-            "hierarchy": ["H1: Playfair Display Bold 36px", "H2: Playfair Display Medium 26px", "Body: Source Sans Pro Regular 16px"],
-            "description": "Sophisticated serif and sans-serif combination for premium brands"
-        },
-        "professional": {
-            "primary": "Roboto", 
-            "secondary": "Open Sans",
-            "hierarchy": ["H1: Roboto Bold 32px", "H2: Roboto Medium 24px", "Body: Open Sans Regular 16px"],
-            "description": "Reliable, versatile fonts suitable for corporate and business applications"
-        }
+    # Dynamic typography pool with more variety
+    typography_styles = {
+        "minimalist": [
+            {"primary": "Inter", "secondary": "Lato", "desc": "Ultra-clean geometric pairing"},
+            {"primary": "Montserrat", "secondary": "Source Sans Pro", "desc": "Modern geometric with high legibility"},
+            {"primary": "Poppins", "secondary": "Inter", "desc": "Friendly geometric with technical precision"},
+            {"primary": "Work Sans", "secondary": "IBM Plex Sans", "desc": "Contemporary minimalist pairing"}
+        ],
+        "modern": [
+            {"primary": "Inter", "secondary": "IBM Plex Sans", "desc": "Tech-forward, highly legible"},
+            {"primary": "DM Sans", "secondary": "Inter", "desc": "Contemporary with excellent readability"},
+            {"primary": "Space Grotesk", "secondary": "Inter", "desc": "Distinctive modern character"},
+            {"primary": "Plus Jakarta Sans", "secondary": "Inter", "desc": "Fresh, modern Indonesian-inspired"}
+        ],
+        "colorful": [
+            {"primary": "Poppins", "secondary": "Nunito Sans", "desc": "Playful, friendly, and energetic"},
+            {"primary": "Comfortaa", "secondary": "Nunito", "desc": "Rounded, warm, and approachable"},
+            {"primary": "Quicksand", "secondary": "Lato", "desc": "Soft, friendly geometric"},
+            {"primary": "Varela Round", "secondary": "Poppins", "desc": "Playful rounded sans-serif"}
+        ],
+        "elegant": [
+            {"primary": "Playfair Display", "secondary": "Source Sans Pro", "desc": "Classic serif with modern sans"},
+            {"primary": "Cormorant Garamond", "secondary": "Lato", "desc": "Refined serif with clean sans"},
+            {"primary": "Crimson Text", "secondary": "Inter", "desc": "Sophisticated reading experience"},
+            {"primary": "Libre Baskerville", "secondary": "Source Sans Pro", "desc": "Traditional elegance meets modernity"}
+        ],
+        "professional": [
+            {"primary": "Roboto", "secondary": "Open Sans", "desc": "Google's reliable, versatile pairing"},
+            {"primary": "IBM Plex Sans", "secondary": "Inter", "desc": "Corporate-grade typography system"},
+            {"primary": "Source Sans Pro", "secondary": "Roboto", "desc": "Adobe's professional standard"},
+            {"primary": "Fira Sans", "secondary": "Lato", "desc": "Mozilla's clean, professional choice"}
+        ],
+        "creative": [
+            {"primary": "Space Grotesk", "secondary": "Inter", "desc": "Distinctive, creative edge"},
+            {"primary": "Archivo", "secondary": "Work Sans", "desc": "Bold, statement-making"},
+            {"primary": "Manrope", "secondary": "Inter", "desc": "Modern with creative flair"},
+            {"primary": "DM Sans", "secondary": "Nunito Sans", "desc": "Fresh, contemporary creative"}
+        ]
     }
     
-    # Industry-specific recommendations
-    industry_typography = {
-        "tech": "modern",
-        "finance": "professional", 
+    # Check if we have research-based insights
+    research_typography = None
+    if brand_essence and brand_essence.get('market_analysis', {}).get('design_trends', {}).get('typography_trends'):
+        typography_trends = brand_essence['market_analysis']['design_trends']['typography_trends']
+        research_typography = _select_typography_from_trends(typography_trends)
+    
+    # If we have research data, use it
+    if research_typography:
+        return research_typography
+    
+    # Otherwise use dynamic selection from style pools
+    import random
+    
+    # Determine style category
+    style_lower = style.lower()
+    style_category = "professional"  # default
+    
+    for category in typography_styles.keys():
+        if category in style_lower or style_lower in category:
+            style_category = category
+            break
+    
+    # Industry overrides
+    industry_style_map = {
+        "technology": "modern",
+        "fintech": "professional", 
+        "finance": "professional",
         "healthcare": "professional",
+        "creative": "creative",
         "education": "modern",
-        "retail": "colourful",
-        "consulting": "elegant",
-        "creative": "colourful"
+        "retail": "colorful",
+        "ecommerce": "colorful",
+        "consulting": "elegant"
     }
     
-    # Determine style
-    final_style = style.lower()
-    if final_style not in style_typography:
-        final_style = industry_typography.get(industry.lower(), "professional")
+    industry_category = industry_style_map.get(industry.lower())
+    if industry_category and industry_category in typography_styles:
+        style_category = industry_category
     
-    return style_typography.get(final_style, style_typography["professional"])
+    # Randomly select from the appropriate category for variety
+    selected_typography = random.choice(typography_styles[style_category])
+    
+    return {
+        "primary": selected_typography["primary"],
+        "secondary": selected_typography["secondary"],
+        "hierarchy": [
+            f"H1: {selected_typography['primary']} Bold 32px", 
+            f"H2: {selected_typography['primary']} Medium 24px", 
+            f"Body: {selected_typography['secondary']} Regular 16px"
+        ],
+        "description": selected_typography["desc"]
+    }
+    
+def _select_typography_from_trends(typography_trends):
+    """Select typography based on research trends"""
+    
+    # Map research trends to font selections
+    trend_typography_map = {
+        "serif": {"primary": "Playfair Display", "secondary": "Source Sans Pro", "desc": "Research-driven serif selection"},
+        "sans-serif": {"primary": "Inter", "secondary": "IBM Plex Sans", "desc": "Research-driven sans-serif selection"},
+        "modern": {"primary": "Space Grotesk", "secondary": "Inter", "desc": "Research-driven modern selection"},
+        "classic": {"primary": "Libre Baskerville", "secondary": "Source Sans Pro", "desc": "Research-driven classic selection"},
+        "bold": {"primary": "Archivo", "secondary": "Work Sans", "desc": "Research-driven bold selection"},
+        "light": {"primary": "Work Sans", "secondary": "Inter", "desc": "Research-driven light selection"},
+        "thin": {"primary": "Lato", "secondary": "Inter", "desc": "Research-driven thin selection"},
+        "condensed": {"primary": "Roboto Condensed", "secondary": "Inter", "desc": "Research-driven condensed selection"}
+    }
+    
+    # Find the first matching trend
+    for trend in typography_trends:
+        if trend.lower() in trend_typography_map:
+            selected = trend_typography_map[trend.lower()]
+            return {
+                "primary": selected["primary"],
+                "secondary": selected["secondary"],
+                "hierarchy": [
+                    f"H1: {selected['primary']} Bold 32px", 
+                    f"H2: {selected['primary']} Medium 24px", 
+                    f"Body: {selected['secondary']} Regular 16px"
+                ],
+                "description": selected["desc"]
+            }
+    
+    return None
 
 def get_moodboard_prompt(company_name, industry, logo_style, values, audience):
     return (

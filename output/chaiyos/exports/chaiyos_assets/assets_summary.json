@@ -1,0 +1,39 @@
+{
+  "company": "Chaiyos",
+  "assets": {
+    "logos": [],
+    "colors": {
+      "primary": "#059669",
+      "secondary": "#F87171",
+      "accent": "#4D7C0F",
+      "supporting": [
+        "#F87171",
+        "#065F46"
+      ],
+      "hex_codes": [
+        "#059669",
+        "#F87171",
+        "#4D7C0F",
+        "#F87171",
+        "#065F46"
+      ]
+    },
+    "typography": {
+      "primary": "Space Grotesk",
+      "secondary": "Inter",
+      "hierarchy": [
+        "H1: Space Grotesk Bold 32px",
+        "H2: Space Grotesk Medium 24px",
+        "Body: Inter Regular 16px"
+      ],
+      "description": "Research-driven modern selection"
+    },
+    "collateral": []
+  },
+  "formats": [
+    "PNG",
+    "SVG",
+    "PDF"
+  ],
+  "usage_rights": "Internal use only"
+}

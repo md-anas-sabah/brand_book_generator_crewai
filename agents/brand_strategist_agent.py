@@ -289,36 +289,44 @@ class BrandStrategistAgent:
     def _create_fallback_research_data(self, industry: str, audience: str) -> List[Dict]:
         """Create fallback research data based on industry knowledge when web search fails"""
         
-        # Industry-specific insights
+        # Industry-specific insights with randomized color order
+        import random
+        
         industry_data = {
             "technology": {
                 "trends": ["AI integration", "clean minimalist design", "blue and tech colors", "modern sans-serif fonts"],
                 "competitors": ["Microsoft", "Google", "Apple", "IBM", "Salesforce"],
                 "design_patterns": ["gradient backgrounds", "geometric shapes", "white space usage"],
-                "colors": ["blue", "gray", "white", "green"]
+                "colors": ["blue", "gray", "white", "green", "teal", "purple"]
             },
             "fintech": {
                 "trends": ["trust-building design", "security emphasis", "professional styling"],
                 "competitors": ["Stripe", "PayPal", "Square", "Robinhood"],  
                 "design_patterns": ["clean lines", "secure imagery", "professional typography"],
-                "colors": ["blue", "green", "gray", "white"]
+                "colors": ["blue", "green", "gray", "white", "navy", "teal"]
             },
             "healthcare": {
                 "trends": ["accessible design", "calming colors", "trust indicators"],
                 "competitors": ["Teladoc", "Moderna", "Johnson & Johnson"],
                 "design_patterns": ["rounded corners", "soft imagery", "clear typography"],
-                "colors": ["blue", "green", "white", "light blue"]
+                "colors": ["blue", "green", "white", "teal", "sage", "mint"]
             },
             "e-commerce": {
                 "trends": ["conversion optimization", "mobile-first design", "vibrant colors"],
                 "competitors": ["Amazon", "Shopify", "Etsy", "eBay"],
                 "design_patterns": ["product-focused", "clear CTAs", "responsive design"],
-                "colors": ["orange", "blue", "red", "green"]
+                "colors": ["orange", "blue", "green", "purple", "teal", "yellow"]
             }
         }
         
         # Get industry-specific data or use general tech fallback
         selected_data = industry_data.get(industry.lower(), industry_data["technology"])
+        
+        # Randomize the color order to ensure variety
+        colors = selected_data["colors"].copy()
+        random.shuffle(colors)
+        selected_data = selected_data.copy()
+        selected_data["colors"] = colors
         
         # Create structured fallback data
         fallback_data = []

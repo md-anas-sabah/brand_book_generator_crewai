@@ -1,9 +1,9 @@
 {
-  "company_name": "Chaayos",
-  "timestamp": "1756207964.8830347",
+  "company_name": "Chaiyos",
+  "timestamp": "1756211201.319937",
   "brand_essence": {
     "company_profile": {
-      "name": "Chaayos",
+      "name": "Chaiyos",
       "industry": "Food & Beverage (F&B), Quick Service Restaurants (QSR), Caf\u00e9/Tea Retail",
       "core_values": [
         "Innovation",
@@ -27,16 +27,16 @@
       ],
       "competitor_insights": {
         "notable_competitors": [
-          "Restaurants",
-          "JS",
-          "Understanding Colour",
-          "ERROR",
-          "Chai Business",
-          "Menu Website",
-          "Keep Guests",
-          "Drink Logos",
-          "Chai Trends",
-          "Just"
+          "Restaurant Websites",
+          "Please",
+          "America",
+          "Websites",
+          "The",
+          "Psychology",
+          "That Will",
+          "Tea Culture",
+          "Enable JavaScript",
+          "Keep Guests"
         ],
         "common_design_patterns": []
       },
@@ -94,7 +94,7 @@
       },
       {
         "title": "Top Restaurant Design Trends of 2025 - Webstaurant Store",
-        "url": "https://www.webstaurantstore.com/blog/2374/top-restaurant-design-trends.html?srsltid=AfmBOooi7zK18IB9saMTyb1HAch_Wl23wuMj6FZH08GQyjMQ6_TwzVsf",
+        "url": "https://www.webstaurantstore.com/blog/2374/top-restaurant-design-trends.html?srsltid=AfmBOoo002jQytK3k7VGU9fT916ieI40jiIA-3l6oPsx6_UUAgzOPpZi",
         "domain": "www.webstaurantstore.com"
       },
       {
@@ -119,7 +119,7 @@
       },
       {
         "title": "How Restaurant Color Schemes Affect Your Customers",
-        "url": "https://www.webstaurantstore.com/blog/1884/interior-color-choices-and-your-restaurants-message.html?srsltid=AfmBOorMkD6BgWTSSMkdzOC1ot-YjK8ZZdC3du5zWyCFQRnMqVmEyySj",
+        "url": "https://www.webstaurantstore.com/blog/1884/interior-color-choices-and-your-restaurants-message.html?srsltid=AfmBOooe6OmVAAtKPT8uf6qftgi4KPylo1aaYjKoudaDBNn0S9CdwWXv",
         "domain": "www.webstaurantstore.com"
       },
       {
@@ -141,66 +141,66 @@
   },
   "visual_identity": {
     "logos": [
-      "output/chaayos_logo_1_20250826_174056_0c3120d5.png",
-      "output/chaayos_logo_2_20250826_174115_c5a468b1.png",
-      "output/chaayos_logo_3_20250826_174211_6cb67f41.png"
+      "output/chaiyos_logo_1_20250826_225552_1f643b3c.png",
+      "output/chaiyos_logo_2_20250826_225611_959ebcc7.png",
+      "output/chaiyos_logo_3_20250826_225632_ba1f1f9e.png"
     ],
     "palette": {
-      "primary": "#DC2626",
-      "secondary": "#059669",
-      "accent": "#2563EB",
+      "primary": "#059669",
+      "secondary": "#F87171",
+      "accent": "#4D7C0F",
       "supporting": [
-        "#E5E7EB",
-        "#9CA3AF"
+        "#F87171",
+        "#065F46"
       ],
       "hex_codes": [
-        "#DC2626",
         "#059669",
-        "#2563EB",
-        "#E5E7EB",
-        "#9CA3AF"
+        "#F87171",
+        "#4D7C0F",
+        "#F87171",
+        "#065F46"
       ]
     },
     "typography": {
-      "primary": "Inter",
-      "secondary": "Source Sans Pro",
+      "primary": "Space Grotesk",
+      "secondary": "Inter",
       "hierarchy": [
-        "H1: Inter Bold 34px",
-        "H2: Inter Medium 25px",
-        "Body: Source Sans Pro Regular 16px"
+        "H1: Space Grotesk Bold 32px",
+        "H2: Space Grotesk Medium 24px",
+        "Body: Inter Regular 16px"
       ],
-      "description": "Contemporary, highly legible fonts optimized for digital interfaces"
+      "description": "Research-driven modern selection"
     },
-    "visual_style": "Visual style for Chaayos in Food & Beverage (F&B), Quick Service Restaurants (QSR), Caf\u00e9/Tea Retail: Elegant aesthetic, values: Innovation, Personalization, Customer Delight, Quality, Community, Convenience, Warmth, Authenticity, Modern Tradition, Consistency, audience: Urban millennials, Young professionals, Office-goers, Students, Tea enthusiasts, Digital-savvy consumers, Health-conscious individuals, People seeking a modern chai caf\u00e9 experience.. Use whitespace, on-brand accent color, modern design cues.",
-    "photography_style": "Photography style for Chaayos: Elegant and Food & Beverage (F&B), Quick Service Restaurants (QSR), Caf\u00e9/Tea Retail feel. Show diversity, authenticity, and lighting that supports brand values: Innovation, Personalization, Customer Delight, Quality, Community, Convenience, Warmth, Authenticity, Modern Tradition, Consistency. Images should resonate with Urban millennials, Young professionals, Office-goers, Students, Tea enthusiasts, Digital-savvy consumers, Health-conscious individuals, People seeking a modern chai caf\u00e9 experience.."
+    "visual_style": "Visual style for Chaiyos in Food & Beverage (F&B), Quick Service Restaurants (QSR), Caf\u00e9/Tea Retail: Modern aesthetic, values: Innovation, Personalization, Customer Delight, Quality, Community, Convenience, Warmth, Authenticity, Modern Tradition, Consistency, audience: Urban millennials, Young professionals, Office-goers, Students, Tea enthusiasts, Digital-savvy consumers, Health-conscious individuals, People seeking a modern chai caf\u00e9 experience.. Use whitespace, on-brand accent color, modern design cues.",
+    "photography_style": "Photography style for Chaiyos: Modern and Food & Beverage (F&B), Quick Service Restaurants (QSR), Caf\u00e9/Tea Retail feel. Show diversity, authenticity, and lighting that supports brand values: Innovation, Personalization, Customer Delight, Quality, Community, Convenience, Warmth, Authenticity, Modern Tradition, Consistency. Images should resonate with Urban millennials, Young professionals, Office-goers, Students, Tea enthusiasts, Digital-savvy consumers, Health-conscious individuals, People seeking a modern chai caf\u00e9 experience.."
   },
   "brand_narrative": {
-    "brand_story": "In the bustling streets of urban India, where the aroma of chai lingers in the air, there stands a beacon of innovation and tradition, Chaayos. Born out of a passion for reinventing the chai experience, Chaayos is not just a caf\u00e9; it's a modern-day chai destination that caters to the diverse tastes of urban millennials, young professionals, office-goers, students, tea enthusiasts, and health-conscious individuals alike.\n\nAt Chaayos, we believe in the power of a perfect cup of chai to brighten your day, uplift your spirits, and bring people together. Our journey began with a simple mission: to redefine the way people enjoy their favorite brew by infusing it with creativity, authenticity, and a dash of modern flair. \n\nStep into any Chaayos caf\u00e9, and you'll be greeted with the warm embrace of our cozy ambience, where the whirring of the chai kettle blends harmoniously with the chatter of friends catching up over a steaming cup of chai. Our commitment to quality is unwavering, as we meticulously source the finest ingredients to craft a menu that caters to every palate \u2013 from the classic masala chai to exotic blends that push the boundaries of tradition.\n\nBut what truly sets Chaayos apart is our dedication to personalization and customer delight. We understand that no two chai lovers are alike, which is why we offer a unique \"Meri Wali Chai\" experience, allowing you to customize your chai just the way you like it. Whether you prefer it strong and spicy or light and fragrant, we're here to make your chai dreams come true.\n\nIn a fast-paced world where convenience is key, Chaayos stands as a beacon of reliability and consistency. Our digital-savvy approach ensures that ordering your favorite cup of chai is just a few clicks away, whether you're on the go or working from home. And with a commitment to community and warmth, we strive to create a space where strangers",
-    "voice_tone": "The brand voice for Chaayos is friendly, warm, and inviting. It strikes a balance between being modern and traditional, reflecting the values of innovation, personalization, customer delight, quality, community, convenience, authenticity, and consistency. \n\nThe tone is engaging, approachable, and customer-focused, catering to urban millennials, young professionals, office-goers, students, tea enthusiasts, digital-savvy consumers, and health-conscious individuals. It conveys a sense of modernity while also cherishing the traditional aspects of chai culture.\n\nChaayos aims to create a space where customers feel welcomed",
-    "messaging_arch": "**Messaging Architecture for Chaayos:**\n\n**Key Value Propositions:**\n\n1. **Urban millennials & Young professionals:** Experience a modern twist on traditional chai with our innovative menu featuring unique flavors and customizable options to suit your taste preferences.\n\n2. **Office-goers & Students:** Fuel your day with our quick and convenient chai offerings, perfect for a mid-day pick-me-up or study session refreshment.\n\n3. **Tea enthusiasts & Health-conscious individuals:** Savor the goodness of freshly brewed, all-natural teas and herbal infusions, crafted with quality ingredients to elevate your tea-drinking experience.\n\n4. **Digital-savvy consumers:** Embrace our tech-savvy approach to ordering and loyalty rewards program, making it easy and seamless to enjoy your favorite Chaayos beverages anytime, anywhere.\n\n5. **People seeking a modern chai caf\u00e9 experience:** Immerse yourself in a",
+    "brand_story": "In the bustling streets of the city, where the aroma of freshly brewed chai mingles with the sounds of urban life, there lies a sanctuary for the modern chai lover \u2013 Chaiyos. \n\nAt Chaiyos, we are more than just a tea caf\u00e9; we are a destination for urban millennials, young professionals, office-goers, students, and tea enthusiasts seeking a modern twist on a traditional favorite. Our story begins with a passion for innovation and a commitment to delivering a personalized experience that delights our customers every time they walk through our doors.\n\nStep into our world, where quality meets convenience, and warmth greets you at every corner. Our mission is simple yet profound \u2013 to empower our community with the finest chai experience that blends authenticity with modernity. From our carefully curated menu to our warm and inviting ambiance, every detail at Chaiyos is crafted with love and dedication.\n\nWhat sets us apart is our unwavering dedication to consistency and excellence. Each cup of chai is a masterpiece, brewed with precision and care to ensure that every sip is a moment of pure bliss. Our teas are not just beverages; they are a reflection of our commitment to quality and passion for perfection.\n\nBut Chaiyos is more than just a tea caf\u00e9; we are a hub for connection and community. Whether you are catching up with friends, studying for exams, or simply seeking a moment of tranquility in the midst of a busy day, Chaiyos is your home away from home. Our space is designed to foster relationships, spark creativity, and inspire moments of joy and reflection.\n\nAs a brand, we embody the spirit of innovation and modern tradition. We are forward-thinking and creative, always seeking new ways to surprise and delight our customers. Our commitment to customer delight drives everything we do, from our innovative menu offerings to our exceptional service.\n\nSo come, join us at Chaiyos, where tradition meets innovation, and every cup of chai tells a story. Experience the",
+    "voice_tone": "Chaiyos' brand voice is warm, friendly, and inviting, with a touch of modern sophistication. It exudes a sense of innovation and authenticity, appealing to urban millennials, young professionals, office-goers, students, tea enthusiasts, digital-savvy consumers, and health-conscious individuals seeking a modern chai caf\u00e9 experience. The tone is personal and engaging, focusing on customer delight, quality, convenience, and community. Chaiyos aims to create a welcoming environment where tradition meets modernity, ensuring consistency in delivering exceptional chai experiences. The brand communicates with a blend of warmth, approachability",
+    "messaging_arch": "Messaging Architecture for Chaiyos:\n\nKey Value Propositions:\n1. Urban Millennials and Young Professionals: Enjoy a modern twist on traditional chai with our unique flavor combinations and trendy ambiance, perfect for your on-the-go lifestyle.\n   \n2. Office-goers and Students: Fuel your day with our convenient grab-and-go options, from energizing chai lattes to delicious snacks, designed to keep you productive and satisfied.\n\n3. Tea Enthusiasts and Digital-savvy Consumers: Explore our curated selection of premium teas and innovative chai creations, crafted to elevate your tea-drinking experience and impress your taste buds.\n\n4. Health-conscious Individuals: Indulge guilt-free with our range of organic and low-sugar chai options, made with high-quality ingredients that prioritize your well-being without compromising on taste.\n\n5. People Seeking a Modern Chai Caf\u00e9 Experience: Immerse yourself in a chic",
     "marketing_copy": {
-      "website": "Headline: Elevate Your Chai Experience with Chaayos - Where Innovation and Tradition Meet\n\nSubheadline: Indulge in Personalized, Quality Chai Delights in a Warm and Authentic Setting, Perfect for Modern Tea Enthusiasts and Health-conscious Urban Millennials",
-      "email": "Subject: Experience Innovation and Authenticity at Chaayos - Your Modern Chai Caf\u00e9!\n\nPreview text: Indulge in personalized chai blends, quality treats, and a warm community vibe at Chaayos - the perfect spot for urban millennials seeking a modern twist on tradition.",
-      "social_media": "Sip, relax, repeat! \ud83c\udf75\u2728 Elevate your chai game with Chaayos - where innovation meets tradition, and quality meets convenience. Personalize your perfect cup of chai and experience customer delight like never before. Join our community of tea enthusiasts and embrace the modern chai caf\u00e9 experience. Cheers to warmth, authenticity, and consistency at Chaayos! #ChaiGoals #InnovativeTradition #ChaayosDelight \ud83c\udf1f",
-      "ad_copy": "\"Craving a modern chai caf\u00e9 experience? Look no further than Chaayos! Indulge in delicious, customizable chai blends that cater to your taste buds. Whether you're an office-goer, student, or tea enthusiast, Chaayos has something for everyone. Visit us today and elevate your chai game! #ChaayosChai #ModernChaiExperience\""
+      "website": "Headline: Elevating the Chai Experience with Innovation and Authenticity\nSubheadline: Chaiyos - Where Quality Meets Personalization for Modern Tea Enthusiasts and Urban Millennials",
+      "email": "Subject: Discover the Modern Chai Caf\u00e9 Experience at Chaiyos!\n\nPreview: Indulge in innovative chai blends, personalized service, and quality beverages at Chaiyos - the perfect blend of tradition and modernity for urban millennials and tea enthusiasts alike. Experience customer delight, community warmth, and convenience with every sip.",
+      "social_media": "\"Unwind with a modern twist on tradition at Chaiyos! \ud83c\udf75\u2728 Experience the perfect blend of innovation and authenticity in every sip. Our personalized chai creations are sure to delight your taste buds. Join our community of tea enthusiasts and enjoy quality, convenience, and warmth in every cup. Embrace the modern chai caf\u00e9 experience with Chaiyos - where consistency meets customer satisfaction! #Chaiyos #ModernTradition #InnovationInACup\"",
+      "ad_copy": "\"Craving a modern chai experience? Look no further than Chaiyos! Sip on handcrafted chai blends that will tantalize your taste buds. Visit us today and elevate your chai game! #ChaiyosExperience\""
     },
     "collaterals": {
-      "business_card": "Simple, clean business card layout for Chaayos in Food & Beverage (F&B), Quick Service Restaurants (QSR), Caf\u00e9/Tea Retail. Emphasize clarity, logo, and minimal info.",
-      "letterhead": "Letterhead with Chaayos branding, address, and subtle color accent from brand palette.",
-      "email_signature": "Professional email signature for Chaayos with logo, name, title, and key contact details.",
-      "presentation_template": "PPT cover slide and content slide layouts using Chaayos palette and fonts.",
-      "social_templates": "Instagram/Facebook post and story templates reflecting Chaayos's style and values."
+      "business_card": "Simple, clean business card layout for Chaiyos in Food & Beverage (F&B), Quick Service Restaurants (QSR), Caf\u00e9/Tea Retail. Emphasize clarity, logo, and minimal info.",
+      "letterhead": "Letterhead with Chaiyos branding, address, and subtle color accent from brand palette.",
+      "email_signature": "Professional email signature for Chaiyos with logo, name, title, and key contact details.",
+      "presentation_template": "PPT cover slide and content slide layouts using Chaiyos palette and fonts.",
+      "social_templates": "Instagram/Facebook post and story templates reflecting Chaiyos's style and values."
     }
   },
   "collateral_suite": {
     "collateral_files": {
-      "business_card": "output/chaayos/collateral/chaayos_business_card.png",
-      "letterhead": "output/chaayos/collateral/chaayos_letterhead.png",
-      "social_square": "output/chaayos/collateral/chaayos_social_square.png",
-      "social_story": "output/chaayos/collateral/chaayos_social_story.png",
-      "presentation": "output/chaayos/collateral/chaayos_presentation_template.png",
-      "email_signature": "output/chaayos/collateral/chaayos_email_signature.png",
-      "logo_lockups": "output/chaayos/collateral/chaayos_logo_lockups.png"
+      "business_card": "output/chaiyos/collateral/chaiyos_business_card.png",
+      "letterhead": "output/chaiyos/collateral/chaiyos_letterhead.png",
+      "social_square": "output/chaiyos/collateral/chaiyos_social_square.png",
+      "social_story": "output/chaiyos/collateral/chaiyos_social_story.png",
+      "presentation": "output/chaiyos/collateral/chaiyos_presentation_template.png",
+      "email_signature": "output/chaiyos/collateral/chaiyos_email_signature.png",
+      "logo_lockups": "output/chaiyos/collateral/chaiyos_logo_lockups.png"
     },
     "usage_guidelines": {
       "logo_usage": {
@@ -267,78 +267,78 @@
   "visual_system": {
     "enhanced_palette": {
       "base_colors": {
-        "primary": "#DC2626",
-        "secondary": "#059669",
-        "accent": "#2563EB",
+        "primary": "#059669",
+        "secondary": "#F87171",
+        "accent": "#4D7C0F",
         "supporting": [
-          "#E5E7EB",
-          "#9CA3AF"
+          "#F87171",
+          "#065F46"
         ],
         "hex_codes": [
-          "#DC2626",
           "#059669",
-          "#2563EB",
-          "#E5E7EB",
-          "#9CA3AF"
+          "#F87171",
+          "#4D7C0F",
+          "#F87171",
+          "#065F46"
         ]
       },
       "tints": {
         "primary": [
-          "#e35151",
-          "#ea7c7c",
-          "#f1a8a8",
-          "#f8d3d3",
-          "#ffffff"
-        ],
-        "secondary": [
           "#37ab87",
           "#69c0a5",
           "#9bd5c3",
           "#cdeae1",
           "#ffffff"
         ],
+        "secondary": [
+          "#f98d8d",
+          "#faa9a9",
+          "#fcc6c6",
+          "#fde2e2",
+          "#ffffff"
+        ],
         "accent": [
-          "#5082ef",
-          "#7ca1f3",
-          "#a7c0f7",
-          "#d3dffb",
+          "#70963f",
+          "#94b06f",
+          "#b7ca9f",
+          "#dbe4cf",
           "#ffffff"
         ]
       },
       "shades": {
         "primary": [
-          "#b01e1e",
-          "#841616",
-          "#580f0f",
-          "#2b0707",
-          "#000000"
-        ],
-        "secondary": [
           "#047854",
           "#035a3f",
           "#023c2a",
           "#001d14",
           "#000000"
         ],
+        "secondary": [
+          "#c65a5a",
+          "#944343",
+          "#632d2d",
+          "#311616",
+          "#000000"
+        ],
         "accent": [
-          "#1d4fbc",
-          "#163b8d",
-          "#0e275e",
-          "#07132e",
+          "#3d630c",
+          "#2e4a09",
+          "#1e3106",
+          "#0f1802",
           "#000000"
         ]
       },
       "gradients": {
         "primary_to_secondary": [
-          "#DC2626",
-          "#059669"
+          "#059669",
+          "#F87171"
         ],
         "dark_to_primary": [
           "#1a1a1a",
-          "#DC2626"
+          "#059669"
         ],
         "primary_to_light": [
-          "#DC2626",
+          "#059669",
           "#f8f9fa"
         ]
       },
@@ -348,8 +348,8 @@
       "hero": {
         "type": "linear_diagonal",
         "colors": [
-          "#DC2626",
-          "#2563EB"
+          "#059669",
+          "#4D7C0F"
         ],
         "direction": "135deg",
         "opacity": 0.9
@@ -386,25 +386,25 @@
       "geometric_bars": {
         "style": "rectangular",
         "height": "4px",
-        "color": "#2563EB",
+        "color": "#4D7C0F",
         "margin": "2rem 0"
       },
       "gradient_divider": {
         "style": "linear_gradient",
         "height": "2px",
-        "gradient": "linear-gradient(90deg, transparent, #DC2626, transparent)",
+        "gradient": "linear-gradient(90deg, transparent, #059669, transparent)",
         "margin": "3rem 0"
       },
       "brand_shape_divider": {
         "style": "custom_svg",
         "height": "20px",
         "pattern": "brand_derived",
-        "color": "#2563EB"
+        "color": "#4D7C0F"
       },
       "minimal_line": {
         "style": "solid",
         "height": "1px",
-        "color": "#059669",
+        "color": "#F87171",
         "opacity": 0.3,
         "margin": "1.5rem 0"
       }
@@ -413,12 +413,12 @@
       "monogram_circle": {
         "shape": "circle",
         "content": "C",
-        "background": "#DC2626",
+        "background": "#059669",
         "text_color": "#ffffff"
       },
       "geometric_pattern": {
         "shape": "hexagon_grid",
-        "color": "#2563EB",
+        "color": "#4D7C0F",
         "opacity": 0.1,
         "usage": "background_pattern"
       },
@@ -430,11 +430,11 @@
       },
       "decorative_elements": {
         "dots": {
-          "color": "#2563EB",
+          "color": "#4D7C0F",
           "opacity": 0.6
         },
         "lines": {
-          "color": "#059669",
+          "color": "#F87171",
           "opacity": 0.3
         },
         "shapes": {
@@ -449,21 +449,21 @@
           "font_size": "clamp(2.5rem, 5vw, 4rem)",
           "font_weight": "bold",
           "line_height": "1.1",
-          "color": "#DC2626",
+          "color": "#059669",
           "margin_bottom": "1.5rem"
         },
         "h2": {
           "font_size": "clamp(2rem, 4vw, 3rem)",
           "font_weight": "semibold",
           "line_height": "1.2",
-          "color": "#DC2626",
+          "color": "#059669",
           "margin_bottom": "1rem"
         },
         "h3": {
           "font_size": "clamp(1.5rem, 3vw, 2rem)",
           "font_weight": "medium",
           "line_height": "1.3",
-          "color": "#059669",
+          "color": "#F87171",
           "margin_bottom": "0.75rem"
         }
       },
@@ -471,7 +471,7 @@
         "paragraph": {
           "font_size": "1.125rem",
           "line_height": "1.6",
-          "color": "#059669",
+          "color": "#F87171",
           "margin_bottom": "1rem"
         },
         "small_text": {
@@ -483,11 +483,11 @@
       },
       "emphasis": {
         "accent_text": {
-          "color": "#2563EB",
+          "color": "#4D7C0F",
           "font_weight": "semibold"
         },
         "highlight": {
-          "background": "#5082ef",
+          "background": "#70963f",
           "padding": "2px 6px",
           "border_radius": "3px"
         }
@@ -546,62 +546,62 @@
       "wcag_aaa_compliant": false,
       "contrast_ratios": {
         "primary": {
-          "vs_white": 4.829404522659002,
-          "vs_black": 4.34836218450338,
+          "vs_white": 3.7681843718971657,
+          "vs_black": 5.572975716532453,
           "aa_compliant": true,
           "aaa_compliant": false
         },
         "secondary": {
-          "vs_white": 3.7681843718971657,
-          "vs_black": 5.572975716532453,
+          "vs_white": 2.766144779174141,
+          "vs_black": 7.5917935164152,
           "aa_compliant": true,
-          "aaa_compliant": false
+          "aaa_compliant": true
         },
         "accent": {
-          "vs_white": 5.168555560022562,
-          "vs_black": 4.0630307164403066,
+          "vs_white": 4.993443527975628,
+          "vs_black": 4.205514667853573,
           "aa_compliant": true,
           "aaa_compliant": false
         },
         "supporting_0": {
-          "vs_white": 1.238090749353873,
-          "vs_black": 16.96159995619008,
+          "vs_white": 2.766144779174141,
+          "vs_black": 7.5917935164152,
           "aa_compliant": true,
           "aaa_compliant": true
         },
         "supporting_1": {
-          "vs_white": 2.5388412065932826,
-          "vs_black": 8.271490137100235,
+          "vs_white": 7.683677009324036,
+          "vs_black": 2.733066469935786,
           "aa_compliant": true,
           "aaa_compliant": true
         },
         "hex_codes_0": {
-          "vs_white": 4.829404522659002,
-          "vs_black": 4.34836218450338,
-          "aa_compliant": true,
-          "aaa_compliant": false
-        },
-        "hex_codes_1": {
           "vs_white": 3.7681843718971657,
           "vs_black": 5.572975716532453,
           "aa_compliant": true,
           "aaa_compliant": false
         },
+        "hex_codes_1": {
+          "vs_white": 2.766144779174141,
+          "vs_black": 7.5917935164152,
+          "aa_compliant": true,
+          "aaa_compliant": true
+        },
         "hex_codes_2": {
-          "vs_white": 5.168555560022562,
-          "vs_black": 4.0630307164403066,
+          "vs_white": 4.993443527975628,
+          "vs_black": 4.205514667853573,
           "aa_compliant": true,
           "aaa_compliant": false
         },
         "hex_codes_3": {
-          "vs_white": 1.238090749353873,
-          "vs_black": 16.96159995619008,
+          "vs_white": 2.766144779174141,
+          "vs_black": 7.5917935164152,
           "aa_compliant": true,
           "aaa_compliant": true
         },
         "hex_codes_4": {
-          "vs_white": 2.5388412065932826,
-          "vs_black": 8.271490137100235,
+          "vs_white": 7.683677009324036,
+          "vs_black": 2.733066469935786,
           "aa_compliant": true,
           "aaa_compliant": true
         }
@@ -626,10 +626,11 @@
     "licensing_audit": {
       "font_licensing_safe": false,
       "font_issues": [
-        "Font 'h1: inter bold 34px' may require licensing verification",
-        "Font 'h2: inter medium 25px' may require licensing verification",
-        "Font 'body: source sans pro regular 16px' may require licensing verification",
-        "Font 'contemporary, highly legible fonts optimized for digital interfaces' may require licensing verification"
+        "Font 'space grotesk' may require licensing verification",
+        "Font 'h1: space grotesk bold 32px' may require licensing verification",
+        "Font 'h2: space grotesk medium 24px' may require licensing verification",
+        "Font 'body: inter regular 16px' may require licensing verification",
+        "Font 'research-driven modern selection' may require licensing verification"
       ],
       "recommendations": [
         "Consider using Google Fonts for guaranteed free licensing",

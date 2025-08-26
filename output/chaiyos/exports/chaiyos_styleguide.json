@@ -1,31 +1,31 @@
 {
-  "company": "Chaayos",
+  "company": "Chaiyos",
   "version": "1.0",
   "colors": {
-    "primary": "#DC2626",
-    "secondary": "#059669",
-    "accent": "#2563EB",
+    "primary": "#059669",
+    "secondary": "#F87171",
+    "accent": "#4D7C0F",
     "supporting": [
-      "#E5E7EB",
-      "#9CA3AF"
+      "#F87171",
+      "#065F46"
     ],
     "hex_codes": [
-      "#DC2626",
       "#059669",
-      "#2563EB",
-      "#E5E7EB",
-      "#9CA3AF"
+      "#F87171",
+      "#4D7C0F",
+      "#F87171",
+      "#065F46"
     ]
   },
   "typography": {
-    "primary": "Inter",
-    "secondary": "Source Sans Pro",
+    "primary": "Space Grotesk",
+    "secondary": "Inter",
     "hierarchy": [
-      "H1: Inter Bold 34px",
-      "H2: Inter Medium 25px",
-      "Body: Source Sans Pro Regular 16px"
+      "H1: Space Grotesk Bold 32px",
+      "H2: Space Grotesk Medium 24px",
+      "Body: Inter Regular 16px"
     ],
-    "description": "Contemporary, highly legible fonts optimized for digital interfaces"
+    "description": "Research-driven modern selection"
   },
   "spacing": {
     "scale": "1.25",
