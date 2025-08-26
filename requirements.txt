@@ -1,6 +1,5 @@
 crewai
 crewai[tools]
-openai
 openai==1.26.0
 python-pptx
 requests
@@ -10,4 +9,13 @@ fal-client
 python-decouple
 markdown
 markdown2
+duckduckgo-search
+beautifulsoup4
+lxml
+colormath
+webcolors
+svglib
+reportlab
+weasyprint
+colorthief
 

@@ -31,11 +31,25 @@ class LiteratureAgent:
     - Marketing copy templates
     - Collateral (business card, email signature, etc.)
     """
-    def create_literature(self, company_name, industry, values, audience):
-        # 1. Brand Story & Mission
+    def create_literature(self, company_name, industry, values, audience, brand_essence=None):
+        # 1. Brand Story & Mission (enhanced with brand essence)
         print(f"Generating brand story and mission for {company_name}...")
-        brand_story_prompt = get_brand_story_prompt(company_name, industry, values, audience)
-        brand_story = call_openai(brand_story_prompt)
+        if brand_essence and brand_essence.get('brand_positioning'):
+            positioning = brand_essence['brand_positioning']
+            enhanced_prompt = f"""Create a compelling brand story for {company_name} in the {industry} industry.
+            
+Company Context:
+- Target Audience: {audience}
+- Core Values: {values}
+- Brand Promise: {positioning.get('brand_promise', '')}
+- Unique Value Proposition: {positioning.get('unique_value_proposition', '')}
+- Brand Personality: {', '.join(positioning.get('brand_personality', []))}
+
+Create a narrative that weaves these elements into a compelling story that resonates with the target audience."""
+            brand_story = call_openai(enhanced_prompt, max_tokens=400)
+        else:
+            brand_story_prompt = get_brand_story_prompt(company_name, industry, values, audience)
+            brand_story = call_openai(brand_story_prompt)
         
         # 2. Voice and Tone
         print(f"Generating brand voice and tone guidelines for {company_name}...")

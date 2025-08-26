@@ -11,18 +11,26 @@ class IdentityAgent:
     - Brand photography guidelines (prompt or static)
     """
 
-    def create_identity(self, company_name, industry, values, audience, logo_style):
+    def create_identity(self, company_name, industry, values, audience, logo_style, brand_essence=None):
         # 1. Logo variations
         print(f"Generating logo variations for {company_name}...")
         logos = generate_logo_variations(company_name, industry, logo_style)
         
-        # 2. Color palette
+        # 2. Color palette (enhanced with brand essence insights)
         print(f"Generating color palette for {company_name}...")
-        palette = get_color_palette(industry, logo_style)
+        if brand_essence and brand_essence.get('visual_direction'):
+            color_direction = brand_essence['visual_direction'].get('color_direction', [])
+            palette = get_color_palette(industry, logo_style, color_hints=color_direction)
+        else:
+            palette = get_color_palette(industry, logo_style)
         
-        # 3. Typography
+        # 3. Typography (enhanced with brand essence insights)
         print(f"Generating typography for {company_name}...")
-        typography = get_typography(industry, logo_style)
+        if brand_essence and brand_essence.get('visual_direction'):
+            style_hint = brand_essence['visual_direction'].get('recommended_style', logo_style)
+            typography = get_typography(industry, style_hint)
+        else:
+            typography = get_typography(industry, logo_style)
         
         # 4. Visual style / moodboard description
         print(f"Generating visual style guidelines for {company_name}...")

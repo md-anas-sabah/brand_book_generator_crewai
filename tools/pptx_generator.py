@@ -42,7 +42,9 @@ class PPTXGenerator:
                 width,
                 height
             )
-            # Safe hex parsing
+            # Safe hex parsing - handle both strings and lists
+            if isinstance(hexcode, list):
+                hexcode = hexcode[0] if hexcode else "#CCCCCC"
             hexcode_clean = (hexcode or "#CCCCCC").lstrip("#")
             if len(hexcode_clean) == 3:
                 hexcode_clean = ''.join([c*2 for c in hexcode_clean])
@@ -74,6 +76,70 @@ class PPTXGenerator:
         tf.text = f"Primary Font: {typography.get('primary')}\nSecondary Font: {typography.get('secondary')}"
         for p in tf.paragraphs:
             p.font.size = Pt(18)
+
+    def _add_brand_essence_slides(self, prs, brand_essence):
+        """Add slides for brand essence and market analysis"""
+        
+        # Company Profile Slide
+        if brand_essence.get("company_profile"):
+            profile = brand_essence["company_profile"]
+            slide = prs.slides.add_slide(prs.slide_layouts[1])
+            slide.shapes.title.text = "Company Profile"
+            content = f"""
+Company: {profile.get('name', 'N/A')}
+Industry: {profile.get('industry', 'N/A')}
+Target Audience: {profile.get('target_audience', 'N/A')}
+
+Core Values:
+{chr(10).join(['• ' + value for value in profile.get('core_values', [])])}
+            """.strip()
+            slide.placeholders[1].text = content
+        
+        # Market Analysis Slide
+        if brand_essence.get("market_analysis"):
+            analysis = brand_essence["market_analysis"]
+            slide = prs.slides.add_slide(prs.slide_layouts[1])
+            slide.shapes.title.text = "Market Analysis & Insights"
+            
+            content_parts = []
+            
+            if analysis.get("industry_trends"):
+                content_parts.append("Industry Trends:")
+                content_parts.extend(['• ' + trend for trend in analysis["industry_trends"][:5]])
+                content_parts.append("")
+            
+            if analysis.get("competitor_insights", {}).get("notable_competitors"):
+                content_parts.append("Key Competitors:")
+                competitors = analysis["competitor_insights"]["notable_competitors"][:6]
+                content_parts.append(', '.join(competitors))
+                content_parts.append("")
+            
+            if analysis.get("design_trends", {}).get("design_styles"):
+                styles = analysis["design_trends"]["design_styles"][:4]
+                content_parts.append(f"Popular Design Styles: {', '.join(styles)}")
+            
+            slide.placeholders[1].text = '\n'.join(content_parts)
+        
+        # Brand Positioning Slide
+        if brand_essence.get("brand_positioning"):
+            positioning = brand_essence["brand_positioning"]
+            slide = prs.slides.add_slide(prs.slide_layouts[1])
+            slide.shapes.title.text = "Brand Positioning"
+            
+            content = f"""
+Unique Value Proposition:
+{positioning.get('unique_value_proposition', 'N/A')}
+
+Brand Promise:
+{positioning.get('brand_promise', 'N/A')}
+
+Brand Personality:
+{', '.join(positioning.get('brand_personality', []))}
+
+Competitive Advantage:
+{positioning.get('competitive_advantage', 'N/A')}
+            """.strip()
+            slide.placeholders[1].text = content
 
     def _add_visual_style_slide(self, prs, visual_style, photography_style):
         slide = prs.slides.add_slide(prs.slide_layouts[5])
@@ -193,11 +259,15 @@ class PPTXGenerator:
         else:
             self._add_multislide_section(prs, "Brand Collateral Templates", collaterals, max_chars=500)
 
-    def create_pptx(self, company_name, identity_data, literature_data):
+    def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None):
         prs = Presentation()
 
         # Title Slide
         self._add_title_slide(prs, company_name)
+        
+        # Brand Essence & Market Analysis (if available)
+        if brand_essence:
+            self._add_brand_essence_slides(prs, brand_essence)
 
         # Logo Variations
         self._add_logo_slide(prs, identity_data.get("logos", []))
@@ -242,10 +312,12 @@ class PPTXGenerator:
         # Collateral
         self._add_collateral_slide(prs, literature_data.get("collaterals", {}))
 
-        # Save file
-        os.makedirs("output", exist_ok=True)
-        file_name = f"{company_name.lower().replace(' ', '_')}_brand_book.pptx"
-        file_path = os.path.join("output", file_name)
+        # Save file in company-specific folder
+        base_name = company_name.lower().replace(' ', '_')
+        company_output_dir = os.path.join("output", base_name)
+        os.makedirs(company_output_dir, exist_ok=True)
+        file_name = f"{base_name}_brand_book.pptx"
+        file_path = os.path.join(company_output_dir, file_name)
         prs.save(file_path)
         print(f"Brand Book PPTX saved at: {file_path}")
         return file_path
