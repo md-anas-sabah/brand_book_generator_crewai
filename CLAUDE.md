@@ -1,3 +1,6 @@
+### Architecture Documents
+- /Users/anassabah/Downloads/Marqait/brand book_crew/AI_Brand_Book_Creator_Architecture.docx
+- /Users/anassabah/Downloads/Marqait/brand book_crew/Dynamic_Brand_Book_Generator_Architecture_Web_Search.docx
 
 The brand book can be described as your brand’s user manual. It’s a key tool that lets everyone know in detail how to use your brand image, on any support, both online and offline.
 
@@ -159,7 +162,7 @@ Comprehensive design rules are more important now than they ever were. A coheren
 
 As marketing supports and communication channels have become extremely diverse in the digital age, your company needs to promote a consistent brand image across its online platforms and physical representations.
 
-It’s up to you to create a powerful identity and make your voice heard! Brandbook examples to follow, airbnb, netflix, nike football spotify, Urban Outfitters
+It’s up to you to create a powerful identity and and make your voice heard! Brandbook examples to follow, airbnb, netflix, nike football spotify, Urban Outfitters
 Nestlé
 
 This AI agent is a "Brand Book Creator" that automatically generates a comprehensive brand book for a company based on user input. Here's a breakdown of how it works:
@@ -215,3 +218,4 @@ The final output of the agent is a complete brand book, delivered in the followi
 *   **HTML File (`.html`):** A web-friendly version of the brand book that can be easily viewed in a browser.
 
 The brand book itself contains everything a company needs to maintain a consistent brand identity, including logo variations, color palettes, typography, brand story, voice and tone guidelines, and marketing copy examples.
+
