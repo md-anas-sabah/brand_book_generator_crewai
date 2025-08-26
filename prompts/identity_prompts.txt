@@ -1,0 +1,9 @@
+# LOGO
+Write a detailed prompt for an AI image generator to create a logo for a company named {company_name} in the {industry} sector.
+The desired style is: {style}.
+Emphasize values: {values} and appeal to: {audience}.
+Output should be clean, modern, and professional.
+
+# COLOR_PALETTE
+Suggest a brand color palette (3-5 colors, with hex codes) for a {industry} company that is {style}.
+Values to consider: {values}.

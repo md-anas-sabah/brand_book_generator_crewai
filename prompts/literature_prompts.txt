@@ -1,0 +1,6 @@
+# BRAND_STORY
+Write a compelling brand story and mission statement for "{company_name}", a {industry} company.
+Company values: {values}. Target audience: {audience}.
+
+# VOICE_TONE
+Describe the ideal brand voice and tone for "{company_name}" given its values: {values} and target audience: {audience}.

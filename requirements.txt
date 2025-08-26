@@ -1,0 +1,13 @@
+crewai
+crewai[tools]
+openai
+openai==0.28
+python-pptx
+requests
+python-dotenv
+pillow
+fal-client
+python-decouple
+markdown
+markdown2
+
