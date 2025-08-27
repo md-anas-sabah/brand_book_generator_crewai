@@ -22,21 +22,24 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
         
         for i in range(num_variations):
             try:
-                # Create detailed prompt for logo generation
+                # Create detailed prompt for logo generation - ALWAYS enforce PURE black background
                 prompt = (
                     f"Professional logo design for {company_name}, {industry} industry. "
                     f"Style: {style}. Clean, modern, minimalistic design. "
-                    f"Black background, high-resolution, corporate branding, "
-                    f"vector-style illustration, simple and memorable design, logo on black background"
+                    f"MUST HAVE solid pure black background (#000000), flat black background, "
+                    f"NO gradients, NO shadows, NO glow effects, NO texture on background. "
+                    f"Logo on completely flat solid black background only. "
+                    f"Simple logo design with pure black background, high-resolution, corporate branding."
                 )
                 
-                # Submit request to Ideogram V2A (matching first code pattern)
+                # Submit request to Ideogram V2A - enforce black background
                 result = fal.run(
                     "fal-ai/ideogram/v2a",
                     arguments={
                         "prompt": prompt,
                         "aspect_ratio": "1:1",  # Square format for logos
-                        "style": "auto"
+                        "style": "auto",
+                        "negative_prompt": "white background, colored background, transparent background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting"
                     }
                 )
                 
@@ -136,8 +139,10 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                 prompt = (
                     f"Professional logo design for {company_name}, {industry} industry. "
                     f"Style: {style}. Clean, modern, minimalistic design. "
-                    f"Black background, high-resolution, corporate branding, "
-                    f"vector-style illustration, simple and memorable design, logo on black background"
+                    f"MUST HAVE solid pure black background (#000000), flat black background, "
+                    f"NO gradients, NO shadows, NO glow effects, NO texture on background. "
+                    f"Logo on completely flat solid black background only. "
+                    f"Simple logo design with pure black background, high-resolution, corporate branding."
                 )
                 
                 result = fal.run(
@@ -145,7 +150,8 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                     arguments={
                         "prompt": prompt,
                         "aspect_ratio": "1:1",
-                        "style": "auto"
+                        "style": "auto",
+                        "negative_prompt": "white background, colored background, transparent background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting"
                     }
                 )
                 

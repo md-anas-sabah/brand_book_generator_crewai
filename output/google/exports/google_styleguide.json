@@ -1,31 +1,31 @@
 {
-  "company": "Nike",
+  "company": "Google",
   "version": "1.0",
   "colors": {
-    "primary": "#F59E0B",
-    "secondary": "#1E40AF",
-    "accent": "#374151",
+    "primary": "#DC2626",
+    "secondary": "#34D399",
+    "accent": "#2563EB",
     "supporting": [
-      "#D97706",
-      "#1E40AF"
+      "#0EA5E9",
+      "#BE185D"
     ],
     "hex_codes": [
-      "#F59E0B",
-      "#1E40AF",
-      "#374151",
-      "#D97706",
-      "#1E40AF"
+      "#DC2626",
+      "#34D399",
+      "#2563EB",
+      "#0EA5E9",
+      "#BE185D"
     ]
   },
   "typography": {
-    "primary": "Archivo",
-    "secondary": "Work Sans",
+    "primary": "Space Grotesk",
+    "secondary": "Inter",
     "hierarchy": [
-      "H1: Archivo Bold 32px",
-      "H2: Archivo Medium 24px",
-      "Body: Work Sans Regular 16px"
+      "H1: Space Grotesk Bold 32px",
+      "H2: Space Grotesk Medium 24px",
+      "Body: Inter Regular 16px"
     ],
-    "description": "Research-driven bold selection"
+    "description": "Research-driven modern selection"
   },
   "spacing": {
     "scale": "1.25",

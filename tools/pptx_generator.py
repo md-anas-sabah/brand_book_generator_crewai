@@ -6,49 +6,110 @@ from pptx.enum.dml import MSO_THEME_COLOR
 from pptx.enum.text import MSO_AUTO_SIZE
 import os
 import re
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from agents.font_research_agent import FontResearchAgent
 
 class PPTXGenerator:
     """
     Assembles brand assets and literature into a PowerPoint brand book.
+    Now with intelligent font research integration.
     """
+    
+    def __init__(self):
+        self.font_research_agent = FontResearchAgent()
+        self.researched_fonts = None
+    
+    def _get_primary_font(self):
+        """Get researched primary font or fallback"""
+        return self.researched_fonts['primary_font'] if self.researched_fonts else "Inter"
+    
+    def _get_secondary_font(self):
+        """Get researched secondary font or fallback"""
+        return self.researched_fonts['secondary_font'] if self.researched_fonts else "Source Sans Pro"
+    
+    def _apply_font_to_paragraph(self, paragraph, font_type="primary", size=16, bold=False):
+        """Apply researched font to any paragraph"""
+        font_name = self._get_primary_font() if font_type == "primary" else self._get_secondary_font()
+        paragraph.font.name = font_name
+        paragraph.font.size = Pt(size)
+        paragraph.font.bold = bold
+    
+    def _apply_font_to_textbox(self, textbox, font_type="primary", size=16, bold=False):
+        """Apply researched font to all paragraphs in a textbox"""
+        for paragraph in textbox.text_frame.paragraphs:
+            self._apply_font_to_paragraph(paragraph, font_type, size, bold)
+    
+    def _style_title_text(self, paragraph, size=28, color_rgb=None):
+        """Apply consistent title styling with researched font"""
+        paragraph.font.name = self._get_primary_font()
+        paragraph.font.size = Pt(size)
+        paragraph.font.bold = True
+        if color_rgb:
+            paragraph.font.color.rgb = RGBColor(*color_rgb)
+    
+    def _style_content_text(self, paragraph, size=16, color_rgb=None):
+        """Apply consistent content styling with researched font"""
+        paragraph.font.name = self._get_secondary_font()
+        paragraph.font.size = Pt(size)
+        if color_rgb:
+            paragraph.font.color.rgb = RGBColor(*color_rgb)
 
     def _add_title_slide(self, prs, company_name, identity_data=None, brand_essence=None):
         # Use blank layout for complete creative control
         slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
         
-        # Get brand colors
+        # Add clean black background for modern minimalistic design
+        self._add_black_background(slide)
+        
+        # Get brand colors for text
         palette = identity_data.get("palette", {}) if identity_data else {}
-        primary_color = self._get_brand_color(palette, "primary", "#2E86AB")
-        accent_color = self._get_brand_color(palette, "accent", "#A23B72") 
-        secondary_color = self._get_brand_color(palette, "secondary", "#F18F01")
+        text_color = self._get_text_color_for_black_bg(palette)
+        text_rgb = self._hex_to_rgb(text_color)
         
-        # Create gradient background
-        self._create_gradient_background(slide, primary_color, accent_color)
+        # Company name - centered, large and bold (modern minimalistic style)
+        company_name_textbox = slide.shapes.add_textbox(Inches(1), Inches(2.5), Inches(8), Inches(1.5))
+        company_name_frame = company_name_textbox.text_frame
+        company_name_frame.text = company_name
+        self._style_title_text(company_name_frame.paragraphs[0], size=56, color_rgb=text_rgb)
+        company_name_frame.paragraphs[0].alignment = 1  # Center alignment
         
-        # Add geometric design elements
-        self._add_geometric_elements(slide, accent_color, secondary_color)
+        # Subtitle with modern styling - centered below company name
+        subtitle_textbox = slide.shapes.add_textbox(Inches(1), Inches(4.2), Inches(8), Inches(0.8))
+        subtitle_frame = subtitle_textbox.text_frame
+        subtitle_frame.text = "Brand Book"
+        self._style_content_text(subtitle_frame.paragraphs[0], size=24, color_rgb=text_rgb)
+        subtitle_frame.paragraphs[0].alignment = 1  # Center alignment
         
-        # Company name - large and bold
-        self._add_hero_text(slide, company_name, primary="#FFFFFF", size=48, 
-                           top=Inches(2), left=Inches(1), width=Inches(8))
+        # Add company logo if available - centered above company name
+        self._add_title_logo(slide, identity_data)
+    
+    def _add_title_logo(self, slide, identity_data):
+        """Add company logo to title slide in minimalistic style"""
+        if not identity_data or not identity_data.get("logos"):
+            return
+            
+        logos = identity_data["logos"]
+        logo_path = None
         
-        # Subtitle with modern styling
-        self._add_hero_text(slide, "Brand Book", primary="#FFFFFF", size=28, 
-                           top=Inches(3), left=Inches(1), width=Inches(8), opacity=0.9)
+        # Find the first existing logo
+        for logo in logos:
+            if isinstance(logo, str) and os.path.exists(logo):
+                logo_path = logo
+                break
         
-        # Get brand keywords from brand essence
-        brand_keywords = self._extract_brand_keywords(brand_essence, identity_data)
-        
-        # Add brand keywords with stylish layout
-        self._add_brand_keywords(slide, brand_keywords, accent_color)
-        
-        # Add company logo if available
-        self._add_hero_logo(slide, identity_data)
-        
-        # Add decorative bottom element
-        self._add_bottom_decoration(slide, secondary_color)
+        if logo_path:
+            try:
+                # Add logo centered above company name
+                slide.shapes.add_picture(
+                    logo_path, 
+                    Inches(4), Inches(1),  # Centered horizontally, top area
+                    width=Inches(2), height=Inches(1.2)
+                )
+            except Exception as e:
+                print(f"Could not add logo to title slide: {e}")
 
-    def _add_index_slide(self, prs, sections, identity_data=None):
+    def _add_index_slide(self, prs, sections, identity_data=None, company_name=""):
         slide = prs.slides.add_slide(prs.slide_layouts[6])  # Use blank layout
         
         # Add black background
@@ -59,55 +120,70 @@ class PPTXGenerator:
         text_color = self._get_text_color_for_black_bg(palette)
         text_rgb = self._hex_to_rgb(text_color)
         
-        # Add title textbox since we're using blank layout
+        # Add "Table of Contents" title
         title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
         title_frame = title_textbox.text_frame
         title_frame.text = "Table of Contents"
-        title_frame.paragraphs[0].font.size = Pt(32)
-        title_frame.paragraphs[0].font.bold = True
-        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
+        self._style_title_text(title_frame.paragraphs[0], size=32, color_rgb=text_rgb)
+        title_frame.paragraphs[0].alignment = 1  # Center alignment
         
-        # Create index content with pagination (50 words per slide)
+        # Create table of contents list (excluding "Table of Contents" from the list)
         content_lines = []
-        for i, section in enumerate(sections, 1):
+        for i, section in enumerate(sections[1:], 1):  # Skip first item which is "Table of Contents"
             content_lines.append(f"{i}. {section}")
         
-        # Split content if too many sections (more than 8 sections = new slide)
-        if len(content_lines) <= 8:
-            # Single slide
-            content_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(5))
-            content_frame = content_textbox.text_frame
-            content_frame.text = "\n".join(content_lines)
-            content_frame.word_wrap = True
-            # Apply brand color text
-            self._apply_text_color_to_textbox(content_textbox, text_color)
-            for paragraph in content_frame.paragraphs:
-                paragraph.font.size = Pt(16)
-        else:
-            # Multiple slides - split into chunks of 8
-            for chunk_idx, start_idx in enumerate(range(0, len(content_lines), 8)):
-                if chunk_idx > 0:
-                    # Create new slide for continuation
-                    slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
-                    self._add_black_background(slide)
-                    
-                    # Add title textbox
-                    title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
-                    title_frame = title_textbox.text_frame
-                    title_frame.text = f"Table of Contents ({chunk_idx + 1})"
-                    title_frame.paragraphs[0].font.size = Pt(32)
-                    title_frame.paragraphs[0].font.bold = True
-                    title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
-                
-                chunk_lines = content_lines[start_idx:start_idx + 8]
-                content_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(5))
-                content_frame = content_textbox.text_frame
-                content_frame.text = "\n".join(chunk_lines)
-                content_frame.word_wrap = True
-                # Apply brand color text
-                self._apply_text_color_to_textbox(content_textbox, text_color)
-                for paragraph in content_frame.paragraphs:
-                    paragraph.font.size = Pt(16)
+        # Add content list
+        content_textbox = slide.shapes.add_textbox(Inches(1.5), Inches(2), Inches(7), Inches(4.5))
+        content_frame = content_textbox.text_frame
+        content_frame.text = "\n".join(content_lines)
+        content_frame.word_wrap = True
+        
+        # Style the content
+        for paragraph in content_frame.paragraphs:
+            self._style_content_text(paragraph, size=16, color_rgb=text_rgb)
+    
+    def _add_simple_index_slide(self, prs, identity_data=None, company_name=""):
+        """Add the simple index slide with just company name and logo as requested"""
+        slide = prs.slides.add_slide(prs.slide_layouts[6])  # Use blank layout
+        
+        # Add black background
+        self._add_black_background(slide)
+        
+        # Get text color for black background (brand primary color)
+        palette = identity_data.get("palette", {}) if identity_data else {}
+        text_color = self._get_text_color_for_black_bg(palette)
+        text_rgb = self._hex_to_rgb(text_color)
+        
+        # Add company name centered at top
+        company_name_textbox = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(1.5))
+        company_name_frame = company_name_textbox.text_frame
+        company_name_frame.text = company_name
+        company_name_frame.paragraphs[0].font.size = Pt(48)
+        company_name_frame.paragraphs[0].font.bold = True
+        company_name_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
+        company_name_frame.paragraphs[0].alignment = 1  # Center alignment
+        
+        # Add company logo if available - centered below company name
+        if identity_data and identity_data.get("logos"):
+            logos = identity_data["logos"]
+            logo_path = None
+            
+            # Find the first existing logo
+            for logo in logos:
+                if isinstance(logo, str) and os.path.exists(logo):
+                    logo_path = logo
+                    break
+            
+            if logo_path:
+                try:
+                    # Add logo centered below company name
+                    slide.shapes.add_picture(
+                        logo_path, 
+                        Inches(4), Inches(4),  # Centered horizontally
+                        width=Inches(2)
+                    )
+                except Exception as e:
+                    print(f"Could not add logo to index slide: {e}")
 
     def _get_brand_color(self, palette, color_name, default):
         """Extract color from palette safely"""
@@ -298,7 +374,7 @@ class PPTXGenerator:
         
         # Style the paragraph
         paragraph = text_frame.paragraphs[0]
-        paragraph.font.name = "Montserrat"
+        paragraph.font.name = self._get_primary_font()
         paragraph.font.size = Pt(size)
         paragraph.font.bold = True
         paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(primary))
@@ -360,7 +436,7 @@ class PPTXGenerator:
             
             # Style the text
             paragraph = text_frame.paragraphs[0]
-            paragraph.font.name = "Montserrat"
+            paragraph.font.name = self._get_primary_font()
             paragraph.font.size = Pt(14)
             paragraph.font.bold = True
             paragraph.font.color.rgb = RGBColor(255, 255, 255)
@@ -433,9 +509,7 @@ class PPTXGenerator:
         title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
         title_frame = title_textbox.text_frame
         title_frame.text = f"Logo Variations ({len(logos)} designs)"
-        title_frame.paragraphs[0].font.size = Pt(28)
-        title_frame.paragraphs[0].font.bold = True
-        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
+        self._style_title_text(title_frame.paragraphs[0], size=28, color_rgb=text_rgb)
         
         left = Inches(1)
         top = Inches(2.5)
@@ -483,9 +557,7 @@ class PPTXGenerator:
         title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
         title_frame = title_textbox.text_frame
         title_frame.text = "Color Palette"
-        title_frame.paragraphs[0].font.size = Pt(28)
-        title_frame.paragraphs[0].font.bold = True
-        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
+        self._style_title_text(title_frame.paragraphs[0], size=28, color_rgb=text_rgb)
         
         left = Inches(1)
         top = Inches(1.5)
@@ -536,9 +608,7 @@ class PPTXGenerator:
         title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
         title_frame = title_textbox.text_frame
         title_frame.text = "Typography"
-        title_frame.paragraphs[0].font.size = Pt(28)
-        title_frame.paragraphs[0].font.bold = True
-        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
+        self._style_title_text(title_frame.paragraphs[0], size=28, color_rgb=text_rgb)
         
         left = Inches(1)
         top = Inches(1.5)
@@ -547,10 +617,12 @@ class PPTXGenerator:
         textbox = slide.shapes.add_textbox(left, top, width, height)
         tf = textbox.text_frame
         tf.word_wrap = True
-        tf.text = f"Primary Font: {typography.get('primary')}\nSecondary Font: {typography.get('secondary')}"
+        # Show the researched fonts instead of the original typography data
+        primary_font = self._get_primary_font()
+        secondary_font = self._get_secondary_font()
+        tf.text = f"Primary Font: {primary_font}\nSecondary Font: {secondary_font}"
         for p in tf.paragraphs:
-            p.font.size = Pt(18)
-            p.font.color.rgb = RGBColor(*text_rgb)
+            self._style_content_text(p, size=18, color_rgb=text_rgb)
 
     def _add_brand_essence_slides(self, prs, brand_essence, identity_data=None):
         """Add slides for brand essence and market analysis"""
@@ -688,9 +760,7 @@ Competitive Advantage:
         title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
         title_frame = title_textbox.text_frame
         title_frame.text = "Visual & Photography Guidelines"
-        title_frame.paragraphs[0].font.size = Pt(28)
-        title_frame.paragraphs[0].font.bold = True
-        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
+        self._style_title_text(title_frame.paragraphs[0], size=28, color_rgb=text_rgb)
         
         left = Inches(1)
         top = Inches(1.5)
@@ -701,8 +771,7 @@ Competitive Advantage:
         tf.word_wrap = True
         tf.text = f"Visual Style:\n{visual_style}\n\nPhotography Style:\n{photography_style}"
         for p in tf.paragraphs:
-            p.font.size = Pt(16)
-            p.font.color.rgb = RGBColor(*text_rgb)
+            self._style_content_text(p, size=16, color_rgb=text_rgb)
 
     def _add_story_and_mission(self, prs, story, identity_data=None):
         # Attempt to split Brand Story, Mission, Values if text is present
@@ -731,9 +800,7 @@ Competitive Advantage:
         title_textbox = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
         title_frame = title_textbox.text_frame
         title_frame.text = title
-        title_frame.paragraphs[0].font.size = Pt(28)
-        title_frame.paragraphs[0].font.bold = True
-        title_frame.paragraphs[0].font.color.rgb = RGBColor(*text_rgb)
+        self._style_title_text(title_frame.paragraphs[0], size=28, color_rgb=text_rgb)
         
         left, top, width, height = Inches(1), Inches(1.5), Inches(7), Inches(3)
         textbox = slide.shapes.add_textbox(left, top, width, height)
@@ -745,7 +812,7 @@ Competitive Advantage:
                 p = tf.add_paragraph()
                 p.text = item.strip()
                 p.level = 0
-                p.font.size = Pt(18)
+                self._style_content_text(p, size=18)
             # Apply contrasting text color to all content AGGRESSIVELY
             self._apply_text_color_to_textbox(textbox, text_color)
             text_rgb = self._hex_to_rgb(text_color)
@@ -773,7 +840,7 @@ Competitive Advantage:
                 p = tf.add_paragraph()
                 p.text = item.strip()
                 p.level = 0
-                p.font.size = Pt(18)
+                self._style_content_text(p, size=18)
             # Apply contrasting text color to all content AGGRESSIVELY
             self._apply_text_color_to_textbox(textbox, text_color)
             text_rgb = self._hex_to_rgb(text_color)
@@ -813,9 +880,8 @@ Competitive Advantage:
             self._apply_text_color_to_textbox(textbox, text_color)
             text_rgb = self._hex_to_rgb(text_color)
             for p in tf.paragraphs:
-                p.font.size = Pt(18 if len(chunk) < 300 else 16)
-                # Force color at paragraph level
-                p.font.color.rgb = RGBColor(*text_rgb)
+                size = 18 if len(chunk) < 300 else 16
+                self._style_content_text(p, size=size, color_rgb=text_rgb)
                 # Force color at run level
                 for run in p.runs:
                     run.font.color.rgb = RGBColor(*text_rgb)
@@ -852,6 +918,12 @@ Competitive Advantage:
 
     def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None):
         prs = Presentation()
+        
+        # Research optimal fonts for this company
+        print(f"🎨 Researching fonts for {company_name}...")
+        industry = brand_essence.get("company_profile", {}).get("industry", "technology") if brand_essence else "technology"
+        self.researched_fonts = self.font_research_agent.research_fonts(company_name, industry, brand_essence)
+        print(f"✅ Selected fonts: {self.researched_fonts['primary_font']} (primary), {self.researched_fonts['secondary_font']} (secondary)")
 
         # Title Slide with modern design
         self._add_title_slide(prs, company_name, identity_data, brand_essence)
@@ -881,7 +953,7 @@ Competitive Advantage:
         ])
         
         # Add Table of Contents slide
-        self._add_index_slide(prs, sections, identity_data)
+        self._add_index_slide(prs, sections, identity_data, company_name)
         
         # Brand Essence & Market Analysis (if available)
         if brand_essence:
