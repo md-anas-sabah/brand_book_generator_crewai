@@ -1,6 +1,7 @@
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.shapes import MSO_CONNECTOR
 from pptx.dml.color import RGBColor
 from pptx.enum.dml import MSO_THEME_COLOR
 from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
@@ -47,18 +48,40 @@ class TextStyler:
         self.text_color = text_color
     
     def apply_title_style(self, paragraph, color=None, size=32):
-        """Large, bold titles using primary font"""
+        """Large, bold titles using primary font with color support"""
         paragraph.font.name = self.primary_font
         paragraph.font.size = Pt(size)
         paragraph.font.bold = True
-        paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(color or self.text_color))
+        
+        if color == 'white':
+            paragraph.font.color.rgb = RGBColor(255, 255, 255)
+        elif color == 'black':
+            paragraph.font.color.rgb = RGBColor(0, 0, 0)
+        elif isinstance(color, str) and color.startswith('#'):
+            # Handle hex colors
+            hex_color = color.lstrip('#')
+            r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            paragraph.font.color.rgb = RGBColor(r, g, b)
+        else:
+            paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(color or self.text_color))
     
     def apply_subtitle_style(self, paragraph, color=None, size=24):
-        """Medium subtitles using secondary font"""
+        """Medium subtitles using secondary font with color support"""
         paragraph.font.name = self.secondary_font
         paragraph.font.size = Pt(size)
         paragraph.font.bold = False
-        paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(color or self.text_color))
+        
+        if color == 'white':
+            paragraph.font.color.rgb = RGBColor(255, 255, 255)
+        elif color == 'black':
+            paragraph.font.color.rgb = RGBColor(0, 0, 0)
+        elif isinstance(color, str) and color.startswith('#'):
+            # Handle hex colors
+            hex_color = color.lstrip('#')
+            r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            paragraph.font.color.rgb = RGBColor(r, g, b)
+        else:
+            paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(color or self.text_color))
     
     def apply_body_style(self, paragraph, color=None, size=16):
         """Body text using secondary font"""
@@ -149,16 +172,21 @@ class EnhancedPPTXGenerator:
         except:
             return (255, 255, 255)
     
-    def _add_slide_background(self, slide, gradient=False, identity_data=None):
-        """Add consistent slide background"""
-        bg_shape = slide.shapes.add_shape(
-            MSO_SHAPE.RECTANGLE,
-            0, 0, 
-            Inches(10), Inches(7.5)
-        )
-        
-        if gradient and identity_data and identity_data.get("palette"):
+    def _add_slide_background(self, slide, gradient=False, identity_data=None, bg_color=None):
+        """Add background to slide with optional pitch black background"""
+        if bg_color == 'pitch_black' or bg_color == 'black':
+            # Set solid pitch black background
+            background = slide.background
+            fill = background.fill
+            fill.solid()
+            fill.fore_color.rgb = RGBColor(0, 0, 0)  # Pure pitch black
+        elif gradient and identity_data and identity_data.get("palette"):
             # Create gradient background
+            bg_shape = slide.shapes.add_shape(
+                MSO_SHAPE.RECTANGLE,
+                0, 0, 
+                Inches(10), Inches(7.5)
+            )
             palette = identity_data["palette"]
             primary = self._get_brand_color(palette, "primary", "#1a1a1a")
             secondary = self._get_brand_color(palette, "secondary", "#2d2d2d")
@@ -169,16 +197,25 @@ class EnhancedPPTXGenerator:
             gradient = fill.gradient_stops
             gradient[0].color.rgb = RGBColor(*self._hex_to_rgb(primary))
             gradient[1].color.rgb = RGBColor(*self._hex_to_rgb(secondary))
+            bg_shape.line.fill.background()
+            
+            # Move to back
+            bg_shape.element.getparent().remove(bg_shape.element)
+            slide.shapes._spTree.insert(1, bg_shape.element)
         else:
             # Solid dark background
+            bg_shape = slide.shapes.add_shape(
+                MSO_SHAPE.RECTANGLE,
+                0, 0, 
+                Inches(10), Inches(7.5)
+            )
             bg_shape.fill.solid()
             bg_shape.fill.fore_color.rgb = RGBColor(26, 26, 26)
-        
-        bg_shape.line.fill.background()
-        
-        # Move to back
-        bg_shape.element.getparent().remove(bg_shape.element)
-        slide.shapes._spTree.insert(1, bg_shape.element)
+            bg_shape.line.fill.background()
+            
+            # Move to back
+            bg_shape.element.getparent().remove(bg_shape.element)
+            slide.shapes._spTree.insert(1, bg_shape.element)
     
     def _add_footer(self, slide, slide_number):
         """Add consistent footer with company name and slide number"""
@@ -201,8 +238,8 @@ class EnhancedPPTXGenerator:
         self.styler.apply_caption_style(number_frame.paragraphs[0], size=10)
         number_frame.paragraphs[0].alignment = PP_ALIGN.RIGHT
     
-    def _add_logo_to_slide(self, slide, identity_data, col=10, row=0, size=1):
-        """Add company logo at specified grid position"""
+    def _add_logo_to_slide(self, slide, identity_data, col=10, row=0, size=1, opacity=1.0):
+        """Add company logo at specified grid position with optional opacity"""
         if not identity_data or not identity_data.get("logos"):
             return
         
@@ -217,18 +254,32 @@ class EnhancedPPTXGenerator:
         if logo_path:
             try:
                 left, top, width, height = self.grid.get_position(col, row, size, size)
-                slide.shapes.add_picture(logo_path, left, top, width=width, height=height)
+                logo = slide.shapes.add_picture(logo_path, left, top, width=width, height=height)
+                
+                # Set logo opacity if specified
+                if opacity < 1.0:
+                    try:
+                        # Access the picture's transparency property
+                        logo.element.get_or_add_alpha().val = int(opacity * 100000)  # Alpha in EMU units
+                    except Exception as opacity_error:
+                        print(f"Could not set logo opacity: {opacity_error}")
+                        
             except Exception as e:
                 print(f"Could not add logo: {e}")
     
-    def _add_geometric_accent(self, slide, identity_data):
-        """Add subtle geometric accent shape"""
+    def _add_geometric_accent(self, slide, identity_data, dark_theme=False):
+        """Add subtle geometric accent shape with dark theme support"""
         if not identity_data or not identity_data.get("palette"):
             return
         
         palette = identity_data["palette"]
-        accent_color = self._get_brand_color(palette, "accent", 
-                                           self._get_brand_color(palette, "secondary", "#4A90E2"))
+        
+        if dark_theme:
+            # Use lighter colors for dark background
+            accent_color = self._get_brand_color(palette, "accent", "#FFFFFF")
+        else:
+            accent_color = self._get_brand_color(palette, "accent", 
+                                               self._get_brand_color(palette, "secondary", "#4A90E2"))
         
         # Add accent circle
         left, top, width, height = self.grid.get_position(9, 1, 2, 2)
@@ -239,36 +290,55 @@ class EnhancedPPTXGenerator:
         circle.line.fill.background()
     
     def _create_title_slide(self, prs, company_name, identity_data, brand_essence):
-        """Create professional title slide"""
+        """Create professional title slide with black background and enhanced layout"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=True, identity_data=identity_data)
         
-        # Add logo
-        self._add_logo_to_slide(slide, identity_data, col=1, row=1, size=2)
+        # Pitch black background instead of gradient
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # Company name - large and centered
-        left, top, width, height = self.grid.get_position(2, 3, 8, 2)
+        # LEFT SIDE: Logo centered in left half
+        self._add_logo_to_slide(slide, identity_data, col=1, row=2, size=3, opacity=0.8)
+        
+        # LEFT SIDE: Company name below logo, centered
+        left, top, width, height = self.grid.get_position(1, 5, 4, 1)
         company_textbox = slide.shapes.add_textbox(left, top, width, height)
         company_frame = company_textbox.text_frame
         company_frame.text = company_name
         company_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-        self.styler.apply_title_style(company_frame.paragraphs[0], size=48)
+        self.styler.apply_title_style(company_frame.paragraphs[0], size=36, color='white')
         company_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         
-        # Subtitle
-        left, top, width, height = self.grid.get_position(3, 5, 6, 1)
-        subtitle_textbox = slide.shapes.add_textbox(left, top, width, height)
-        subtitle_frame = subtitle_textbox.text_frame
-        subtitle_frame.text = "Brand Book"
-        self.styler.apply_subtitle_style(subtitle_frame.paragraphs[0], size=24)
-        subtitle_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        # Get dynamic primary color from brand palette
+        primary_color = "#FFFFFF"  # Default white
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
         
-        # Add geometric accent
-        self._add_geometric_accent(slide, identity_data)
+        # RIGHT SIDE: Dynamic colored line above "Brand Identity System"
+        line_left, line_top, line_width, line_height = self.grid.get_position(9, 7, 3, 2)
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT, 
+            line_left, line_top, 
+            line_left + line_width, line_top
+        )
+        # Set line color to brand primary color
+        line_rgb = self._hex_to_rgb(primary_color)
+        line_shape.line.color.rgb = RGBColor(*line_rgb)
+        line_shape.line.width = Pt(0)
         
-        # Add footer
-        self._add_footer(slide, self.slide_counter)
+        # RIGHT SIDE: "Brand Identity System" text centered below line
+        left, top, width, height = self.grid.get_position(9, 7, 3, 2)
+        brand_system_textbox = slide.shapes.add_textbox(left, top, width, height)
+        brand_system_frame = brand_system_textbox.text_frame
+        brand_system_frame.text = "Brand Identity System"
+        brand_system_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
+        self.styler.apply_subtitle_style(brand_system_frame.paragraphs[0], size=18, color='white')
+        brand_system_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        brand_system_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+        
+
+
     
     def _create_table_of_contents(self, prs, sections, identity_data):
         """Create auto-generated table of contents with two-column layout if needed"""
