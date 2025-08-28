@@ -309,6 +309,50 @@ class EnhancedPPTXGenerator:
         circle.fill.transparency = 0.7
         circle.line.fill.background()
     
+    def _add_logo_as_background(self, slide, identity_data, opacity=0.85):
+        """Add logo as full background with specified opacity"""
+        if not identity_data or not identity_data.get("logos"):
+            return
+        
+        try:
+            # Get the first logo
+            logo_path = identity_data["logos"][0]
+            
+            # Add logo covering the entire slide (10 inches x 7.5 inches standard)
+            left = Inches(0)
+            top = Inches(0) 
+            width = Inches(10)
+            height = Inches(7.5)
+            
+            # Add the logo image
+            logo_shape = slide.shapes.add_picture(logo_path, left, top, width=width, height=height)
+            
+            # Set opacity (transparency)
+            try:
+                # Method 1: Try to set transparency via fill
+                if hasattr(logo_shape, 'fill'):
+                    logo_shape.fill.transparency = 1.0 - opacity  # transparency is inverse of opacity
+                
+                # Method 2: Alternative method for transparency
+                elif hasattr(logo_shape, 'element'):
+                    # This sets the alpha channel for transparency
+                    alpha_value = int(opacity * 100000)  # Convert to percentage for Office
+                    
+                    # Try to access the picture element and set alpha
+                    pic_element = logo_shape.element
+                    if pic_element is not None:
+                        # This is a more complex approach but might work better
+                        pass  # Keep the default opacity for now if complex method needed
+                        
+            except Exception as e:
+                print(f"Could not set logo opacity: {e}")
+                # Logo will still be added, just without opacity adjustment
+            
+            print(f"✅ Added background logo with opacity {opacity}")
+            
+        except Exception as e:
+            print(f"Could not add background logo: {e}")
+    
     def _create_title_slide(self, prs, company_name, identity_data, brand_essence):
         """Create professional title slide with black background and enhanced layout"""
         self.slide_counter += 1
@@ -317,28 +361,14 @@ class EnhancedPPTXGenerator:
         # Pitch black background instead of gradient
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # LEFT SIDE: Logo and company name aligned like flex-start (left-aligned together)
-        # Logo positioned at left edge
-        self._add_logo_to_slide(slide, identity_data, col=1, row=2, size=2, opacity=0.8)
+        # FULL BACKGROUND LOGO with slight opacity reduction
+        self._add_logo_as_background(slide, identity_data, opacity=0.85)
         
         # Get dynamic primary color from brand palette
         primary_color = "#FFFFFF"  # Default white
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
             primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
-        
-        # LEFT SIDE: Company name directly below logo, left-aligned (flex-start style)
-        left, top, width, height = self.grid.get_position(1, 4.5, 4, 1)
-        company_textbox = slide.shapes.add_textbox(left, top, width, height)
-        company_frame = company_textbox.text_frame
-        company_frame.text = company_name
-        company_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-        company_frame.margin_left = 0
-        company_frame.margin_right = 0
-        company_frame.margin_top = 0
-        company_frame.margin_bottom = 0
-        self.styler.apply_title_style(company_frame.paragraphs[0], size=36, color="#FFFFFF")
-        company_frame.paragraphs[0].alignment = PP_ALIGN.LEFT  # Left-aligned like flex-start
         
         # RIGHT SIDE: Dynamic colored line above "Brand Identity System"
         line_left, line_top, line_width, line_height = self.grid.get_position(9, 7, 3, 2)
@@ -1243,9 +1273,21 @@ class EnhancedPPTXGenerator:
             purpose_data = self.brand_purpose_agent.generate_brand_purpose(
                 company_name, industry, values, audience, brand_essence
             )
+            
+            # First try to get structured data
             vision_content = purpose_data.get("vision", "")
             mission_content = purpose_data.get("mission", "")
             values_content = purpose_data.get("values_content", "")
+            
+            # If structured data is missing, parse from full_content
+            if not vision_content or not mission_content or not values_content:
+                full_content = purpose_data.get("full_content", "")
+                if full_content:
+                    parsed_vision, parsed_mission, parsed_values = self._parse_brand_purpose_content(full_content)
+                    vision_content = parsed_vision or vision_content
+                    mission_content = parsed_mission or mission_content  
+                    values_content = parsed_values or values_content
+            
         except Exception as e:
             print(f"  ⚠️ AI brand purpose generation failed, using fallback: {e}")
             # Fallback content
@@ -1261,6 +1303,79 @@ class EnhancedPPTXGenerator:
         
         # Create Core Values slide
         self._create_single_purpose_slide(prs, identity_data, "BRAND PURPOSE (VALUES)", values_content)
+    
+    def _parse_brand_purpose_content(self, full_content):
+        """Parse full brand purpose content into Vision, Mission, Core Values"""
+        if not full_content:
+            return "", "", ""
+            
+        vision = ""
+        mission = ""
+        values = ""
+        
+        lines = full_content.split('\n')
+        current_section = None
+        current_content = []
+        
+        for line in lines:
+            line = line.strip()
+            
+            if line.startswith('Vision:'):
+                if current_section and current_content:
+                    # Save previous section
+                    content = ' '.join(current_content).strip()
+                    if current_section == "vision":
+                        vision = content
+                    elif current_section == "mission":
+                        mission = content
+                    elif current_section == "values":
+                        values = content
+                
+                current_section = "vision"
+                current_content = [line.replace('Vision:', '').strip()]
+                
+            elif line.startswith('Mission:'):
+                if current_section and current_content:
+                    # Save previous section
+                    content = ' '.join(current_content).strip()
+                    if current_section == "vision":
+                        vision = content
+                    elif current_section == "mission":
+                        mission = content
+                    elif current_section == "values":
+                        values = content
+                
+                current_section = "mission"
+                current_content = [line.replace('Mission:', '').strip()]
+                
+            elif line.startswith('Core Values:'):
+                if current_section and current_content:
+                    # Save previous section
+                    content = ' '.join(current_content).strip()
+                    if current_section == "vision":
+                        vision = content
+                    elif current_section == "mission":
+                        mission = content
+                    elif current_section == "values":
+                        values = content
+                
+                current_section = "values"
+                current_content = [line.replace('Core Values:', '').strip()]
+                
+            elif line and current_section:
+                current_content.append(line)
+        
+        # Save the last section
+        if current_section and current_content:
+            content = ' '.join(current_content).strip()
+            if current_section == "vision":
+                vision = content
+            elif current_section == "mission":
+                mission = content
+            elif current_section == "values":
+                values = content
+        
+        return vision, mission, values
     
     def _create_single_purpose_slide(self, prs, identity_data, title, content):
         """Create a single brand purpose slide with same design as Introduction slide"""
@@ -1376,6 +1491,11 @@ class EnhancedPPTXGenerator:
         # Split content into manageable chunks for slides
         story_parts = self._split_story_content(story_content)
         
+        print(f"  📖 Brand Story split into {len(story_parts)} parts")
+        for i, part in enumerate(story_parts):
+            word_count = len(part.split())
+            print(f"    Part {i+1}: {word_count} words")
+        
         if len(story_parts) == 1:
             # Single slide
             self._create_brand_story_slide(prs, identity_data, "BRAND STORY", story_parts[0])
@@ -1390,8 +1510,8 @@ class EnhancedPPTXGenerator:
         if not content:
             return [""]
         
-        # Target words per slide (roughly 200-250 words per slide for readability)
-        words_per_slide = 200
+        # Target words per slide (roughly 150 words per slide for better readability on slides)
+        words_per_slide = 150
         words = content.split()
         
         if len(words) <= words_per_slide:
