@@ -326,7 +326,7 @@ class EnhancedPPTXGenerator:
         company_frame = company_textbox.text_frame
         company_frame.text = company_name
         company_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-        self.styler.apply_title_style(company_frame.paragraphs[0], size=36, color=primary_color)
+        self.styler.apply_title_style(company_frame.paragraphs[0], size=36, color="#FFFFFF")
         company_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         
         # RIGHT SIDE: Dynamic colored line above "Brand Identity System"
