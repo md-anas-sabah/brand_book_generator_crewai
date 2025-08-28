@@ -42,10 +42,15 @@ class IntroductionContentAgent:
         
         # Generate content using available AI
         if self.openai_api_key:
+            print(f"🤖 Using OpenAI API to generate introduction for {company_name}")
+            print(f"📝 Prompt preview: {prompt[:200]}...")
             return self._generate_with_openai(prompt)
         elif self.claude_api_key:
+            print(f"🤖 Using Claude API to generate introduction for {company_name}")
             return self._generate_with_claude(prompt)
         else:
+            print(f"⚠️ No AI API keys found, using fallback for {company_name}")
+            print(f"💡 To enable AI generation, set OPENAI_API_KEY or CLAUDE_API_KEY in your .env file")
             return self._generate_fallback_introduction(company_name, industry, values)
     
     def _extract_brand_context(self, brand_essence: Dict) -> Dict:
@@ -115,10 +120,12 @@ Format: Return only the introduction text, no additional formatting or explanati
                 temperature=0.7
             )
             
-            return response.choices[0].message.content.strip()
+            generated_content = response.choices[0].message.content.strip()
+            print(f"✅ OpenAI generated introduction: {generated_content[:100]}...")
+            return generated_content
             
         except Exception as e:
-            print(f"OpenAI generation failed: {e}")
+            print(f"❌ OpenAI generation failed: {e}")
             return self._generate_fallback_introduction_from_prompt(prompt)
     
     def _generate_with_claude(self, prompt: str) -> str:

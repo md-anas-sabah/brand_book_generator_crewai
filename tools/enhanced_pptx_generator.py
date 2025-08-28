@@ -434,19 +434,13 @@ class EnhancedPPTXGenerator:
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # Get dynamic primary color
-        primary_color = "#FFFFFF"
+        # Get brand primary color (ensure it uses the agent's chosen primary color)
+        primary_color_hex = "#FFFF00"  # Default to yellow
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
         
-        # Title
-        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
-        title_textbox = slide.shapes.add_textbox(left, top, width, height)
-        title_frame = title_textbox.text_frame
-        title_frame.text = "Brand Purpose"
-        self.styler.apply_title_style(title_frame.paragraphs[0], color=primary_color)
-        title_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
         # Generate AI-powered brand purpose content
         print("  🤖 Generating AI-powered brand purpose content...")
@@ -457,8 +451,8 @@ class EnhancedPPTXGenerator:
             purpose_content = purpose_data.get("full_content", "")
         except Exception as e:
             print(f"  ⚠️ AI brand purpose generation failed, using fallback: {e}")
-            # Fallback to original content
-            purpose_content = "Our Purpose\n\n"
+            # Fallback content (without "Our Purpose" title)
+            purpose_content = ""
             
             if brand_essence and brand_essence.get("brand_positioning"):
                 positioning = brand_essence["brand_positioning"]
@@ -474,20 +468,47 @@ class EnhancedPPTXGenerator:
                 for value in brand_values:
                     purpose_content += f"• {value}\n"
             else:
-                purpose_content += "Our core values guide everything we do, from innovation to customer service excellence."
+                purpose_content += "Core Values:\nOur core values guide everything we do, from innovation to customer service excellence."
         
-        left, top, width, height = self.grid.get_position(2, 2, 8, 5)
+        # Main content text - positioned in upper area (same as Introduction)
+        # Content positioned in upper portion - reduced top space and increased width
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 4)
         content_textbox = slide.shapes.add_textbox(left, top, width, height)
         content_frame = content_textbox.text_frame
         content_frame.text = purpose_content
         content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
         
-        for i, paragraph in enumerate(content_frame.paragraphs):
-            if i == 0:  # Title "Our Purpose"
-                self.styler.apply_subtitle_style(paragraph, color=primary_color, size=24)
-                paragraph.alignment = PP_ALIGN.CENTER
-            else:
-                self.styler.apply_body_style(paragraph, color='white', size=16)
+        # Style the content text - white, left-aligned, same as introduction slide
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=20)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)  # Consistent spacing
+        
+        # Full-width line separator (same width as introduction slide)
+        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # "BRAND PURPOSE" title in primary color below the line (same as Introduction)
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
+            Inches(4), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "BRAND PURPOSE"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
         
 
 

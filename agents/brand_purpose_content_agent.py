@@ -42,10 +42,13 @@ class BrandPurposeContentAgent:
         
         # Generate content using available AI
         if self.openai_api_key:
+            print(f"🤖 Using OpenAI API to generate brand purpose for {company_name}")
             return self._generate_with_openai(prompt, company_name, values)
         elif self.claude_api_key:
+            print(f"🤖 Using Claude API to generate brand purpose for {company_name}")
             return self._generate_with_claude(prompt, company_name, values)
         else:
+            print(f"⚠️ No AI API keys found, using fallback for brand purpose for {company_name}")
             return self._generate_fallback_purpose(company_name, industry, values)
     
     def _extract_brand_context(self, brand_essence: Dict) -> Dict:
@@ -103,25 +106,33 @@ Generate the following sections:
    - Should be actionable and specific to {industry} industry
    - Focus on current purpose and core business
 
-3. CORE VALUES EXPANDED:
+3. CORE VALUES PARAGRAPH:
    - Take the provided values: {', '.join(values_list)}
-   - Create brief explanations for each (1 sentence per value)
-   - Make them relevant to {industry} and {audience}
+   - Create a flowing paragraph that naturally incorporates all the values
+   - Make it relevant to {industry} and {audience}
+   - Write it as a cohesive narrative, not bullet points
+   - Keep it to 3-4 sentences maximum to fit slide layout
+
+IMPORTANT: 
+- Format the entire response as flowing paragraphs, NOT bullet points
+- Keep total content to 8-10 lines maximum to fit on slide
+- Make it cohesive and narrative-driven
+- Each section should flow naturally into the next
 
 Requirements:
 - Professional yet inspiring tone
 - Industry-specific language for {industry}
 - Relevant to {audience}
-- Each section should be concise but impactful
+- Concise but impactful (8-10 lines total)
+- Paragraph format, no bullet points
 - Align with the brand promise and competitive advantage
 
-Format your response as:
-VISION: [vision statement]
-MISSION: [mission statement]
-VALUES:
-• [Value 1]: [explanation]
-• [Value 2]: [explanation]
-• [Value 3]: [explanation]"""
+Format your response as flowing paragraphs:
+VISION: [vision statement paragraph]
+
+MISSION: [mission statement paragraph]
+
+VALUES: [flowing paragraph incorporating all core values naturally]"""
 
         return prompt
     
@@ -165,7 +176,7 @@ VALUES:
         
         vision_text = ""
         mission_text = ""
-        values_text = []
+        values_text = ""
         
         for line in lines:
             line = line.strip()
@@ -177,35 +188,39 @@ VALUES:
                 mission_text = line.replace("MISSION:", "").strip()
             elif line.startswith("VALUES:"):
                 current_section = "values"
-            elif line.startswith("•") or line.startswith("-"):
-                if current_section == "values":
-                    values_text.append(line)
+                values_text = line.replace("VALUES:", "").strip()
             elif current_section and line:
                 if current_section == "vision":
                     vision_text += " " + line
                 elif current_section == "mission":
                     mission_text += " " + line
+                elif current_section == "values":
+                    values_text += " " + line
         
         result["vision"] = vision_text.strip()
         result["mission"] = mission_text.strip()
-        result["values_content"] = "\n".join(values_text)
+        result["values_content"] = values_text.strip()
         
-        # Create full formatted content for slide
-        full_content = "Our Purpose\n\n"
+        # Create full formatted content for slide (without "Our Purpose" title)
+        full_content = ""
         if result["vision"]:
             full_content += f"Vision: {result['vision']}\n\n"
         if result["mission"]:
             full_content += f"Mission: {result['mission']}\n\n"
         if result["values_content"]:
-            full_content += f"Core Values:\n{result['values_content']}"
+            full_content += f"Core Values: {result['values_content']}"
         else:
-            # Fallback if values parsing failed
+            # Fallback if values parsing failed - create paragraph format
             values_list = [v.strip() for v in values.split(',') if v.strip()]
-            full_content += "Core Values:\n"
-            for value in values_list:
-                full_content += f"• {value}\n"
+            if values_list:
+                values_paragraph = f"Our core values of {', '.join(values_list[:-1])} and {values_list[-1]} guide everything we do, from innovation to customer service excellence."
+                full_content += f"Core Values: {values_paragraph}"
         
-        result["full_content"] = full_content
+        # Remove the "Our Purpose" title if it exists at the beginning
+        if full_content.startswith("Our Purpose\n\n"):
+            full_content = full_content[12:]  # Remove "Our Purpose\n\n"
+        
+        result["full_content"] = full_content.strip()
         return result
     
     def _generate_fallback_purpose(self, company_name: str, industry: str, values: str) -> Dict[str, str]:
@@ -234,24 +249,20 @@ VALUES:
             vision = f"To be the preferred partner for businesses seeking excellence and innovation in their field."
             mission = f"We deliver exceptional solutions that drive growth and create lasting value for our clients and communities."
         
-        # Create values content
-        values_content = "Core Values:\n"
-        if len(values_list) >= 3:
-            values_content += f"• {values_list[0]}: Driving progress through creative thinking and breakthrough solutions\n"
-            values_content += f"• {values_list[1]}: Building trust through transparent and reliable service delivery\n"
-            values_content += f"• {values_list[2]}: Putting people at the center of everything we do\n"
-            
-            # Add remaining values
-            for value in values_list[3:]:
-                values_content += f"• {value}: Commitment to excellence in all our endeavors\n"
+        # Create values content as flowing paragraph
+        if len(values_list) > 0:
+            if len(values_list) == 1:
+                values_content = f"Core Values: Our commitment to {values_list[0].lower()} drives every decision we make and shapes how we serve our clients and community."
+            elif len(values_list) == 2:
+                values_content = f"Core Values: Through {values_list[0].lower()} and {values_list[1].lower()}, we build lasting relationships and deliver exceptional value to all our stakeholders."
+            else:
+                # For 3 or more values, create a flowing paragraph
+                values_content = f"Core Values: Our foundation rests on {values_list[0].lower()}, {', '.join([v.lower() for v in values_list[1:-1]])}, and {values_list[-1].lower()}, which together guide our commitment to excellence and drive our mission to create meaningful impact for our clients."
         else:
-            for value in values_list:
-                values_content += f"• {value}\n"
+            values_content = "Core Values: Our principles guide everything we do, from innovation to customer service excellence."
         
-        # Create full content
-        full_content = f"""Our Purpose
-
-Vision: {vision}
+        # Create full content (without "Our Purpose" title)
+        full_content = f"""Vision: {vision}
 
 Mission: {mission}
 
