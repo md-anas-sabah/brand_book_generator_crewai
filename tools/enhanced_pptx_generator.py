@@ -1254,13 +1254,13 @@ class EnhancedPPTXGenerator:
             values_content = "Our principles guide everything we do, from innovation to customer service excellence."
         
         # Create Vision slide
-        self._create_single_purpose_slide(prs, identity_data, "VISION", vision_content)
+        self._create_single_purpose_slide(prs, identity_data, "BRAND PURPOSE (VISION)", vision_content)
         
         # Create Mission slide  
-        self._create_single_purpose_slide(prs, identity_data, "MISSION", mission_content)
+        self._create_single_purpose_slide(prs, identity_data, "BRAND PURPOSE (MISSION)", mission_content)
         
         # Create Core Values slide
-        self._create_single_purpose_slide(prs, identity_data, "CORE VALUES", values_content)
+        self._create_single_purpose_slide(prs, identity_data, "BRAND PURPOSE (VALUES)", values_content)
     
     def _create_single_purpose_slide(self, prs, identity_data, title, content):
         """Create a single brand purpose slide with same design as Introduction slide"""
