@@ -1,0 +1,60 @@
+{
+  "company": "Flipkart",
+  "version": "1.0",
+  "colors": {
+    "primary": "#2563EB",
+    "secondary": "#EF4444",
+    "accent": "#FB923C",
+    "supporting": [
+      "#FB923C",
+      "#BE185D"
+    ],
+    "hex_codes": [
+      "#2563EB",
+      "#EF4444",
+      "#FB923C",
+      "#FB923C",
+      "#BE185D"
+    ]
+  },
+  "typography": {
+    "primary": "Space Grotesk",
+    "secondary": "Inter",
+    "hierarchy": [
+      "H1: Space Grotesk Bold 32px",
+      "H2: Space Grotesk Medium 24px",
+      "Body: Inter Regular 16px"
+    ],
+    "description": "Research-driven modern selection"
+  },
+  "spacing": {
+    "scale": "1.25",
+    "base": "1rem",
+    "sizes": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "1rem",
+      "lg": "1.5rem",
+      "xl": "2rem",
+      "2xl": "3rem",
+      "3xl": "4rem"
+    },
+    "components": {
+      "button_padding": "0.75rem 1.5rem",
+      "card_padding": "2rem",
+      "section_margin": "4rem 0"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": {
+        "background": "var(--accent-color)",
+        "color": "white"
+      },
+      "secondary": {
+        "background": "transparent",
+        "border": "1px solid var(--accent-color)"
+      }
+    }
+  }
+}

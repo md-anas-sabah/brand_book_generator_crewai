@@ -1,0 +1,206 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Flipkart Brand Book</title>
+            <style>
+        :root {
+            --primary-color: #2563EB;
+            --accent-color: #FB923C;
+            --secondary-color: #EF4444;
+            --gradient-primary: linear-gradient(135deg, #2563EB, #FB923C);
+            --gradient-section: linear-gradient(180deg, #f8f9fa, #ffffff);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);  /* Use primary brand color for body text */
+            background: var(--gradient-section);
+        }
+        
+        .hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .color-swatch {
+            text-align: center;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: translateY(-4px);
+        }
+        
+        .swatch {
+            width: 100%;
+            height: 120px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+        }
+        
+        .brand-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .typography-demo {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .hero { padding: 2rem 1rem; }
+            .section { padding: 2rem 0; }
+            .container { padding: 0 1rem; }
+        }
+        </style>
+        </head>
+        <body>
+            
+        <section class="hero">
+            <div class="container">
+                <h1>Flipkart</h1>
+                <p style="font-size: 1.25rem; opacity: 0.9;">Brand Book & Style Guide</p>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Essence</h2>
+                <div class="brand-card">
+                    <h3>Company Profile</h3>
+                    <p><strong>Industry:</strong> E-commerce, Retail, Technology, Logistics & Supply Chain</p>
+                    <p><strong>Target Audience:</strong> Price-conscious shoppers, Middle-class families, Young professionals, Students, Digital-savvy consumers, Tier 2 & Tier 3 city customers, Small businesses, Value-seeking online buyers.</p>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Visual Identity</h2>
+                <div class="brand-card">
+                    <h3>Color Palette</h3>
+                    <div class="color-palette">
+                        
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #2563EB;"></div>
+                        <h4>Primary</h4>
+                        <p>#2563EB</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #EF4444;"></div>
+                        <h4>Secondary</h4>
+                        <p>#EF4444</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #FB923C;"></div>
+                        <h4>Accent</h4>
+                        <p>#FB923C</p>
+                    </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Narrative</h2>
+                <div class="brand-card">
+                    <h3>Brand Story</h3>
+                    <p>In the bustling streets of India, where the vibrant colors and sounds of daily life intertwine, there is a beacon of innovation and convenience that shines brighter than the rest - Flipkart.
+
+At Flipkart, we believe in the power of empowerment through technology. Our journey began with a simple idea - to revolutionize the way people shop, especially those who value affordability and convenience above all else. We saw an opportunity to cater to the needs of price-conscious shoppers, middle-class families, young professionals, students, and digital-savvy consumers who were looking for a reliable and trustworthy online shopping experience.
+
+Driven by our core values of customer-centricity, innovation, and inclusivity, we embarked on a mission to redefine the E-commerce landscape. We wanted to make shopping accessible to everyone, regardless of their location or background. That's why we focused on reaching out to tier 2 & tier 3 city customers and small businesses, providing them with a platform where they could access a wide range of products at competitive prices.
+
+Our brand promise is simple yet powerful - to empower individuals and businesses through our distinctive E-commerce, Retail, Technology, Logistics & Supply Chain solutions. We understand the importance of affordability and trust in today's fast-paced world, which is why we have built a reputation for delivering high-quality products at affordable prices, backed by excellent customer service and reliable delivery.
+
+What sets us apart is our commitment to growth and agility. We are constantly pushing the boundaries of innovation, exploring new ways to enhance the shopping experience for our customers. Whether it's through our cutting-edge technology solutions or our seamless logistics and supply chain network, we are always striving to stay ahead of the curve and meet the evolving needs of our diverse customer base.
+
+So, if you are a price-conscious shopper looking for the best deals, a middle-class family trying to make ends meet, a young professional juggling work and personal life, a student on a tight budget, or a small business looking to expand your reach - Flipkart is</p>
+                </div>
+                <div class="brand-card">
+                    <h3>Voice & Tone</h3>
+                    <p>Flipkart's brand voice is friendly, approachable, and inclusive, catering to a diverse audience of price-conscious shoppers, middle-class families, young professionals, students, digital-savvy consumers, Tier 2 & Tier 3 city customers, small businesses, and value-seeking online buyers. The tone is customer-centric, focusing on innovation, affordability, trust, reliability, convenience, inclusivity, agility, empowerment, and growth.
+
+The brand voice is characterized by a balance of empathy and expertise, reflecting Flipkart's commitment to understanding and meeting the needs of its customers. It is authoritative in its knowledge</p>
+                </div>
+            </div>
+        </section>
+        
+        </body>
+        </html>
+        

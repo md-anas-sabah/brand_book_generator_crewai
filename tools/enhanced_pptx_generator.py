@@ -84,11 +84,25 @@ class TextStyler:
             paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(color or self.text_color))
     
     def apply_body_style(self, paragraph, color=None, size=16):
-        """Body text using secondary font"""
+        """Body text using secondary font with color support"""
         paragraph.font.name = self.secondary_font
         paragraph.font.size = Pt(size)
         paragraph.font.bold = False
-        paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(color or self.text_color))
+        
+        if color == 'white':
+            paragraph.font.color.rgb = RGBColor(255, 255, 255)
+        elif color == 'black':
+            paragraph.font.color.rgb = RGBColor(0, 0, 0)
+        elif isinstance(color, str) and color.startswith('#'):
+            # Handle hex colors like '#CCCCCC'
+            hex_color = color.lstrip('#')
+            r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            paragraph.font.color.rgb = RGBColor(r, g, b)
+        elif hasattr(color, 'rgb'):
+            # Handle RGBColor objects
+            paragraph.font.color.rgb = color
+        else:
+            paragraph.font.color.rgb = RGBColor(*self._hex_to_rgb(color or self.text_color))
     
     def apply_caption_style(self, paragraph, color=None, size=12):
         """Small caption text"""
@@ -435,68 +449,167 @@ class EnhancedPPTXGenerator:
 
     
     def _create_table_of_contents(self, prs, sections, identity_data):
-        """Create auto-generated table of contents with two-column layout if needed"""
+        """Create auto-generated table of contents with INDEX design pattern"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        # Pitch black background instead of gradient
+        
+        # Pitch black background
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
+        # Get brand primary color from AI research
+        primary_color_hex = "#FFFFFF"  # Default white
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFFFF")
         
-        # Title
-        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
-        title_textbox = slide.shapes.add_textbox(left, top, width, height)
-        title_frame = title_textbox.text_frame
-        title_frame.text = "Table of Contents"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
-        title_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        primary_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
-        # Determine if two-column layout is needed
+        # Filter sections (remove Table of Contents from list)
         filtered_sections = [s for s in sections if s != "Table of Contents"]
-        use_two_columns = len(filtered_sections) > 8
         
-        if use_two_columns:
-            # Two-column layout with increased gap
-            mid_point = len(filtered_sections) // 2
-            col1_sections = filtered_sections[:mid_point]
-            col2_sections = filtered_sections[mid_point:]
+        # Map our actual slides to index format with page numbers
+        section_data = []
+        page_num = 1
+        
+        for section in filtered_sections:
+            section_name = section.replace("1. ", "").replace("2. ", "").replace("3. ", "").replace("4. ", "").replace("5. ", "").replace("6. ", "").replace("7. ", "").replace("8. ", "").replace("9. ", "").replace("10. ", "").replace("11. ", "").replace("12. ", "").replace("13. ", "").replace("14. ", "")
             
-            # Column 1 - Left side with more space
-            left, top, width, height = self.grid.get_position(1, 2, 4, 5)
-            col1_textbox = slide.shapes.add_textbox(left, top, width, height)
-            col1_frame = col1_textbox.text_frame
-            col1_content = []
-            for i, section in enumerate(col1_sections, 1):
-                col1_content.append(f"{i}. {section}")
-            col1_frame.text = "\n\n".join(col1_content)
-            col1_frame.word_wrap = True
+            if "Logo" in section_name:
+                section_data.append({
+                    "name": "Logo Variations",
+                    "page": f"{page_num:02d}",
+                    "subsections": ["Logo Mark", "Clear Space", "Usage Guidelines"]
+                })
+            elif "Color" in section_name:
+                section_data.append({
+                    "name": "Brand Colors",
+                    "page": f"{page_num:02d}",
+                    "subsections": ["Primary Colors", "Secondary Colors", "Color Usage"]
+                })
+            elif "Typography" in section_name:
+                section_data.append({
+                    "name": "Typography",
+                    "page": f"{page_num:02d}",
+                    "subsections": ["Brand Font", "Font Usage", "Text Hierarchy"]
+                })
+            elif "Visual" in section_name:
+                section_data.append({
+                    "name": "Visual Guidelines",
+                    "page": f"{page_num:02d}",
+                    "subsections": ["Visual Style", "Photography", "Imagery"]
+                })
+            else:
+                section_data.append({
+                    "name": section_name,
+                    "page": f"{page_num:02d}",
+                    "subsections": []
+                })
+            page_num += 1
+        
+        # Three-column layout
+        col1_left = Inches(0.5)
+        col2_left = Inches(3.8)
+        col3_left = Inches(7.1)
+        
+        # Split sections into three columns
+        items_per_col = len(section_data) // 3 + (1 if len(section_data) % 3 > 0 else 0)
+        col1_sections = section_data[:items_per_col]
+        col2_sections = section_data[items_per_col:items_per_col*2]
+        col3_sections = section_data[items_per_col*2:]
+        
+        # "INDEX" title at top (brand colored text, bold)
+        index_textbox = slide.shapes.add_textbox(
+            Inches(0.5), Inches(0.5),
+            Inches(3), Inches(0.8)
+        )
+        index_frame = index_textbox.text_frame
+        index_frame.text = "INDEX"
+        self.styler.apply_title_style(index_frame.paragraphs[0], size=28, color=primary_color_hex)
+        index_frame.paragraphs[0].font.bold = True
+        
+        # Top brand colored line (full width)
+        top_line_top = Inches(1.2)
+        top_line = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), top_line_top,
+            Inches(9.5), top_line_top
+        )
+        top_line.line.color.rgb = primary_rgb
+        top_line.line.width = Pt(2)
+        
+        # Create content for each column
+        def create_column_content(slide, sections, col_left, start_top=1.7):
+            current_top = start_top
             
-            # Column 2 - Right side with bigger gap (moved from col 7 to col 8)
-            left, top, width, height = self.grid.get_position(8, 2, 4, 5)
-            col2_textbox = slide.shapes.add_textbox(left, top, width, height)
-            col2_frame = col2_textbox.text_frame
-            col2_content = []
-            for i, section in enumerate(col2_sections, mid_point + 1):
-                col2_content.append(f"{i}. {section}")
-            col2_frame.text = "\n\n".join(col2_content)
-            col2_frame.word_wrap = True
-            
-            # Style both columns
-            for frame in [col1_frame, col2_frame]:
-                for paragraph in frame.paragraphs:
-                    self.styler.apply_body_style(paragraph, size=16)
-        else:
-            # Single column layout
-            left, top, width, height = self.grid.get_position(2, 2, 8, 5)
-            content_textbox = slide.shapes.add_textbox(left, top, width, height)
-            content_frame = content_textbox.text_frame
-            content_lines = []
-            for i, section in enumerate(filtered_sections, 1):
-                content_lines.append(f"{i}. {section}")
-            content_frame.text = "\n\n".join(content_lines)
-            content_frame.word_wrap = True
-            
-            for paragraph in content_frame.paragraphs:
-                self.styler.apply_body_style(paragraph, size=16)
+            for section in sections:
+                # Main section with brand colored line and page number
+                section_top = Inches(current_top)
+                
+                # Section name (white text, smaller)
+                section_textbox = slide.shapes.add_textbox(col_left, section_top, 
+                                                         Inches(2.2), Inches(0.3))
+                section_frame = section_textbox.text_frame
+                section_frame.text = section["name"]
+                section_frame.margin_left = 0
+                section_frame.margin_right = 0
+                section_frame.margin_top = 0
+                section_frame.margin_bottom = 0
+                self.styler.apply_body_style(section_frame.paragraphs[0], size=12, color='white')
+                section_frame.paragraphs[0].font.bold = True
+                
+                # Brand colored accent line (shorter)
+                line_left = col_left + Inches(2.3)
+                line_top = section_top + Inches(0.12)
+                line_shape = slide.shapes.add_connector(
+                    MSO_CONNECTOR.STRAIGHT,
+                    line_left, line_top,
+                    line_left + Inches(0.4), line_top
+                )
+                line_shape.line.color.rgb = primary_rgb
+                line_shape.line.width = Pt(1.5)
+                
+                # Page number (brand colored text, smaller)
+                page_left = col_left + Inches(2.8)
+                page_textbox = slide.shapes.add_textbox(page_left, section_top, 
+                                                       Inches(0.3), Inches(0.3))
+                page_frame = page_textbox.text_frame
+                page_frame.text = section["page"]
+                page_frame.margin_left = 0
+                page_frame.margin_top = 0
+                page_frame.margin_bottom = 0
+                self.styler.apply_body_style(page_frame.paragraphs[0], size=12, color=primary_color_hex)
+                page_frame.paragraphs[0].font.bold = True
+                
+                current_top += 0.4
+                
+                # Add subsections (gray text, indented, smaller)
+                for subsection in section["subsections"]:
+                    sub_top = Inches(current_top)
+                    sub_left = col_left + Inches(0.2)  # Indent subsections
+                    
+                    sub_textbox = slide.shapes.add_textbox(sub_left, sub_top, 
+                                                          Inches(2.0), Inches(0.25))
+                    sub_frame = sub_textbox.text_frame
+                    sub_frame.text = subsection
+                    sub_frame.margin_left = 0
+                    sub_frame.margin_top = 0
+                    sub_frame.margin_bottom = 0
+                    self.styler.apply_body_style(sub_frame.paragraphs[0], size=9, color='#CCCCCC')
+                    
+                    current_top += 0.25
+                
+                current_top += 0.15  # Smaller space between main sections
+        
+        # Create all three columns
+        if col1_sections:
+            create_column_content(slide, col1_sections, col1_left)
+        if col2_sections:
+            create_column_content(slide, col2_sections, col2_left)
+        if col3_sections:
+            create_column_content(slide, col3_sections, col3_left)
+        
+        # Add footer
+        self._add_footer(slide, self.slide_counter)
         
 
     
@@ -1073,27 +1186,16 @@ class EnhancedPPTXGenerator:
         # Build sections list with Introduction and Brand Purpose first
         sections.extend([
             "1. Introduction",
-            "2. Brand Purpose"
-        ])
-        
-        if brand_essence:
-            if brand_essence.get("company_profile"):
-                sections.append("3. Company Profile")
-            if brand_essence.get("market_analysis"):
-                sections.append("4. Market Analysis & Insights")
-            if brand_essence.get("brand_positioning"):
-                sections.append("5. Brand Positioning")
-        
-        sections.extend([
-            "6. Logo Variations",
-            "7. Color Palette", 
-            "8. Typography",
-            "9. Visual & Photography Guidelines",
-            "10. Brand Story & Mission",
-            "11. Brand Voice & Tone",
-            "12. Messaging & Value Propositions",
-            "13. Marketing Copy",
-            "14. Brand Collateral Templates"
+            "2. Brand Purpose",
+            "3. Logo Variations",
+            "4. Color Palette", 
+            "5. Typography",
+            "6. Visual & Photography Guidelines",
+            "7. Brand Story & Mission",
+            "8. Brand Voice & Tone",
+            "9. Messaging & Value Propositions",
+            "10. Marketing Copy",
+            "11. Brand Collateral Templates"
         ])
         
         # 2. Table of Contents
@@ -1105,27 +1207,18 @@ class EnhancedPPTXGenerator:
         # 4. Brand Purpose Slide
         self._create_brand_purpose_slide(prs, brand_essence, identity_data)
         
-        # 5. Brand Essence Slides
-        if brand_essence:
-            if brand_essence.get("company_profile"):
-                self._create_company_profile_slide(prs, brand_essence, identity_data)
-            if brand_essence.get("market_analysis"):
-                self._create_market_analysis_slide(prs, brand_essence, identity_data)
-            if brand_essence.get("brand_positioning"):
-                self._create_brand_positioning_slide(prs, brand_essence, identity_data)
-        
-        # 4. Logo Variations
+        # 5. Logo Variations
         if identity_data.get("logos"):
             self._create_logo_variations_slide(prs, identity_data["logos"], identity_data)
         
-        # 5. Color Palette
+        # 6. Color Palette
         if identity_data.get("palette"):
             self._create_color_palette_slide(prs, identity_data["palette"], identity_data)
         
-        # 6. Typography
+        # 7. Typography
         self._create_typography_slide(prs, identity_data.get("typography", {}), identity_data)
         
-        # 7. Visual & Photography Guidelines
+        # 8. Visual & Photography Guidelines
         self._create_visual_guidelines_slide(
             prs,
             identity_data.get("visual_style", ""),
@@ -1133,29 +1226,29 @@ class EnhancedPPTXGenerator:
             identity_data
         )
         
-        # 8. Brand Story & Mission
+        # 9. Brand Story & Mission
         story_data = literature_data.get("brand_story", "")
         if story_data:
             self._create_text_slide(prs, "Brand Story & Mission", str(story_data), 100, identity_data)
         
-        # 9. Voice & Tone
+        # 10. Voice & Tone
         voice_data = literature_data.get("voice_tone", "")
         if voice_data:
             self._create_text_slide(prs, "Brand Voice & Tone", voice_data, 80, identity_data)
         
-        # 10. Messaging & Value Propositions
+        # 11. Messaging & Value Propositions
         messaging_data = literature_data.get("messaging_arch", "")
         if messaging_data:
             self._create_text_slide(prs, "Messaging & Value Propositions", messaging_data, 80, identity_data)
         
-        # 11. Marketing Copy
+        # 12. Marketing Copy
         marketing_copy = literature_data.get("marketing_copy", {})
         if marketing_copy:
             for channel, copy in marketing_copy.items():
                 title = f"Marketing Copy: {channel.replace('_', ' ').title()}"
                 self._create_text_slide(prs, title, copy, 70, identity_data)
         
-        # 12. Collateral
+        # 13. Collateral
         collaterals = literature_data.get("collaterals", {})
         if collaterals:
             if isinstance(collaterals, dict):

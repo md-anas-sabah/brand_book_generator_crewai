@@ -1,0 +1,39 @@
+{
+  "company": "Flipkart",
+  "assets": {
+    "logos": [],
+    "colors": {
+      "primary": "#2563EB",
+      "secondary": "#EF4444",
+      "accent": "#FB923C",
+      "supporting": [
+        "#FB923C",
+        "#BE185D"
+      ],
+      "hex_codes": [
+        "#2563EB",
+        "#EF4444",
+        "#FB923C",
+        "#FB923C",
+        "#BE185D"
+      ]
+    },
+    "typography": {
+      "primary": "Space Grotesk",
+      "secondary": "Inter",
+      "hierarchy": [
+        "H1: Space Grotesk Bold 32px",
+        "H2: Space Grotesk Medium 24px",
+        "Body: Inter Regular 16px"
+      ],
+      "description": "Research-driven modern selection"
+    },
+    "collateral": []
+  },
+  "formats": [
+    "PNG",
+    "SVG",
+    "PDF"
+  ],
+  "usage_rights": "Internal use only"
+}
