@@ -40,10 +40,23 @@ class BrandPurposeContentAgent:
             company_name, industry, values, audience, context
         )
         
-        # Generate content using available AI
+        # Generate content using available AI with Claude refinement
         if self.openai_api_key:
-            print(f"🤖 Using OpenAI API to generate brand purpose for {company_name}")
-            return self._generate_with_openai(prompt, company_name, values)
+            print(f"🤖 Using OpenAI + Claude refinement pipeline for {company_name}")
+            
+            # Step 1: Generate with OpenAI
+            openai_result = self._generate_with_openai(prompt, company_name, values)
+            
+            # Step 2: Refine with Claude if available
+            if self.claude_api_key and openai_result and openai_result.get("full_content"):
+                print(f"✨ Refining brand purpose with Claude...")
+                refined_content = self._refine_with_claude(openai_result["full_content"], company_name, industry, values)
+                if refined_content:
+                    openai_result["full_content"] = refined_content
+                return openai_result
+            else:
+                return openai_result
+                
         elif self.claude_api_key:
             print(f"🤖 Using Claude API to generate brand purpose for {company_name}")
             return self._generate_with_claude(prompt, company_name, values)
@@ -143,7 +156,7 @@ VALUES: [flowing paragraph incorporating all core values naturally]"""
             client = OpenAI(api_key=self.openai_api_key)
             
             response = client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are a professional brand strategist creating compelling brand purpose statements. Focus on clarity, inspiration, and business relevance."},
                     {"role": "user", "content": prompt}
@@ -165,6 +178,46 @@ VALUES: [flowing paragraph incorporating all core values naturally]"""
         # This would implement Claude API integration
         # For now, fall back to template
         return self._generate_fallback_purpose(company_name, "technology", values)
+    
+    def _refine_with_claude(self, openai_content: str, company_name: str, industry: str, values: str) -> str:
+        """Refine OpenAI-generated brand purpose content using Claude for better quality"""
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=self.claude_api_key)
+            
+            refinement_prompt = f"""Please refine and improve this brand purpose content for {company_name} in the {industry} industry.
+
+Original content:
+{openai_content}
+
+Core values: {values}
+
+Requirements:
+1. Keep the paragraph format (NO bullet points)
+2. Ensure it's exactly 8-10 lines total to fit on slide
+3. Make the Vision and Mission more compelling and industry-specific
+4. Make the Core Values paragraph flow naturally and incorporate all values meaningfully
+5. Ensure professional yet inspiring tone
+6. Make it specific to {company_name} and {industry}
+7. Keep the structure: Vision: [text] + Mission: [text] + Core Values: [paragraph]
+
+Return only the refined brand purpose content, no additional formatting or explanations."""
+
+            response = client.messages.create(
+                model="claude-3-sonnet-20240229",
+                max_tokens=400,
+                messages=[
+                    {"role": "user", "content": refinement_prompt}
+                ]
+            )
+            
+            refined_content = response.content[0].text.strip()
+            print(f"✅ Claude refined brand purpose: {refined_content[:100]}...")
+            return refined_content
+            
+        except Exception as e:
+            print(f"❌ Claude refinement failed: {e}")
+            return openai_content  # Return original if refinement fails
     
     def _parse_ai_response(self, content: str, company_name: str, values: str) -> Dict[str, str]:
         """Parse AI response into structured format"""

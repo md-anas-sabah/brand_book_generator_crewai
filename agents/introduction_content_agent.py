@@ -40,11 +40,22 @@ class IntroductionContentAgent:
             company_name, industry, values, audience, context
         )
         
-        # Generate content using available AI
+        # Generate content using available AI with Claude refinement
         if self.openai_api_key:
-            print(f"🤖 Using OpenAI API to generate introduction for {company_name}")
+            print(f"🤖 Using OpenAI + Claude refinement pipeline for {company_name}")
             print(f"📝 Prompt preview: {prompt[:200]}...")
-            return self._generate_with_openai(prompt)
+            
+            # Step 1: Generate with OpenAI
+            openai_content = self._generate_with_openai(prompt)
+            
+            # Step 2: Refine with Claude if available
+            if self.claude_api_key and openai_content:
+                print(f"✨ Refining with Claude...")
+                refined_content = self._refine_with_claude(openai_content, company_name, industry)
+                return refined_content if refined_content else openai_content
+            else:
+                return openai_content
+                
         elif self.claude_api_key:
             print(f"🤖 Using Claude API to generate introduction for {company_name}")
             return self._generate_with_claude(prompt)
@@ -114,7 +125,7 @@ Format: Return only the introduction text, no additional formatting or explanati
             client = OpenAI(api_key=self.openai_api_key)
             
             response = client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are a professional brand strategist creating compelling brand book introductions."},
                     {"role": "user", "content": prompt}
@@ -136,6 +147,43 @@ Format: Return only the introduction text, no additional formatting or explanati
         # This would implement Claude API integration
         # For now, fall back to template
         return self._generate_fallback_introduction_from_prompt(prompt)
+    
+    def _refine_with_claude(self, openai_content: str, company_name: str, industry: str) -> str:
+        """Refine OpenAI-generated content using Claude for better quality"""
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=self.claude_api_key)
+            
+            refinement_prompt = f"""Please refine and improve this brand introduction text for {company_name} in the {industry} industry.
+
+Original text:
+{openai_content}
+
+Requirements:
+1. Keep the same general structure and length (4-6 lines)
+2. Make it more compelling and professional
+3. Ensure it flows naturally when read aloud
+4. Make it specific to {company_name} and {industry}
+5. Keep the core message about "international, engaging, consistent, recognizable and proprietary"
+6. Polish the language for maximum impact
+
+Return only the refined introduction text, no additional formatting or explanations."""
+
+            response = client.messages.create(
+                model="claude-3-sonnet-20240229",
+                max_tokens=300,
+                messages=[
+                    {"role": "user", "content": refinement_prompt}
+                ]
+            )
+            
+            refined_content = response.content[0].text.strip()
+            print(f"✅ Claude refined introduction: {refined_content[:100]}...")
+            return refined_content
+            
+        except Exception as e:
+            print(f"❌ Claude refinement failed: {e}")
+            return openai_content  # Return original if refinement fails
     
     def _generate_fallback_introduction(self, company_name: str, industry: str, values: str) -> str:
         """Generate fallback introduction when AI is not available"""

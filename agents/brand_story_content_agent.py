@@ -48,9 +48,21 @@ class BrandStoryContentAgent:
             company_name, industry, values, audience, context
         )
         
-        # Generate content using available AI
+        # Generate content using available AI with Claude refinement
         if self.openai_api_key:
-            return self._generate_with_openai(prompt, company_name)
+            print(f"🤖 Using OpenAI + Claude refinement pipeline for {company_name}")
+            
+            # Step 1: Generate with OpenAI
+            openai_story = self._generate_with_openai(prompt, company_name)
+            
+            # Step 2: Refine with Claude if available
+            if self.claude_api_key and openai_story:
+                print(f"✨ Refining brand story with Claude...")
+                refined_story = self._refine_with_claude(openai_story, company_name, industry, values)
+                return refined_story if refined_story else openai_story
+            else:
+                return openai_story
+                
         elif self.claude_api_key:
             return self._generate_with_claude(prompt, company_name)
         else:
@@ -152,7 +164,7 @@ Write only the story content, no additional formatting or explanations. Make it 
             client = OpenAI(api_key=self.openai_api_key)
             
             response = client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": "You are a professional brand storyteller creating compelling company narratives. Focus on authenticity, emotional connection, and business relevance."},
                     {"role": "user", "content": prompt}
@@ -174,6 +186,47 @@ Write only the story content, no additional formatting or explanations. Make it 
         # This would implement Claude API integration
         # For now, fall back to template
         return self._generate_fallback_story(company_name, "technology", "innovation, quality, service")
+    
+    def _refine_with_claude(self, openai_story: str, company_name: str, industry: str, values: str) -> str:
+        """Refine OpenAI-generated brand story using Claude for better quality"""
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=self.claude_api_key)
+            
+            refinement_prompt = f"""Please refine and improve this brand story for {company_name} in the {industry} industry.
+
+Original story:
+{openai_story}
+
+Core values: {values}
+
+Requirements:
+1. Keep it to 150-200 words maximum for slide readability
+2. Make it more engaging and emotionally compelling
+3. Ensure it's specific to {company_name} and {industry}
+4. Naturally incorporate the core values into the narrative
+5. Improve the flow and storytelling structure
+6. Make it authentic and relatable to the target audience
+7. End with a forward-looking, inspiring statement
+8. Add proper paragraph breaks for slide readability (use \\n\\n)
+
+Return only the refined brand story, no additional formatting or explanations."""
+
+            response = client.messages.create(
+                model="claude-3-sonnet-20240229",
+                max_tokens=400,
+                messages=[
+                    {"role": "user", "content": refinement_prompt}
+                ]
+            )
+            
+            refined_story = response.content[0].text.strip()
+            print(f"✅ Claude refined brand story: {refined_story[:100]}...")
+            return self._format_story_for_slide(refined_story)
+            
+        except Exception as e:
+            print(f"❌ Claude refinement failed: {e}")
+            return openai_story  # Return original if refinement fails
     
     def _format_story_for_slide(self, story: str) -> str:
         """Format AI-generated story for slide presentation"""
