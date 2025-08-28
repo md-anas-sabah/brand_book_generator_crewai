@@ -219,7 +219,8 @@ class BrandBookOrchestrator:
         # Enhanced PowerPoint
         print("  Generating professional PowerPoint presentation...")
         enhanced_pptx_path = self._create_professional_pptx(
-            company_name, identity_data, literature_data, brand_essence, visual_system
+            company_name, identity_data, literature_data, brand_essence, visual_system,
+            industry, values, audience
         )
         
         # Final summary
@@ -404,16 +405,18 @@ class BrandBookOrchestrator:
         print(f"📄 Complete markdown saved: {md_path}")
     
     def _create_professional_pptx(self, company_name: str, identity_data: dict,
-                                 literature_data: dict, brand_essence: dict, visual_system: dict) -> str:
-        """Create professional PowerPoint matching top agency standards"""
+                                 literature_data: dict, brand_essence: dict, visual_system: dict,
+                                 industry: str, values: str, audience: str) -> str:
+        """Create professional PowerPoint matching top agency standards with AI-generated content"""
         print("  Creating professional-grade presentation design...")
         
-        # Generate comprehensive PPTX with black background and proper text colors
+        # Generate comprehensive PPTX with AI-powered content and black background
         pptx_path = self.pptx_generator.create_pptx(
-            company_name, identity_data, literature_data, brand_essence
+            company_name, identity_data, literature_data, brand_essence,
+            industry, values, audience
         )
         
-        print("  ✨ Professional presentation created with agency-level design")
+        print("  ✨ Professional presentation created with AI-powered content and agency-level design")
         return pptx_path
     
     def _display_final_summary(self, company_name: str, export_results: dict, 

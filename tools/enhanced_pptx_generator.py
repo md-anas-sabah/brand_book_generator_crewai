@@ -11,6 +11,9 @@ import re
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from agents.font_research_agent import FontResearchAgent
+from agents.introduction_content_agent import IntroductionContentAgent
+from agents.brand_purpose_content_agent import BrandPurposeContentAgent
+from agents.brand_story_content_agent import BrandStoryContentAgent
 
 
 class GridLayout:
@@ -129,6 +132,9 @@ class EnhancedPPTXGenerator:
     
     def __init__(self):
         self.font_research_agent = FontResearchAgent()
+        self.introduction_agent = IntroductionContentAgent()
+        self.brand_purpose_agent = BrandPurposeContentAgent()
+        self.brand_story_agent = BrandStoryContentAgent()
         self.researched_fonts = None
         self.grid = GridLayout()
         self.styler = None
@@ -351,8 +357,9 @@ class EnhancedPPTXGenerator:
         brand_system_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         brand_system_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
 
-    def _create_introduction_slide(self, prs, company_name, brand_essence, identity_data):
-        """Create introduction slide with company overview"""
+    def _create_introduction_slide(self, prs, company_name, brand_essence, identity_data, 
+                                  industry="", values="", audience=""):
+        """Create introduction slide with AI-generated company overview"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
@@ -365,8 +372,16 @@ class EnhancedPPTXGenerator:
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
-        # Main content text - positioned in upper area
-        intro_content = f"The following brand identity system for {company_name}\nis thoughtfully crafted to present our brand in\nan international, engaging, consistent, recognisable\nand proprietary way. Unique in form, versatile in its\napplication and unified by a fundamental principle."
+        # Generate AI-powered introduction content
+        print("  🤖 Generating AI-powered introduction content...")
+        try:
+            intro_content = self.introduction_agent.generate_introduction(
+                company_name, industry, values, audience, brand_essence
+            )
+        except Exception as e:
+            print(f"  ⚠️ AI introduction generation failed, using fallback: {e}")
+            # Fallback to original content
+            intro_content = f"The following brand identity system for {company_name}\nis thoughtfully crafted to present our brand in\nan international, engaging, consistent, recognisable\nand proprietary way. Unique in form, versatile in its\napplication and unified by a fundamental principle."
         
         # Content positioned in upper portion - reduced top space and increased width
         left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 4)
@@ -412,8 +427,9 @@ class EnhancedPPTXGenerator:
        
 
 
-    def _create_brand_purpose_slide(self, prs, brand_essence, identity_data):
-        """Create brand purpose slide with mission and values"""
+    def _create_brand_purpose_slide(self, prs, brand_essence, identity_data, 
+                                   company_name="", industry="", values="", audience=""):
+        """Create brand purpose slide with AI-generated mission and values"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
@@ -432,24 +448,33 @@ class EnhancedPPTXGenerator:
         self.styler.apply_title_style(title_frame.paragraphs[0], color=primary_color)
         title_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         
-        # Brand Purpose content from AI research
-        purpose_content = "Our Purpose\n\n"
-        
-        if brand_essence and brand_essence.get("brand_positioning"):
-            positioning = brand_essence["brand_positioning"]
-            if positioning.get("unique_value_proposition"):
-                purpose_content += f"Vision: {positioning['unique_value_proposition']}\n\n"
-            if positioning.get("brand_promise"):
-                purpose_content += f"Mission: {positioning['brand_promise']}\n\n"
-        
-        # Add core values if available
-        if brand_essence and brand_essence.get("company_profile", {}).get("core_values"):
-            values = brand_essence["company_profile"]["core_values"]
-            purpose_content += f"Core Values:\n"
-            for value in values:
-                purpose_content += f"• {value}\n"
-        else:
-            purpose_content += "Our core values guide everything we do, from innovation to customer service excellence."
+        # Generate AI-powered brand purpose content
+        print("  🤖 Generating AI-powered brand purpose content...")
+        try:
+            purpose_data = self.brand_purpose_agent.generate_brand_purpose(
+                company_name, industry, values, audience, brand_essence
+            )
+            purpose_content = purpose_data.get("full_content", "")
+        except Exception as e:
+            print(f"  ⚠️ AI brand purpose generation failed, using fallback: {e}")
+            # Fallback to original content
+            purpose_content = "Our Purpose\n\n"
+            
+            if brand_essence and brand_essence.get("brand_positioning"):
+                positioning = brand_essence["brand_positioning"]
+                if positioning.get("unique_value_proposition"):
+                    purpose_content += f"Vision: {positioning['unique_value_proposition']}\n\n"
+                if positioning.get("brand_promise"):
+                    purpose_content += f"Mission: {positioning['brand_promise']}\n\n"
+            
+            # Add core values if available
+            if brand_essence and brand_essence.get("company_profile", {}).get("core_values"):
+                brand_values = brand_essence["company_profile"]["core_values"]
+                purpose_content += f"Core Values:\n"
+                for value in brand_values:
+                    purpose_content += f"• {value}\n"
+            else:
+                purpose_content += "Our core values guide everything we do, from innovation to customer service excellence."
         
         left, top, width, height = self.grid.get_position(2, 2, 8, 5)
         content_textbox = slide.shapes.add_textbox(left, top, width, height)
@@ -1182,13 +1207,23 @@ class EnhancedPPTXGenerator:
         
         return chunks
     
-    def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None):
-        """Create comprehensive brand book presentation"""
+    def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None, 
+                   industry="", values="", audience=""):
+        """Create comprehensive brand book presentation with AI-generated content"""
         prs = Presentation()
+        
+        # Extract input parameters from brand_essence if not provided
+        if brand_essence and brand_essence.get("company_profile"):
+            profile = brand_essence["company_profile"]
+            if not industry:
+                industry = profile.get("industry", "technology")
+            if not values and profile.get("core_values"):
+                values = ", ".join(profile["core_values"])
+            if not audience:
+                audience = profile.get("target_audience", "businesses")
         
         # Research fonts
         print(f"🎨 Researching fonts for {company_name}...")
-        industry = brand_essence.get("company_profile", {}).get("industry", "technology") if brand_essence else "technology"
         self.researched_fonts = self.font_research_agent.research_fonts(company_name, industry, brand_essence)
         print(f"✅ Selected fonts: {self.researched_fonts['primary_font']} (primary), {self.researched_fonts['secondary_font']} (secondary)")
         
@@ -1215,16 +1250,28 @@ class EnhancedPPTXGenerator:
         # 2. Table of Contents
         self._create_table_of_contents(prs, sections, identity_data)
         
-        # 3. Introduction Slide
-        self._create_introduction_slide(prs, company_name, brand_essence, identity_data)
+        # 3. Introduction Slide with AI content
+        self._create_introduction_slide(prs, company_name, brand_essence, identity_data, 
+                                       industry, values, audience)
         
-        # 4. Brand Purpose Slide
-        self._create_brand_purpose_slide(prs, brand_essence, identity_data)
+        # 4. Brand Purpose Slide with AI content
+        self._create_brand_purpose_slide(prs, brand_essence, identity_data, 
+                                        company_name, industry, values, audience)
         
-        # 5. Brand Story Slide
-        story_data = literature_data.get("brand_story", "")
-        if story_data:
-            self._create_text_slide(prs, "Brand Story", str(story_data), 100, identity_data)
+        # 5. Brand Story Slide with AI content
+        print("  🤖 Generating AI-powered brand story content...")
+        try:
+            story_content = self.brand_story_agent.generate_brand_story(
+                company_name, industry, values, audience, brand_essence, literature_data
+            )
+        except Exception as e:
+            print(f"  ⚠️ AI brand story generation failed, using fallback: {e}")
+            story_content = literature_data.get("brand_story", "") if literature_data else ""
+            if not story_content:
+                story_content = f"Our story at {company_name} is one of innovation and dedication to excellence."
+        
+        if story_content:
+            self._create_text_slide(prs, "Brand Story", story_content, 100, identity_data)
         
         # 6. Logo Variations
         if identity_data.get("logos"):

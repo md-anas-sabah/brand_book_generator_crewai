@@ -3,19 +3,19 @@
   "assets": {
     "logos": [],
     "colors": {
-      "primary": "#2563EB",
-      "secondary": "#EF4444",
-      "accent": "#FB923C",
+      "primary": "#EA580C",
+      "secondary": "#F87171",
+      "accent": "#1F2937",
       "supporting": [
         "#FB923C",
-        "#BE185D"
+        "#000000"
       ],
       "hex_codes": [
-        "#2563EB",
-        "#EF4444",
+        "#EA580C",
+        "#F87171",
+        "#1F2937",
         "#FB923C",
-        "#FB923C",
-        "#BE185D"
+        "#000000"
       ]
     },
     "typography": {

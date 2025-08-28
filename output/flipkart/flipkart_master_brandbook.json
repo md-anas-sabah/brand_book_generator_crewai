@@ -1,6 +1,6 @@
 {
   "company_name": "Flipkart",
-  "timestamp": "1756323706.1160903",
+  "timestamp": "1756384568.2876894",
   "brand_essence": {
     "company_profile": {
       "name": "Flipkart",
@@ -21,29 +21,31 @@
     },
     "market_analysis": {
       "industry_trends": [
+        "Trends Book Cover Design",
         "2024 \u00b7 Published on November 19, 2024 TABLE OF CONTENTS Example H2 Choosing the right color"
       ],
       "competitor_insights": {
         "notable_competitors": [
-          "The Best",
-          "Designs",
-          "Shoppers",
+          "Ecommerce Color",
+          "Blog Features",
           "Best Logistics",
-          "Logistics Color",
-          "Logistics Website",
-          "PDF",
-          "Palette Explore",
-          "Just",
-          "Palette Combinations"
+          "Ideal",
+          "And Logistics",
+          "Careers Contact",
+          "Retail Supply",
+          "Chain Technology",
+          "Pricing Migration",
+          "Trends That"
         ],
         "common_design_patterns": []
       },
       "design_trends": {
         "popular_colors": [
           "orange",
+          "black",
           "red",
-          "blue",
-          "black"
+          "white",
+          "blue"
         ],
         "typography_trends": [
           "modern",
@@ -53,8 +55,8 @@
           "modern",
           "professional",
           "bold",
-          "creative",
-          "minimalist"
+          "minimalist",
+          "creative"
         ]
       }
     },
@@ -72,8 +74,8 @@
       "recommended_style": "modern",
       "color_direction": [
         "orange",
-        "red",
-        "blue"
+        "black",
+        "red"
       ],
       "typography_approach": "clean and professional",
       "visual_elements": [
@@ -99,19 +101,19 @@
         "domain": "www.solvoyo.com"
       },
       {
-        "title": "Supply Chain Logo royalty-free images - Shutterstock",
-        "url": "https://www.shutterstock.com/search/supply-chain-logo",
-        "domain": "www.shutterstock.com"
-      },
-      {
         "title": "Logistics logos - 99Designs",
         "url": "https://99designs.com/inspiration/logos/logistics",
         "domain": "99designs.com"
       },
       {
-        "title": "30 Best Logistic Logo Design Ideas You Should Check - Pinterest",
-        "url": "https://www.pinterest.com/pin/30-best-logistic-logo-design-ideas--65865213294042286/",
-        "domain": "www.pinterest.com"
+        "title": "E Logistics Logo vectors - Shutterstock",
+        "url": "https://www.shutterstock.com/search/e-logistics-logo?image_type=vector",
+        "domain": "www.shutterstock.com"
+      },
+      {
+        "title": "Top 25 Supply Chain And Logistics Logo Ideas - Designhill",
+        "url": "https://www.designhill.com/design-blog/top-supply-chain-and-logistics-logo-ideas/",
+        "domain": "www.designhill.com"
       },
       {
         "title": "The Best 15 Ecommerce Color Palette Combinations - Piktochart",
@@ -124,9 +126,9 @@
         "domain": "www.pinterest.com"
       },
       {
-        "title": "The Psychology of Color in eCommerce - FreightAmigo",
-        "url": "https://www.freightamigo.com/blog/the-psychology-of-color-in-ecommerce-boosting-sales-through-strategic-design/",
-        "domain": "www.freightamigo.com"
+        "title": "Explore 13 Ecommerce Color Palettes, Inspirations, Ideas",
+        "url": "https://octet.design/colors/tag/ecommerce/",
+        "domain": "octet.design"
       },
       {
         "title": "[PDF] How India spends: A deep dive into consumer spending behaviour",
@@ -137,24 +139,24 @@
   },
   "visual_identity": {
     "logos": [
-      "output/flipkart_logo_1_20250828_172836_18c40558.png",
-      "output/flipkart_logo_2_20250828_172855_a83833dd.png",
-      "output/flipkart_logo_3_20250828_172914_22af2aa2.png"
+      "output/flipkart_logo_1_20250828_181950_a6e442d2.png",
+      "output/flipkart_logo_2_20250828_182008_4840f44b.png",
+      "output/flipkart_logo_3_20250828_182027_c42fdb5b.png"
     ],
     "palette": {
-      "primary": "#2563EB",
-      "secondary": "#EF4444",
-      "accent": "#FB923C",
+      "primary": "#EA580C",
+      "secondary": "#F87171",
+      "accent": "#1F2937",
       "supporting": [
         "#FB923C",
-        "#BE185D"
+        "#000000"
       ],
       "hex_codes": [
-        "#2563EB",
-        "#EF4444",
+        "#EA580C",
+        "#F87171",
+        "#1F2937",
         "#FB923C",
-        "#FB923C",
-        "#BE185D"
+        "#000000"
       ]
     },
     "typography": {
@@ -167,18 +169,18 @@
       ],
       "description": "Research-driven modern selection"
     },
-    "visual_style": "Visual style for Flipkart in E-commerce, Retail, Technology, Logistics & Supply Chain: Cartoon aesthetic, values: Customer-Centricity, Innovation, Affordability, Trust, Reliability, Convenience, Inclusivity, Agility, Empowerment, Growth, audience: Price-conscious shoppers, Middle-class families, Young professionals, Students, Digital-savvy consumers, Tier 2 & Tier 3 city customers, Small businesses, Value-seeking online buyers.. Use whitespace, on-brand accent color, modern design cues.",
-    "photography_style": "Photography style for Flipkart: Cartoon and E-commerce, Retail, Technology, Logistics & Supply Chain feel. Show diversity, authenticity, and lighting that supports brand values: Customer-Centricity, Innovation, Affordability, Trust, Reliability, Convenience, Inclusivity, Agility, Empowerment, Growth. Images should resonate with Price-conscious shoppers, Middle-class families, Young professionals, Students, Digital-savvy consumers, Tier 2 & Tier 3 city customers, Small businesses, Value-seeking online buyers.."
+    "visual_style": "Visual style for Flipkart in E-commerce, Retail, Technology, Logistics & Supply Chain: Mordern aesthetic, values: Customer-Centricity, Innovation, Affordability, Trust, Reliability, Convenience, Inclusivity, Agility, Empowerment, Growth, audience: Price-conscious shoppers, Middle-class families, Young professionals, Students, Digital-savvy consumers, Tier 2 & Tier 3 city customers, Small businesses, Value-seeking online buyers.. Use whitespace, on-brand accent color, modern design cues.",
+    "photography_style": "Photography style for Flipkart: Mordern and E-commerce, Retail, Technology, Logistics & Supply Chain feel. Show diversity, authenticity, and lighting that supports brand values: Customer-Centricity, Innovation, Affordability, Trust, Reliability, Convenience, Inclusivity, Agility, Empowerment, Growth. Images should resonate with Price-conscious shoppers, Middle-class families, Young professionals, Students, Digital-savvy consumers, Tier 2 & Tier 3 city customers, Small businesses, Value-seeking online buyers.."
   },
   "brand_narrative": {
-    "brand_story": "In the bustling streets of India, where the vibrant colors and sounds of daily life intertwine, there is a beacon of innovation and convenience that shines brighter than the rest - Flipkart.\n\nAt Flipkart, we believe in the power of empowerment through technology. Our journey began with a simple idea - to revolutionize the way people shop, especially those who value affordability and convenience above all else. We saw an opportunity to cater to the needs of price-conscious shoppers, middle-class families, young professionals, students, and digital-savvy consumers who were looking for a reliable and trustworthy online shopping experience.\n\nDriven by our core values of customer-centricity, innovation, and inclusivity, we embarked on a mission to redefine the E-commerce landscape. We wanted to make shopping accessible to everyone, regardless of their location or background. That's why we focused on reaching out to tier 2 & tier 3 city customers and small businesses, providing them with a platform where they could access a wide range of products at competitive prices.\n\nOur brand promise is simple yet powerful - to empower individuals and businesses through our distinctive E-commerce, Retail, Technology, Logistics & Supply Chain solutions. We understand the importance of affordability and trust in today's fast-paced world, which is why we have built a reputation for delivering high-quality products at affordable prices, backed by excellent customer service and reliable delivery.\n\nWhat sets us apart is our commitment to growth and agility. We are constantly pushing the boundaries of innovation, exploring new ways to enhance the shopping experience for our customers. Whether it's through our cutting-edge technology solutions or our seamless logistics and supply chain network, we are always striving to stay ahead of the curve and meet the evolving needs of our diverse customer base.\n\nSo, if you are a price-conscious shopper looking for the best deals, a middle-class family trying to make ends meet, a young professional juggling work and personal life, a student on a tight budget, or a small business looking to expand your reach - Flipkart is",
-    "voice_tone": "Flipkart's brand voice is friendly, approachable, and inclusive, catering to a diverse audience of price-conscious shoppers, middle-class families, young professionals, students, digital-savvy consumers, Tier 2 & Tier 3 city customers, small businesses, and value-seeking online buyers. The tone is customer-centric, focusing on innovation, affordability, trust, reliability, convenience, inclusivity, agility, empowerment, and growth.\n\nThe brand voice is characterized by a balance of empathy and expertise, reflecting Flipkart's commitment to understanding and meeting the needs of its customers. It is authoritative in its knowledge",
-    "messaging_arch": "**Messaging Architecture for Flipkart:**\n\n**1. Price-conscious shoppers:**\n- Offering unbeatable deals and discounts on a wide range of products to help you save more while shopping.\n\n**2. Middle-class families:**\n- Providing quality products at affordable prices, making it easier for you to fulfill your family's needs without breaking the bank.\n\n**3. Young professionals:**\n- Curated selection of trendy and stylish products that fit your busy lifestyle, with fast delivery options to keep up with your on-the-go schedule.\n\n**4. Students:**\n- Exclusive student discounts and budget-friendly options on essentials like books, electronics, and stationery, helping you stay within your budget while studying.\n\n**5. Digital-savvy consumers:**\n- Seamless online shopping experience with user-friendly interface, personalized recommendations, and secure payment options for a hassle-free shopping journey.\n\n**6. Tier 2 &",
+    "brand_story": "In the bustling streets of India, where tradition meets modernity, there is a beacon of innovation that shines brightly \u2013 Flipkart. Born out of a vision to revolutionize the way Price-conscious shoppers, Middle-class families, Young professionals, Students, Digital-savvy consumers, Tier 2 & Tier 3 city customers, Small businesses, and Value-seeking online buyers shop, Flipkart has become synonymous with cutting-edge E-commerce, Retail, Technology, Logistics & Supply Chain solutions.\n\nAt the heart of Flipkart's success lies a deep-rooted commitment to its core values \u2013 Customer-Centricity, Innovation, Affordability, Trust, Reliability, Convenience, Inclusivity, Agility, Empowerment, and Growth. From its humble beginnings, Flipkart has always placed the customer at the center of everything it does. Understanding the diverse needs and aspirations of its customers, Flipkart has continuously strived to innovate and create solutions that not only meet but exceed their expectations.\n\nImagine a young professional in a bustling city, juggling work, family, and personal commitments. With just a few clicks on the Flipkart app, they can browse through a wide range of products, from the latest gadgets to trendy fashion, all at affordable prices. For a middle-class family living in a Tier 2 city, Flipkart is their go-to destination for quality products that fit their budget. Students, eager to stay ahead in their studies, find everything they need on Flipkart, from textbooks to laptops, delivered right to their doorstep.\n\nBut Flipkart's impact goes beyond just catering to individual shoppers. Small businesses across the country have found a lifeline in Flipkart's platform, reaching a wider audience and growing their enterprises. By empowering these sellers, Flipkart is not just a marketplace but a catalyst for economic growth and empowerment.\n\nWhat sets Flipkart apart is its relentless pursuit of excellence and its ability to adapt and evolve with the ever-changing landscape of E-commerce, Retail, Technology, Logistics & Supply Chain",
+    "voice_tone": "Flipkart's brand voice is friendly, approachable, and empathetic, reflecting its core values of customer-centricity, affordability, trust, and inclusivity. The tone is informative, engaging, and empowering, resonating with price-conscious shoppers, middle-class families, young professionals, students, digital-savvy consumers, tier 2 & tier 3 city customers, small businesses, and value-seeking online buyers.\n\nFlipkart communicates with a touch of playfulness, while also maintaining a level of authority and expertise in the e-commerce, retail, technology, logistics, and supply chain sectors. The brand",
+    "messaging_arch": "Messaging Architecture for Flipkart:\n\n1. Price-conscious shoppers: \"Get the best deals on a wide range of products, with exclusive discounts and offers to help you save more on every purchase.\"\n\n2. Middle-class families: \"Shop for quality products at affordable prices, with convenient payment options and reliable delivery services to make shopping easier for your family.\"\n\n3. Young professionals: \"Discover the latest trends in fashion, electronics, and more, with fast and efficient delivery to fit your busy schedule.\"\n\n4. Students: \"Find everything you need for your studies and lifestyle, from textbooks to gadgets, at unbeatable prices with student discounts and deals.\"\n\n5. Digital-savvy consumers: \"Experience a seamless online shopping journey with user-friendly interfaces, personalized recommendations, and secure payment options for a hassle-free experience.\"\n\n6. Tier 2 & Tier 3 city customers: \"Access a wide selection of products",
     "marketing_copy": {
-      "website": "\"Empowering Every Shopper: Flipkart's Innovative, Affordable, and Customer-Centric E-commerce Platform\"\n\"Experience Trust, Reliability, and Convenience with Flipkart - Your One-Stop Shop for Inclusive Growth and Agility\"",
-      "email": "Subject: Discover the Flipkart Difference: Customer-Centricity, Innovation, and Affordability!\n\nPreview text: Experience trust, reliability, and convenience while enjoying inclusivity, agility, and empowerment. Grow with us as we cater to price-conscious shoppers, families, professionals, students, and more in Tier 2 & 3 cities!",
-      "social_media": "\ud83c\udf1f Get more bang for your buck with Flipkart! \ud83d\udecd\ufe0f From price-conscious shoppers to young professionals and small businesses, we've got something for everyone. \ud83d\udcb8 Shop with confidence knowing you're getting the best deal without compromising on quality. \ud83d\udcaa Embrace innovation, affordability, and convenience all in one place. Let's empower your shopping experience together! \ud83c\udf08 #Flipkart #AffordableShopping #Innovation #Empowerment",
-      "ad_copy": "\"\ud83c\udf89 Get more bang for your buck with Flipkart! Shop top brands at unbeatable prices for all your needs. From tech gadgets to fashion essentials, we've got it all. Don't miss out - shop now and save big! \ud83d\udcb8 #Flipkart #ShopSmart\""
+      "website": "\"Empowering Price-Conscious Shoppers with Innovative Solutions: Flipkart - Your Trusted Online Retail Destination\"\n\"Experience Affordable Convenience and Reliability Tailored for Middle-Class Families, Students, and Small Businesses\"",
+      "email": "Subject: Discover the Power of Innovation and Affordability at Flipkart!\n\nPreview: Experience customer-centricity, trust, and reliability with Flipkart \u2013 your go-to destination for convenience, inclusivity, and empowerment. Find growth opportunities, agility, and unbeatable value for price-conscious shoppers, middle-class families, young professionals, students, and digital-savvy consumers in tier 2 & tier 3 cities. Shop now and see how Flipkart is revolutionizing the online shopping experience for small businesses and value-seeking online buyers.",
+      "social_media": "\ud83c\udf1f Shop smart, shop with Flipkart! \ud83d\uded2\u2728 From budget-friendly finds to top-notch tech, we've got something for everyone. \ud83d\udcb8\ud83d\udca1 Why compromise on quality when you can have it all at unbeatable prices? \ud83e\udd29\ud83d\udce6 #FlipkartFinds #AffordableLuxury #InnovationForAll #ShopWithConfidence",
+      "ad_copy": "\"Find unbeatable deals on Flipkart - your one-stop shop for all things tech, fashion, home goods, and more! Shop smart, save big, and discover the best prices for price-conscious shoppers, young professionals, students, and savvy online buyers. Don't miss out - shop now on Flipkart!\""
     },
     "collaterals": {
       "business_card": "Simple, clean business card layout for Flipkart in E-commerce, Retail, Technology, Logistics & Supply Chain. Emphasize clarity, logo, and minimal info.",
@@ -263,89 +265,104 @@
   "visual_system": {
     "enhanced_palette": {
       "base_colors": {
-        "primary": "#2563EB",
-        "secondary": "#EF4444",
-        "accent": "#FB923C",
+        "primary": "#EA580C",
+        "secondary": "#F87171",
+        "accent": "#1F2937",
         "supporting": [
           "#FB923C",
-          "#BE185D"
+          "#000000"
         ],
         "hex_codes": [
-          "#2563EB",
-          "#EF4444",
+          "#EA580C",
+          "#F87171",
+          "#1F2937",
           "#FB923C",
-          "#FB923C",
-          "#BE185D"
+          "#000000"
         ]
       },
       "tints": {
         "primary": [
-          "#5082ef",
-          "#7ca1f3",
-          "#a7c0f7",
-          "#d3dffb",
+          "#ee793c",
+          "#f29a6d",
+          "#f6bc9d",
+          "#faddce",
           "#ffffff"
         ],
         "secondary": [
-          "#f26969",
-          "#f58e8e",
-          "#f8b4b4",
-          "#fbd9d9",
+          "#f98d8d",
+          "#faa9a9",
+          "#fcc6c6",
+          "#fde2e2",
           "#ffffff"
         ],
         "accent": [
-          "#fba763",
-          "#fcbd8a",
-          "#fdd3b1",
-          "#fee9d8",
+          "#4b535f",
+          "#787e87",
+          "#a5a9af",
+          "#d2d4d7",
           "#ffffff"
         ]
       },
       "shades": {
         "primary": [
-          "#1d4fbc",
-          "#163b8d",
-          "#0e275e",
-          "#07132e",
+          "#bb4609",
+          "#8c3407",
+          "#5d2304",
+          "#2e1102",
           "#000000"
         ],
         "secondary": [
-          "#bf3636",
-          "#8f2828",
-          "#5f1b1b",
-          "#2f0d0d",
+          "#c65a5a",
+          "#944343",
+          "#632d2d",
+          "#311616",
           "#000000"
         ],
         "accent": [
-          "#c87430",
-          "#965724",
-          "#643a18",
-          "#321d0b",
+          "#18202c",
+          "#121821",
+          "#0c1016",
+          "#06080a",
           "#000000"
         ]
       },
       "gradients": {
         "primary_to_secondary": [
-          "#2563EB",
-          "#EF4444"
+          "#EA580C",
+          "#F87171"
         ],
         "dark_to_primary": [
           "#1a1a1a",
-          "#2563EB"
+          "#EA580C"
         ],
         "primary_to_light": [
-          "#2563EB",
+          "#EA580C",
           "#f8f9fa"
         ]
       },
-      "accessible_pairs": []
+      "accessible_pairs": [
+        {
+          "foreground": "secondary",
+          "background": "accent",
+          "contrast_ratio": 5.306706499294051,
+          "wcag_aa": true,
+          "wcag_aaa": false
+        },
+        {
+          "foreground": "accent",
+          "background": "secondary",
+          "contrast_ratio": 5.306706499294051,
+          "wcag_aa": true,
+          "wcag_aaa": false
+        }
+      ]
     },
     "gradient_backgrounds": {
       "hero": {
         "type": "linear_diagonal",
         "colors": [
-          "#2563EB",
-          "#FB923C"
+          "#EA580C",
+          "#1F2937"
         ],
         "direction": "135deg",
         "opacity": 0.9
@@ -382,25 +399,25 @@
       "geometric_bars": {
         "style": "rectangular",
         "height": "4px",
-        "color": "#FB923C",
+        "color": "#1F2937",
         "margin": "2rem 0"
       },
       "gradient_divider": {
         "style": "linear_gradient",
         "height": "2px",
-        "gradient": "linear-gradient(90deg, transparent, #2563EB, transparent)",
+        "gradient": "linear-gradient(90deg, transparent, #EA580C, transparent)",
         "margin": "3rem 0"
       },
       "brand_shape_divider": {
         "style": "custom_svg",
         "height": "20px",
         "pattern": "brand_derived",
-        "color": "#FB923C"
+        "color": "#1F2937"
       },
       "minimal_line": {
         "style": "solid",
         "height": "1px",
-        "color": "#EF4444",
+        "color": "#F87171",
         "opacity": 0.3,
         "margin": "1.5rem 0"
       }
@@ -409,12 +426,12 @@
       "monogram_circle": {
         "shape": "circle",
         "content": "F",
-        "background": "#2563EB",
+        "background": "#EA580C",
         "text_color": "#ffffff"
       },
       "geometric_pattern": {
         "shape": "hexagon_grid",
-        "color": "#FB923C",
+        "color": "#1F2937",
         "opacity": 0.1,
         "usage": "background_pattern"
       },
@@ -426,11 +443,11 @@
       },
       "decorative_elements": {
         "dots": {
-          "color": "#FB923C",
+          "color": "#1F2937",
           "opacity": 0.6
         },
         "lines": {
-          "color": "#EF4444",
+          "color": "#F87171",
           "opacity": 0.3
         },
         "shapes": {
@@ -445,21 +462,21 @@
           "font_size": "clamp(2.5rem, 5vw, 4rem)",
           "font_weight": "bold",
           "line_height": "1.1",
-          "color": "#2563EB",
+          "color": "#EA580C",
           "margin_bottom": "1.5rem"
         },
         "h2": {
           "font_size": "clamp(2rem, 4vw, 3rem)",
           "font_weight": "semibold",
           "line_height": "1.2",
-          "color": "#2563EB",
+          "color": "#EA580C",
           "margin_bottom": "1rem"
         },
         "h3": {
           "font_size": "clamp(1.5rem, 3vw, 2rem)",
           "font_weight": "medium",
           "line_height": "1.3",
-          "color": "#EF4444",
+          "color": "#F87171",
           "margin_bottom": "0.75rem"
         }
       },
@@ -467,7 +484,7 @@
         "paragraph": {
           "font_size": "1.125rem",
           "line_height": "1.6",
-          "color": "#EF4444",
+          "color": "#F87171",
           "margin_bottom": "1rem"
         },
         "small_text": {
@@ -479,11 +496,11 @@
       },
       "emphasis": {
         "accent_text": {
-          "color": "#FB923C",
+          "color": "#1F2937",
           "font_weight": "semibold"
         },
         "highlight": {
-          "background": "#fba763",
+          "background": "#4b535f",
           "padding": "2px 6px",
           "border_radius": "3px"
         }
@@ -542,20 +559,20 @@
       "wcag_aaa_compliant": false,
       "contrast_ratios": {
         "primary": {
-          "vs_white": 5.168555560022562,
-          "vs_black": 4.0630307164403066,
+          "vs_white": 3.5595130905908228,
+          "vs_black": 5.899683317786122,
           "aa_compliant": true,
           "aaa_compliant": false
         },
         "secondary": {
-          "vs_white": 3.763127680148142,
-          "vs_black": 5.58046438625577,
+          "vs_white": 2.766144779174141,
+          "vs_black": 7.5917935164152,
           "aa_compliant": true,
-          "aaa_compliant": false
+          "aaa_compliant": true
         },
         "accent": {
-          "vs_white": 2.2632606344883768,
-          "vs_black": 9.278648548026007,
+          "vs_white": 14.67911847763172,
+          "vs_black": 1.4306036177853692,
           "aa_compliant": true,
           "aaa_compliant": true
         },
@@ -566,26 +583,26 @@
           "aaa_compliant": true
         },
         "supporting_1": {
-          "vs_white": 6.037699049194929,
-          "vs_black": 3.4781461992213996,
+          "vs_white": 21.0,
+          "vs_black": 1.0,
           "aa_compliant": true,
-          "aaa_compliant": false
+          "aaa_compliant": true
         },
         "hex_codes_0": {
-          "vs_white": 5.168555560022562,
-          "vs_black": 4.0630307164403066,
+          "vs_white": 3.5595130905908228,
+          "vs_black": 5.899683317786122,
           "aa_compliant": true,
           "aaa_compliant": false
         },
         "hex_codes_1": {
-          "vs_white": 3.763127680148142,
-          "vs_black": 5.58046438625577,
+          "vs_white": 2.766144779174141,
+          "vs_black": 7.5917935164152,
           "aa_compliant": true,
-          "aaa_compliant": false
+          "aaa_compliant": true
         },
         "hex_codes_2": {
-          "vs_white": 2.2632606344883768,
-          "vs_black": 9.278648548026007,
+          "vs_white": 14.67911847763172,
+          "vs_black": 1.4306036177853692,
           "aa_compliant": true,
           "aaa_compliant": true
         },
@@ -596,10 +613,10 @@
           "aaa_compliant": true
         },
         "hex_codes_4": {
-          "vs_white": 6.037699049194929,
-          "vs_black": 3.4781461992213996,
+          "vs_white": 21.0,
+          "vs_black": 1.0,
           "aa_compliant": true,
-          "aaa_compliant": false
+          "aaa_compliant": true
         }
       },
       "color_blind_friendly": true,
@@ -609,6 +626,7 @@
         "protanopia_safe": true,
         "tritanopia_safe": true,
         "recommendations": [
+          "Consider adding more hue diversity to improve color blind accessibility",
           "Consider adding more hue diversity to improve color blind accessibility",
           "Consider adding more hue diversity to improve color blind accessibility",
           "Consider adding more hue diversity to improve color blind accessibility",
