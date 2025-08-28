@@ -1,0 +1,208 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Zeta Brand Book</title>
+            <style>
+        :root {
+            --primary-color: #059669;
+            --accent-color: #3B82F6;
+            --secondary-color: #6D28D9;
+            --gradient-primary: linear-gradient(135deg, #059669, #3B82F6);
+            --gradient-section: linear-gradient(180deg, #f8f9fa, #ffffff);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);  /* Use primary brand color for body text */
+            background: var(--gradient-section);
+        }
+        
+        .hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .color-swatch {
+            text-align: center;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: translateY(-4px);
+        }
+        
+        .swatch {
+            width: 100%;
+            height: 120px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+        }
+        
+        .brand-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .typography-demo {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .hero { padding: 2rem 1rem; }
+            .section { padding: 2rem 0; }
+            .container { padding: 0 1rem; }
+        }
+        </style>
+        </head>
+        <body>
+            
+        <section class="hero">
+            <div class="container">
+                <h1>Zeta</h1>
+                <p style="font-size: 1.25rem; opacity: 0.9;">Brand Book & Style Guide</p>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Essence</h2>
+                <div class="brand-card">
+                    <h3>Company Profile</h3>
+                    <p><strong>Industry:</strong> Banking Technology , Fintech</p>
+                    <p><strong>Target Audience:</strong> Banks, Fintech companies, Financial institutions (issuers, neobanks), NBFCs, Corporates launching embedded banking, particularly in markets like India</p>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Visual Identity</h2>
+                <div class="brand-card">
+                    <h3>Color Palette</h3>
+                    <div class="color-palette">
+                        
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #059669;"></div>
+                        <h4>Primary</h4>
+                        <p>#059669</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #6D28D9;"></div>
+                        <h4>Secondary</h4>
+                        <p>#6D28D9</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #3B82F6;"></div>
+                        <h4>Accent</h4>
+                        <p>#3B82F6</p>
+                    </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Narrative</h2>
+                <div class="brand-card">
+                    <h3>Brand Story</h3>
+                    <p>In the bustling world of Banking Technology and Fintech, one name stands out among the rest - Zeta. Born out of a vision to revolutionize the way banks, fintech companies, financial institutions, NBFCs, and corporates approach embedded banking, Zeta is not just a solution provider; it is a partner in empowerment and innovation.
+
+At the heart of Zeta's ethos lies a commitment to reliability, precision, scalability, and compliance. We understand the challenges faced by our clients in navigating the complex landscape of modern finance, and we are here to provide them with cutting-edge solutions that not only meet their needs but exceed their expectations.
+
+Our brand promise is simple yet powerful - to empower banks, fintech companies, financial institutions, NBFCs, and corporates launching embedded banking in markets like India through our innovative Banking Technology and Fintech solutions. We believe in the power of partnership and transparency, working hand in hand with our clients to co-create solutions that drive their business forward.
+
+What sets Zeta apart is our unique value proposition - a distinctive approach to Banking Technology and Fintech solutions that is tailored to the specific needs of our clients in the Indian market. We understand the nuances of operating in this dynamic environment and have crafted our solutions with this in mind.
+
+But beyond our technical expertise and industry knowledge, what truly sets us apart is our brand personality. We are innovative, forward-thinking, and creative, constantly pushing the boundaries of what is possible in the world of Banking Technology and Fintech.
+
+So if you are a bank, fintech company, financial institution, NBFC, or corporate looking to launch embedded banking solutions in markets like India, look no further than Zeta. We are not just a solution provider; we are a partner in your journey towards success and empowerment. Together, let's redefine the future of banking.</p>
+                </div>
+                <div class="brand-card">
+                    <h3>Voice & Tone</h3>
+                    <p>Zeta's brand voice is authoritative, yet friendly and approachable, reflecting its core values of reliability, innovation, precision, scalability, partnership, compliance, transparency, speed, business-centric approach, and customer empowerment. 
+
+The tone is professional and trustworthy, showcasing Zeta as a leader in banking technology and fintech solutions. It emphasizes the company's commitment to providing cutting-edge products and services that meet the evolving needs of banks, fintech companies, financial institutions, NBFCs, and corporates venturing into embedded banking.
+
+Zeta's messaging is clear, concise, and business-focused, highlighting</p>
+                </div>
+            </div>
+        </section>
+        
+        </body>
+        </html>
+        

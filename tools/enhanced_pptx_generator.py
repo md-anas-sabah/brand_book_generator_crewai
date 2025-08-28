@@ -1315,6 +1315,120 @@ class EnhancedPPTXGenerator:
         self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+    
+    def _create_brand_story_slide(self, prs, identity_data, title, content):
+        """Create brand story slide with same design as Introduction slide"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color (ensure it uses the agent's chosen primary color)
+        primary_color_hex = "#FFFF00"  # Default to yellow
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+        
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Main content text - positioned in upper area (same as Introduction)
+        # Content positioned in upper portion - reduced top space and increased width
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 4)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = content
+        content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
+        
+        # Style the content text - white, left-aligned, same as introduction slide
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=20)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)  # Consistent spacing
+        
+        # Full-width line separator (same width as introduction slide)
+        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # Title in primary color below the line (same as Introduction)
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = title
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+    
+    def _create_brand_story_slides(self, prs, identity_data, story_content):
+        """Create Brand Story slides - split into multiple slides if content is too long"""
+        
+        # Split content into manageable chunks for slides
+        story_parts = self._split_story_content(story_content)
+        
+        if len(story_parts) == 1:
+            # Single slide
+            self._create_brand_story_slide(prs, identity_data, "BRAND STORY", story_parts[0])
+        else:
+            # Multiple slides with pagination
+            for i, part in enumerate(story_parts):
+                slide_title = f"BRAND STORY ({i+1}/{len(story_parts)})"
+                self._create_brand_story_slide(prs, identity_data, slide_title, part)
+    
+    def _split_story_content(self, content):
+        """Split story content into appropriate chunks for slides"""
+        if not content:
+            return [""]
+        
+        # Target words per slide (roughly 200-250 words per slide for readability)
+        words_per_slide = 200
+        words = content.split()
+        
+        if len(words) <= words_per_slide:
+            return [content]
+        
+        # Split into paragraphs first
+        paragraphs = content.split('\n\n')
+        
+        parts = []
+        current_part = ""
+        current_word_count = 0
+        
+        for paragraph in paragraphs:
+            paragraph_words = paragraph.split()
+            paragraph_word_count = len(paragraph_words)
+            
+            # If adding this paragraph would exceed the limit, start a new part
+            if current_word_count + paragraph_word_count > words_per_slide and current_part:
+                parts.append(current_part.strip())
+                current_part = paragraph + "\n\n"
+                current_word_count = paragraph_word_count
+            else:
+                current_part += paragraph + "\n\n"
+                current_word_count += paragraph_word_count
+        
+        # Add the last part if there's content
+        if current_part.strip():
+            parts.append(current_part.strip())
+        
+        # If we still don't have good splits, do a simple word-based split
+        if not parts or (len(parts) == 1 and len(words) > words_per_slide * 2):
+            parts = []
+            for i in range(0, len(words), words_per_slide):
+                chunk_words = words[i:i + words_per_slide]
+                parts.append(' '.join(chunk_words))
+        
+        return parts if parts else [content]
 
     def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None, 
                    industry="", values="", audience=""):
@@ -1382,7 +1496,7 @@ class EnhancedPPTXGenerator:
                 story_content = f"Our story at {company_name} is one of innovation and dedication to excellence."
         
         if story_content:
-            self._create_text_slide(prs, "Brand Story", story_content, 100, identity_data)
+            self._create_brand_story_slides(prs, identity_data, story_content)
         
         # 8. Logo Variations
         if identity_data.get("logos"):
