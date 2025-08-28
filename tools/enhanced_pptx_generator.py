@@ -336,6 +336,100 @@ class EnhancedPPTXGenerator:
         self.styler.apply_subtitle_style(brand_system_frame.paragraphs[0], size=18, color=primary_color)
         brand_system_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         brand_system_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+
+    def _create_introduction_slide(self, prs, company_name, brand_essence, identity_data):
+        """Create introduction slide with company overview"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get dynamic primary color
+        primary_color = "#FFFFFF"
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
+        
+        # Title
+        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
+        title_textbox = slide.shapes.add_textbox(left, top, width, height)
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Introduction"
+        self.styler.apply_title_style(title_frame.paragraphs[0], color=primary_color)
+        title_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        
+        # Introduction content
+        intro_content = f"Welcome to the {company_name} Brand Book.\n\nThis comprehensive guide outlines our brand identity, values, and visual standards to ensure consistent brand representation across all touchpoints."
+        
+        # Add brand essence intro if available
+        if brand_essence and brand_essence.get("company_profile"):
+            profile = brand_essence["company_profile"]
+            if profile.get("target_audience"):
+                intro_content += f"\n\nOur mission is to serve {profile['target_audience']} with excellence and innovation."
+        
+        left, top, width, height = self.grid.get_position(2, 2, 8, 4)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = intro_content
+        content_frame.word_wrap = True
+        
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=18)
+            paragraph.alignment = PP_ALIGN.CENTER
+        
+       
+
+
+    def _create_brand_purpose_slide(self, prs, brand_essence, identity_data):
+        """Create brand purpose slide with mission and values"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get dynamic primary color
+        primary_color = "#FFFFFF"
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
+        
+        # Title
+        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
+        title_textbox = slide.shapes.add_textbox(left, top, width, height)
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Brand Purpose"
+        self.styler.apply_title_style(title_frame.paragraphs[0], color=primary_color)
+        title_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        
+        # Brand Purpose content from AI research
+        purpose_content = "Our Purpose\n\n"
+        
+        if brand_essence and brand_essence.get("brand_positioning"):
+            positioning = brand_essence["brand_positioning"]
+            if positioning.get("unique_value_proposition"):
+                purpose_content += f"Vision: {positioning['unique_value_proposition']}\n\n"
+            if positioning.get("brand_promise"):
+                purpose_content += f"Mission: {positioning['brand_promise']}\n\n"
+        
+        # Add core values if available
+        if brand_essence and brand_essence.get("company_profile", {}).get("core_values"):
+            values = brand_essence["company_profile"]["core_values"]
+            purpose_content += f"Core Values:\n"
+            for value in values:
+                purpose_content += f"• {value}\n"
+        else:
+            purpose_content += "Our core values guide everything we do, from innovation to customer service excellence."
+        
+        left, top, width, height = self.grid.get_position(2, 2, 8, 5)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = purpose_content
+        content_frame.word_wrap = True
+        
+        for i, paragraph in enumerate(content_frame.paragraphs):
+            if i == 0:  # Title "Our Purpose"
+                self.styler.apply_subtitle_style(paragraph, color=primary_color, size=24)
+                paragraph.alignment = PP_ALIGN.CENTER
+            else:
+                self.styler.apply_body_style(paragraph, color='white', size=16)
         
 
 
@@ -473,7 +567,7 @@ class EnhancedPPTXGenerator:
                 chip_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
                 self.styler.apply_body_style(chip_frame.paragraphs[0], "#FFFFFF", size=14)
         
-        self._add_footer(slide, self.slide_counter)
+       
     
     def _create_market_analysis_slide(self, prs, brand_essence, identity_data):
         """Create market analysis with organized blocks"""
@@ -976,31 +1070,42 @@ class EnhancedPPTXGenerator:
         # 1. Title Slide
         self._create_title_slide(prs, company_name, identity_data, brand_essence)
         
-        # Build sections list
+        # Build sections list with Introduction and Brand Purpose first
+        sections.extend([
+            "1. Introduction",
+            "2. Brand Purpose"
+        ])
+        
         if brand_essence:
             if brand_essence.get("company_profile"):
-                sections.append("Company Profile")
+                sections.append("3. Company Profile")
             if brand_essence.get("market_analysis"):
-                sections.append("Market Analysis & Insights")
+                sections.append("4. Market Analysis & Insights")
             if brand_essence.get("brand_positioning"):
-                sections.append("Brand Positioning")
+                sections.append("5. Brand Positioning")
         
         sections.extend([
-            "Logo Variations",
-            "Color Palette", 
-            "Typography",
-            "Visual & Photography Guidelines",
-            "Brand Story & Mission",
-            "Brand Voice & Tone",
-            "Messaging & Value Propositions",
-            "Marketing Copy",
-            "Brand Collateral Templates"
+            "6. Logo Variations",
+            "7. Color Palette", 
+            "8. Typography",
+            "9. Visual & Photography Guidelines",
+            "10. Brand Story & Mission",
+            "11. Brand Voice & Tone",
+            "12. Messaging & Value Propositions",
+            "13. Marketing Copy",
+            "14. Brand Collateral Templates"
         ])
         
         # 2. Table of Contents
         self._create_table_of_contents(prs, sections, identity_data)
         
-        # 3. Brand Essence Slides
+        # 3. Introduction Slide
+        self._create_introduction_slide(prs, company_name, brand_essence, identity_data)
+        
+        # 4. Brand Purpose Slide
+        self._create_brand_purpose_slide(prs, brand_essence, identity_data)
+        
+        # 5. Brand Essence Slides
         if brand_essence:
             if brand_essence.get("company_profile"):
                 self._create_company_profile_slide(prs, brand_essence, identity_data)
