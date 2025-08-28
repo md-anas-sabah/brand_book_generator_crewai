@@ -317,8 +317,9 @@ class EnhancedPPTXGenerator:
         # Pitch black background instead of gradient
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # LEFT SIDE: Logo centered in left half
-        self._add_logo_to_slide(slide, identity_data, col=1, row=2, size=3, opacity=0.8)
+        # LEFT SIDE: Logo and company name aligned like flex-start (left-aligned together)
+        # Logo positioned at left edge
+        self._add_logo_to_slide(slide, identity_data, col=1, row=2, size=2, opacity=0.8)
         
         # Get dynamic primary color from brand palette
         primary_color = "#FFFFFF"  # Default white
@@ -326,14 +327,18 @@ class EnhancedPPTXGenerator:
             palette = identity_data["palette"]
             primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
         
-        # LEFT SIDE: Company name below logo, centered
-        left, top, width, height = self.grid.get_position(2, 5, 4, 1)
+        # LEFT SIDE: Company name directly below logo, left-aligned (flex-start style)
+        left, top, width, height = self.grid.get_position(1, 4.5, 4, 1)
         company_textbox = slide.shapes.add_textbox(left, top, width, height)
         company_frame = company_textbox.text_frame
         company_frame.text = company_name
         company_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
+        company_frame.margin_left = 0
+        company_frame.margin_right = 0
+        company_frame.margin_top = 0
+        company_frame.margin_bottom = 0
         self.styler.apply_title_style(company_frame.paragraphs[0], size=36, color="#FFFFFF")
-        company_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        company_frame.paragraphs[0].alignment = PP_ALIGN.LEFT  # Left-aligned like flex-start
         
         # RIGHT SIDE: Dynamic colored line above "Brand Identity System"
         line_left, line_top, line_width, line_height = self.grid.get_position(9, 7, 3, 2)
@@ -1228,6 +1233,89 @@ class EnhancedPPTXGenerator:
         
         return chunks
     
+    def _create_brand_purpose_slides(self, prs, brand_essence, identity_data, 
+                                    company_name="", industry="", values="", audience=""):
+        """Create three separate brand purpose slides: Vision, Mission, Core Values"""
+        
+        # Generate AI-powered brand purpose content once
+        print("  🤖 Generating AI-powered brand purpose content...")
+        try:
+            purpose_data = self.brand_purpose_agent.generate_brand_purpose(
+                company_name, industry, values, audience, brand_essence
+            )
+            vision_content = purpose_data.get("vision", "")
+            mission_content = purpose_data.get("mission", "")
+            values_content = purpose_data.get("values_content", "")
+        except Exception as e:
+            print(f"  ⚠️ AI brand purpose generation failed, using fallback: {e}")
+            # Fallback content
+            vision_content = "To be the preferred partner for businesses seeking excellence and innovation in their field."
+            mission_content = "We deliver exceptional solutions that drive growth and create lasting value for our clients and communities."
+            values_content = "Our principles guide everything we do, from innovation to customer service excellence."
+        
+        # Create Vision slide
+        self._create_single_purpose_slide(prs, identity_data, "VISION", vision_content)
+        
+        # Create Mission slide  
+        self._create_single_purpose_slide(prs, identity_data, "MISSION", mission_content)
+        
+        # Create Core Values slide
+        self._create_single_purpose_slide(prs, identity_data, "CORE VALUES", values_content)
+    
+    def _create_single_purpose_slide(self, prs, identity_data, title, content):
+        """Create a single brand purpose slide with same design as Introduction slide"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color (ensure it uses the agent's chosen primary color)
+        primary_color_hex = "#FFFF00"  # Default to yellow
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+        
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Main content text - positioned in upper area (same as Introduction)
+        # Content positioned in upper portion - reduced top space and increased width
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 4)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = content
+        content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
+        
+        # Style the content text - white, left-aligned, same as introduction slide
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=20)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)  # Consistent spacing
+        
+        # Full-width line separator (same width as introduction slide)
+        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # Title in primary color below the line (same as Introduction)
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = title
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+
     def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None, 
                    industry="", values="", audience=""):
         """Create comprehensive brand book presentation with AI-generated content"""
@@ -1257,15 +1345,17 @@ class EnhancedPPTXGenerator:
         # 1. Title Slide
         self._create_title_slide(prs, company_name, identity_data, brand_essence)
         
-        # Build sections list with Introduction and Brand Purpose first
+        # Build sections list with Introduction and Brand Purpose sections
         sections.extend([
             "1. Introduction",
-            "2. Brand Purpose",
-            "3. Brand Story",
-            "4. Logo Variations",
-            "5. Color Palette", 
-            "6. Typography",
-            "7. Visual & Photography Guidelines"
+            "2. Brand Purpose (Vision)",
+            "3. Brand Purpose (Mission)", 
+            "4. Brand Purpose (Values)",
+            "5. Brand Story",
+            "6. Logo Variations",
+            "7. Color Palette", 
+            "8. Typography",
+            "9. Visual & Photography Guidelines"
         ])
         
         # 2. Table of Contents
@@ -1275,11 +1365,11 @@ class EnhancedPPTXGenerator:
         self._create_introduction_slide(prs, company_name, brand_essence, identity_data, 
                                        industry, values, audience)
         
-        # 4. Brand Purpose Slide with AI content
-        self._create_brand_purpose_slide(prs, brand_essence, identity_data, 
-                                        company_name, industry, values, audience)
+        # 4-6. Brand Purpose Slides (Vision, Mission, Core Values) with AI content
+        self._create_brand_purpose_slides(prs, brand_essence, identity_data, 
+                                         company_name, industry, values, audience)
         
-        # 5. Brand Story Slide with AI content
+        # 7. Brand Story Slide with AI content
         print("  🤖 Generating AI-powered brand story content...")
         try:
             story_content = self.brand_story_agent.generate_brand_story(
@@ -1294,18 +1384,18 @@ class EnhancedPPTXGenerator:
         if story_content:
             self._create_text_slide(prs, "Brand Story", story_content, 100, identity_data)
         
-        # 6. Logo Variations
+        # 8. Logo Variations
         if identity_data.get("logos"):
             self._create_logo_variations_slide(prs, identity_data["logos"], identity_data)
         
-        # 7. Color Palette
+        # 9. Color Palette
         if identity_data.get("palette"):
             self._create_color_palette_slide(prs, identity_data["palette"], identity_data)
         
-        # 8. Typography
+        # 10. Typography
         self._create_typography_slide(prs, identity_data.get("typography", {}), identity_data)
         
-        # 9. Visual & Photography Guidelines
+        # 11. Visual & Photography Guidelines
         self._create_visual_guidelines_slide(
             prs,
             identity_data.get("visual_style", ""),
