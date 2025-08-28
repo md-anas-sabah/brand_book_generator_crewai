@@ -252,7 +252,7 @@ class EnhancedPPTXGenerator:
         company_textbox = slide.shapes.add_textbox(left, top, width, height)
         company_frame = company_textbox.text_frame
         company_frame.text = company_name
-        company_frame.text_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
+        company_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
         self.styler.apply_title_style(company_frame.paragraphs[0], size=48)
         company_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         
@@ -398,7 +398,7 @@ class EnhancedPPTXGenerator:
                 chip_frame = chip_textbox.text_frame
                 chip_frame.text = value
                 chip_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-                chip_frame.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+                chip_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
                 self.styler.apply_body_style(chip_frame.paragraphs[0], "#FFFFFF", size=14)
         
         self._add_footer(slide, self.slide_counter)
@@ -528,7 +528,7 @@ class EnhancedPPTXGenerator:
                 chip_frame = chip_textbox.text_frame
                 chip_frame.text = personality
                 chip_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-                chip_frame.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+                chip_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
                 self.styler.apply_body_style(chip_frame.paragraphs[0], size=12)
         
         # Competitive Advantage (bottom)
@@ -804,7 +804,7 @@ class EnhancedPPTXGenerator:
         
         # Placeholder rectangles for example images
         for i in range(3):
-            col = 7 + i * 1
+            col = 7 + i * 2
             placeholder_left, placeholder_top, placeholder_width, placeholder_height = self.grid.get_position(col, 6, 1, 1)
             placeholder = slide.shapes.add_shape(
                 MSO_SHAPE.RECTANGLE,

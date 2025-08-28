@@ -4,7 +4,7 @@ from agents.identity_agent import IdentityAgent
 from agents.literature_agent import LiteratureAgent
 from agents.collateral_agent import CollateralAgent
 from agents.qa_compliance_agent import QAComplianceAgent
-from tools.pptx_generator import PPTXGenerator
+from tools.enhanced_pptx_generator import EnhancedPPTXGenerator
 from tools.visual_enhancement import VisualEnhancementEngine
 from tools.advanced_export_engine import AdvancedExportEngine
 from typing import Dict
@@ -44,7 +44,7 @@ class BrandBookOrchestrator:
         self.qa_agent = QAComplianceAgent()
         self.visual_engine = VisualEnhancementEngine()
         self.export_engine = None  # Initialize later with company name
-        self.pptx_generator = PPTXGenerator()
+        self.pptx_generator = EnhancedPPTXGenerator()
         
         # Setup CrewAI agents for coordination
         self.strategist_crew_agent = Agent(
