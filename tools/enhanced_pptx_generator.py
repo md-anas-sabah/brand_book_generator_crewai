@@ -98,7 +98,7 @@ class TextStyler:
             hex_color = color.lstrip('#')
             r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
             paragraph.font.color.rgb = RGBColor(r, g, b)
-        elif hasattr(color, 'rgb'):
+        elif isinstance(color, RGBColor):
             # Handle RGBColor objects
             paragraph.font.color.rgb = color
         else:
@@ -357,38 +357,57 @@ class EnhancedPPTXGenerator:
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # Get dynamic primary color
-        primary_color = "#FFFFFF"
+        # Get brand primary color (ensure it uses the agent's chosen primary color)
+        primary_color_hex = "#FFFF00"  # Default to yellow
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
         
-        # Title
-        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
-        title_textbox = slide.shapes.add_textbox(left, top, width, height)
-        title_frame = title_textbox.text_frame
-        title_frame.text = "Introduction"
-        self.styler.apply_title_style(title_frame.paragraphs[0], color=primary_color)
-        title_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
-        # Introduction content
-        intro_content = f"Welcome to the {company_name} Brand Book.\n\nThis comprehensive guide outlines our brand identity, values, and visual standards to ensure consistent brand representation across all touchpoints."
+        # Main content text - positioned in upper area
+        intro_content = f"The following brand identity system for {company_name}\nis thoughtfully crafted to present our brand in\nan international, engaging, consistent, recognisable\nand proprietary way. Unique in form, versatile in its\napplication and unified by a fundamental principle."
         
-        # Add brand essence intro if available
-        if brand_essence and brand_essence.get("company_profile"):
-            profile = brand_essence["company_profile"]
-            if profile.get("target_audience"):
-                intro_content += f"\n\nOur mission is to serve {profile['target_audience']} with excellence and innovation."
-        
-        left, top, width, height = self.grid.get_position(2, 2, 8, 4)
+        # Content positioned in upper portion - reduced top space and increased width
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 4)
         content_textbox = slide.shapes.add_textbox(left, top, width, height)
         content_frame = content_textbox.text_frame
         content_frame.text = intro_content
         content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
         
+        # Style the content text - white, left-aligned, same as index slide
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=18)
-            paragraph.alignment = PP_ALIGN.CENTER
+            self.styler.apply_body_style(paragraph, color='white', size=20)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)  # Consistent spacing
+        
+        # Full-width line separator (same width as index slide)
+        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # "INTRODUCTION" title in primary color below the line
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
+            Inches(4), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "INTRODUCTION"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        
         
        
 

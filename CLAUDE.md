@@ -1,5 +1,29 @@
 # AI Brand Book Creator - World-Class Architecture
 
+## 🎨 PowerPoint Styling Best Practices
+
+When updating slides in the Enhanced PPTX Generator, follow these consistency guidelines:
+
+### Text Styling Standards:
+- **Index slide main text**: `size=12`, white color, bold, all margins set to 0
+- **Index slide subsections**: `size=9`, light gray (`#CCCCCC`), all margins set to 0  
+- **Introduction content**: `size=16-20`, white color, all margins set to 0
+- **Title styling**: `size=28`, use `primary_color_hex` (agent's chosen color), bold
+
+### Layout Standards:
+- **Line width**: Use `Pt(2)` for consistency with index slide
+- **Full-width lines**: Use `Inches(0.5)` to `Inches(9.5)` coordinates
+- **Margins**: Set all text frame margins to 0 for consistent spacing
+- **Content positioning**: Use grid positioning for proper alignment
+- **Color handling**: Use `primary_color_hex` for text styles, `primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))` for line/shape colors
+
+### RGBColor Best Practices:
+- Always convert hex colors to RGBColor using: `RGBColor(*self._hex_to_rgb(hex_color))`
+- Use hex strings for `apply_title_style()` and `apply_body_style()` methods
+- Use RGBColor objects for line colors and shape fills
+
+---
+
 ## 🏆 SYSTEM STATUS: PRODUCTION-READY ENTERPRISE SOLUTION
 
 **Current Version:** World-Class Multi-Agent Creative Agency  
