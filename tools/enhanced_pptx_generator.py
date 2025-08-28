@@ -300,20 +300,20 @@ class EnhancedPPTXGenerator:
         # LEFT SIDE: Logo centered in left half
         self._add_logo_to_slide(slide, identity_data, col=1, row=2, size=3, opacity=0.8)
         
+        # Get dynamic primary color from brand palette
+        primary_color = "#FFFFFF"  # Default white
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
+        
         # LEFT SIDE: Company name below logo, centered
         left, top, width, height = self.grid.get_position(1, 5, 4, 1)
         company_textbox = slide.shapes.add_textbox(left, top, width, height)
         company_frame = company_textbox.text_frame
         company_frame.text = company_name
         company_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-        self.styler.apply_title_style(company_frame.paragraphs[0], size=36, color='white')
+        self.styler.apply_title_style(company_frame.paragraphs[0], size=36, color=primary_color)
         company_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-        
-        # Get dynamic primary color from brand palette
-        primary_color = "#FFFFFF"  # Default white
-        if identity_data and identity_data.get("palette"):
-            palette = identity_data["palette"]
-            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
         
         # RIGHT SIDE: Dynamic colored line above "Brand Identity System"
         line_left, line_top, line_width, line_height = self.grid.get_position(9, 7, 3, 2)
@@ -333,7 +333,7 @@ class EnhancedPPTXGenerator:
         brand_system_frame = brand_system_textbox.text_frame
         brand_system_frame.text = "Brand Identity System"
         brand_system_frame.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-        self.styler.apply_subtitle_style(brand_system_frame.paragraphs[0], size=18, color='white')
+        self.styler.apply_subtitle_style(brand_system_frame.paragraphs[0], size=18, color=primary_color)
         brand_system_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         brand_system_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
         
@@ -344,7 +344,9 @@ class EnhancedPPTXGenerator:
         """Create auto-generated table of contents with two-column layout if needed"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide)
+        # Pitch black background instead of gradient
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
         
         # Title
         left, top, width, height = self.grid.get_position(1, 0, 10, 1)
@@ -359,29 +361,29 @@ class EnhancedPPTXGenerator:
         use_two_columns = len(filtered_sections) > 8
         
         if use_two_columns:
-            # Two-column layout
+            # Two-column layout with increased gap
             mid_point = len(filtered_sections) // 2
             col1_sections = filtered_sections[:mid_point]
             col2_sections = filtered_sections[mid_point:]
             
-            # Column 1
-            left, top, width, height = self.grid.get_position(1, 2, 5, 5)
+            # Column 1 - Left side with more space
+            left, top, width, height = self.grid.get_position(1, 2, 4, 5)
             col1_textbox = slide.shapes.add_textbox(left, top, width, height)
             col1_frame = col1_textbox.text_frame
             col1_content = []
             for i, section in enumerate(col1_sections, 1):
                 col1_content.append(f"{i}. {section}")
-            col1_frame.text = "\n".join(col1_content)
+            col1_frame.text = "\n\n".join(col1_content)
             col1_frame.word_wrap = True
             
-            # Column 2
-            left, top, width, height = self.grid.get_position(7, 2, 5, 5)
+            # Column 2 - Right side with bigger gap (moved from col 7 to col 8)
+            left, top, width, height = self.grid.get_position(8, 2, 4, 5)
             col2_textbox = slide.shapes.add_textbox(left, top, width, height)
             col2_frame = col2_textbox.text_frame
             col2_content = []
             for i, section in enumerate(col2_sections, mid_point + 1):
                 col2_content.append(f"{i}. {section}")
-            col2_frame.text = "\n".join(col2_content)
+            col2_frame.text = "\n\n".join(col2_content)
             col2_frame.word_wrap = True
             
             # Style both columns
@@ -396,13 +398,13 @@ class EnhancedPPTXGenerator:
             content_lines = []
             for i, section in enumerate(filtered_sections, 1):
                 content_lines.append(f"{i}. {section}")
-            content_frame.text = "\n".join(content_lines)
+            content_frame.text = "\n\n".join(content_lines)
             content_frame.word_wrap = True
             
             for paragraph in content_frame.paragraphs:
                 self.styler.apply_body_style(paragraph, size=16)
         
-        self._add_footer(slide, self.slide_counter)
+
     
     def _create_company_profile_slide(self, prs, brand_essence, identity_data):
         """Create company profile with key-value layout and value chips"""
