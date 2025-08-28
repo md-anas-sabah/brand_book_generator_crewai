@@ -545,9 +545,9 @@ class EnhancedPPTXGenerator:
                 # Main section with brand colored line and page number
                 section_top = Inches(current_top)
                 
-                # Section name (white text, smaller)
+                # Section name (white text, smaller) - reduced width for closer gap
                 section_textbox = slide.shapes.add_textbox(col_left, section_top, 
-                                                         Inches(2.2), Inches(0.3))
+                                                         Inches(2.0), Inches(0.3))
                 section_frame = section_textbox.text_frame
                 section_frame.text = section["name"]
                 section_frame.margin_left = 0
@@ -557,8 +557,8 @@ class EnhancedPPTXGenerator:
                 self.styler.apply_body_style(section_frame.paragraphs[0], size=12, color='white')
                 section_frame.paragraphs[0].font.bold = True
                 
-                # Brand colored accent line (shorter)
-                line_left = col_left + Inches(2.3)
+                # Brand colored accent line (moved closer)
+                line_left = col_left + Inches(2.05)
                 line_top = section_top + Inches(0.12)
                 line_shape = slide.shapes.add_connector(
                     MSO_CONNECTOR.STRAIGHT,
@@ -568,8 +568,8 @@ class EnhancedPPTXGenerator:
                 line_shape.line.color.rgb = primary_rgb
                 line_shape.line.width = Pt(1.5)
                 
-                # Page number (brand colored text, smaller)
-                page_left = col_left + Inches(2.8)
+                # Page number (brand colored text, smaller) - moved closer
+                page_left = col_left + Inches(2.5)
                 page_textbox = slide.shapes.add_textbox(page_left, section_top, 
                                                        Inches(0.3), Inches(0.3))
                 page_frame = page_textbox.text_frame
@@ -608,8 +608,7 @@ class EnhancedPPTXGenerator:
         if col3_sections:
             create_column_content(slide, col3_sections, col3_left)
         
-        # Add footer
-        self._add_footer(slide, self.slide_counter)
+        
         
 
     
@@ -1187,15 +1186,11 @@ class EnhancedPPTXGenerator:
         sections.extend([
             "1. Introduction",
             "2. Brand Purpose",
-            "3. Logo Variations",
-            "4. Color Palette", 
-            "5. Typography",
-            "6. Visual & Photography Guidelines",
-            "7. Brand Story & Mission",
-            "8. Brand Voice & Tone",
-            "9. Messaging & Value Propositions",
-            "10. Marketing Copy",
-            "11. Brand Collateral Templates"
+            "3. Brand Story",
+            "4. Logo Variations",
+            "5. Color Palette", 
+            "6. Typography",
+            "7. Visual & Photography Guidelines"
         ])
         
         # 2. Table of Contents
@@ -1207,56 +1202,29 @@ class EnhancedPPTXGenerator:
         # 4. Brand Purpose Slide
         self._create_brand_purpose_slide(prs, brand_essence, identity_data)
         
-        # 5. Logo Variations
+        # 5. Brand Story Slide
+        story_data = literature_data.get("brand_story", "")
+        if story_data:
+            self._create_text_slide(prs, "Brand Story", str(story_data), 100, identity_data)
+        
+        # 6. Logo Variations
         if identity_data.get("logos"):
             self._create_logo_variations_slide(prs, identity_data["logos"], identity_data)
         
-        # 6. Color Palette
+        # 7. Color Palette
         if identity_data.get("palette"):
             self._create_color_palette_slide(prs, identity_data["palette"], identity_data)
         
-        # 7. Typography
+        # 8. Typography
         self._create_typography_slide(prs, identity_data.get("typography", {}), identity_data)
         
-        # 8. Visual & Photography Guidelines
+        # 9. Visual & Photography Guidelines
         self._create_visual_guidelines_slide(
             prs,
             identity_data.get("visual_style", ""),
             identity_data.get("photography_style", ""),
             identity_data
         )
-        
-        # 9. Brand Story & Mission
-        story_data = literature_data.get("brand_story", "")
-        if story_data:
-            self._create_text_slide(prs, "Brand Story & Mission", str(story_data), 100, identity_data)
-        
-        # 10. Voice & Tone
-        voice_data = literature_data.get("voice_tone", "")
-        if voice_data:
-            self._create_text_slide(prs, "Brand Voice & Tone", voice_data, 80, identity_data)
-        
-        # 11. Messaging & Value Propositions
-        messaging_data = literature_data.get("messaging_arch", "")
-        if messaging_data:
-            self._create_text_slide(prs, "Messaging & Value Propositions", messaging_data, 80, identity_data)
-        
-        # 12. Marketing Copy
-        marketing_copy = literature_data.get("marketing_copy", {})
-        if marketing_copy:
-            for channel, copy in marketing_copy.items():
-                title = f"Marketing Copy: {channel.replace('_', ' ').title()}"
-                self._create_text_slide(prs, title, copy, 70, identity_data)
-        
-        # 13. Collateral
-        collaterals = literature_data.get("collaterals", {})
-        if collaterals:
-            if isinstance(collaterals, dict):
-                for name, desc in collaterals.items():
-                    title = f"Collateral: {name.replace('_',' ').title()}"
-                    self._create_text_slide(prs, title, desc, 70, identity_data)
-            else:
-                self._create_text_slide(prs, "Brand Collateral Templates", str(collaterals), 80, identity_data)
         
         # Save file
         base_name = company_name.lower().replace(' ', '_')
