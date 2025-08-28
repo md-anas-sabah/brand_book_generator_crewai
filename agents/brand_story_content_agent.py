@@ -148,7 +148,10 @@ Write only the story content, no additional formatting or explanations. Make it 
     def _generate_with_openai(self, prompt: str, company_name: str) -> str:
         """Generate content using OpenAI"""
         try:
-            response = openai.ChatCompletion.create(
+            from openai import OpenAI
+            client = OpenAI(api_key=self.openai_api_key)
+            
+            response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are a professional brand storyteller creating compelling company narratives. Focus on authenticity, emotional connection, and business relevance."},
@@ -159,10 +162,11 @@ Write only the story content, no additional formatting or explanations. Make it 
             )
             
             story = response.choices[0].message.content.strip()
+            print(f"✅ OpenAI generated brand story: {story[:100]}...")
             return self._format_story_for_slide(story)
             
         except Exception as e:
-            print(f"OpenAI generation failed: {e}")
+            print(f"❌ OpenAI generation failed: {e}")
             return self._generate_fallback_story(company_name, "technology", "innovation, quality, service")
     
     def _generate_with_claude(self, prompt: str, company_name: str) -> str:

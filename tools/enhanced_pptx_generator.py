@@ -327,7 +327,7 @@ class EnhancedPPTXGenerator:
             primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
         
         # LEFT SIDE: Company name below logo, centered
-        left, top, width, height = self.grid.get_position(1, 5, 4, 1)
+        left, top, width, height = self.grid.get_position(2, 5, 4, 1)
         company_textbox = slide.shapes.add_textbox(left, top, width, height)
         company_frame = company_textbox.text_frame
         company_frame.text = company_name

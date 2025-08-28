@@ -110,7 +110,10 @@ Format: Return only the introduction text, no additional formatting or explanati
     def _generate_with_openai(self, prompt: str) -> str:
         """Generate content using OpenAI"""
         try:
-            response = openai.ChatCompletion.create(
+            from openai import OpenAI
+            client = OpenAI(api_key=self.openai_api_key)
+            
+            response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are a professional brand strategist creating compelling brand book introductions."},

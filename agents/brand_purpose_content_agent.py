@@ -139,7 +139,10 @@ VALUES: [flowing paragraph incorporating all core values naturally]"""
     def _generate_with_openai(self, prompt: str, company_name: str, values: str) -> Dict[str, str]:
         """Generate content using OpenAI"""
         try:
-            response = openai.ChatCompletion.create(
+            from openai import OpenAI
+            client = OpenAI(api_key=self.openai_api_key)
+            
+            response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are a professional brand strategist creating compelling brand purpose statements. Focus on clarity, inspiration, and business relevance."},
@@ -150,10 +153,11 @@ VALUES: [flowing paragraph incorporating all core values naturally]"""
             )
             
             content = response.choices[0].message.content.strip()
+            print(f"✅ OpenAI generated brand purpose: {content[:100]}...")
             return self._parse_ai_response(content, company_name, values)
             
         except Exception as e:
-            print(f"OpenAI generation failed: {e}")
+            print(f"❌ OpenAI generation failed: {e}")
             return self._generate_fallback_purpose(company_name, "technology", values)
     
     def _generate_with_claude(self, prompt: str, company_name: str, values: str) -> Dict[str, str]:
