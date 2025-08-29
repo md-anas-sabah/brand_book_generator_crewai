@@ -1316,7 +1316,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
         
-        self._add_footer(slide, self.slide_counter)
+       
     
     def _create_secondary_usage_slide(self, prs, secondary_colors, identity_data):
         """Create Secondary Color Usage slide (2/2) with usage guidelines for secondary colors"""
@@ -1370,7 +1370,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
         
-        self._add_footer(slide, self.slide_counter)
+       
     
     def _generate_primary_color_usage(self, primary_colors):
         """Generate shorter usage guidelines for primary colors"""
