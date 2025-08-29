@@ -22,7 +22,11 @@ class LivePPTXHandler(FileSystemEventHandler):
         self.test_data = {
             "company_name": "TechForward Live",
             "identity_data": {
-                "logos": [],
+                "logos": [
+                    "/Users/anassabah/Downloads/Marqait/brand book_crew/output/zeta_logo_1_20250828_235333_3e1fde11.png",
+                    "/Users/anassabah/Downloads/Marqait/brand book_crew/output/zeta_logo_2_20250828_235352_a3259202.png",
+                    "/Users/anassabah/Downloads/Marqait/brand book_crew/output/zeta_logo_3_20250828_235415_054bae29.png"
+                ],
                 "palette": {"primary": "#2E86AB", "secondary": "#A23B72", "accent": "#F18F01"},
                 "typography": {"primary": "Inter", "secondary": "Source Sans Pro"},
                 "visual_style": "Modern, clean, professional, minimalist, bold typography",
@@ -89,6 +93,13 @@ class LivePPTXHandler(FileSystemEventHandler):
         try:
             print("🎨 Regenerating PPTX with latest changes...")
             
+            # Close any existing PowerPoint files first
+            try:
+                subprocess.run(['pkill', '-f', 'Microsoft PowerPoint'], check=False)
+                time.sleep(0.5)  # Brief pause to let PowerPoint close
+            except:
+                pass
+            
             # Reload the module to get latest changes
             import importlib
             import tools.enhanced_pptx_generator
@@ -107,6 +118,9 @@ class LivePPTXHandler(FileSystemEventHandler):
             )
             
             print(f"✅ Generated: {pptx_path}")
+            
+            # Wait a moment for file to be completely written
+            time.sleep(1)
             
             # Auto-open in default application
             self.open_file(pptx_path)

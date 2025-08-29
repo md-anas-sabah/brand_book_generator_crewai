@@ -1620,7 +1620,10 @@ class EnhancedPPTXGenerator:
         
         # 8. Logo Variations
         if identity_data.get("logos"):
+            print(f"  🎨 Creating logo variations slide with {len(identity_data['logos'])} logos...")
             self._create_logo_variations_slide(prs, identity_data["logos"], identity_data)
+        else:
+            print("  ⚠️ No logos found in identity_data - skipping logo slide")
         
         # 9. Color Palette
         if identity_data.get("palette"):
