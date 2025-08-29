@@ -14,6 +14,7 @@ from agents.font_research_agent import FontResearchAgent
 from agents.introduction_content_agent import IntroductionContentAgent
 from agents.brand_purpose_content_agent import BrandPurposeContentAgent
 from agents.brand_story_content_agent import BrandStoryContentAgent
+from agents.enhanced_color_research_agent import EnhancedColorResearchAgent
 
 
 class GridLayout:
@@ -135,9 +136,11 @@ class EnhancedPPTXGenerator:
         self.introduction_agent = IntroductionContentAgent()
         self.brand_purpose_agent = BrandPurposeContentAgent()
         self.brand_story_agent = BrandStoryContentAgent()
+        self.enhanced_color_agent = EnhancedColorResearchAgent()
         self.researched_fonts = None
         self.grid = GridLayout()
         self.styler = None
+        self.enhanced_color_system = None  # Store the enhanced color system
     
     def _initialize_styling(self, identity_data, company_name=""):
         """Initialize styling system based on brand data"""
@@ -145,16 +148,35 @@ class EnhancedPPTXGenerator:
         primary_font = self.researched_fonts['primary_font'] if self.researched_fonts else "Inter"
         secondary_font = self.researched_fonts['secondary_font'] if self.researched_fonts else "Source Sans Pro"
         
-        # Get colors from brand palette
-        palette = identity_data.get("palette", {}) if identity_data else {}
-        primary_color = self._get_brand_color(palette, "primary", "#2E86AB")
-        text_color = self._get_accessible_text_color(palette)
+        # Get primary color - prefer enhanced color system if available
+        if self.enhanced_color_system and self.enhanced_color_system.get('primary_colors'):
+            # Use the first primary color from enhanced color system
+            first_primary = self.enhanced_color_system['primary_colors'][0]
+            primary_color = first_primary['hex']
+            print(f"🎨 Using enhanced primary color: {primary_color} ({first_primary['name']})")
+        else:
+            # Fallback to original palette method
+            palette = identity_data.get("palette", {}) if identity_data else {}
+            primary_color = self._get_brand_color(palette, "primary", "#2E86AB")
+            print(f"🎨 Using fallback primary color: {primary_color}")
+        
+        text_color = "#FFFFFF"  # Keep all content text white as requested
         
         self.styler = TextStyler(primary_font, secondary_font, primary_color, text_color)
         
         # Store company name for footers
         self.company_name = company_name
         self.slide_counter = 0
+    
+    def _update_styling_with_primary_color(self):
+        """Update styling to use the first primary color from enhanced color system"""
+        if self.enhanced_color_system and self.enhanced_color_system.get('primary_colors') and self.styler:
+            first_primary = self.enhanced_color_system['primary_colors'][0]
+            new_primary_color = first_primary['hex']
+            print(f"🎨 Updating all slide titles to use: {new_primary_color} ({first_primary['name']})")
+            
+            # Update the styler's primary color
+            self.styler.primary_color = new_primary_color
     
     def _get_brand_color(self, palette, color_name, default):
         """Extract color from palette safely"""
@@ -584,7 +606,7 @@ class EnhancedPPTXGenerator:
                 section_data.append({
                     "name": "Brand Colors",
                     "page": f"{page_num:02d}",
-                    "subsections": ["Primary Colors", "Secondary Colors", "Color Usage"]
+                    "subsections": ["Primary Colors", "Secondary Colors", "Color Usage 1/2", "Color Usage 2/2"]
                 })
             elif "Typography" in section_name:
                 section_data.append({
@@ -1024,123 +1046,440 @@ class EnhancedPPTXGenerator:
             
             context = variation_contexts.get(variation_number, "versatile logo for various applications")
             
-            # Generate guidelines with OpenAI
-            prompt = f"""Generate concise logo usage guidelines for {company_name} in the {industry} industry.
-            
-This is Variation {variation_number}: {context}.
+            # Generate concise explanation for why someone might choose this logo (10-15 words)
+            prompt = f"""Generate a concise explanation for why someone might choose Logo Variation {variation_number} for {company_name}.
 
-Create exactly 15-20 words describing when and how to use this logo variation. Focus on:
-- Application context (digital, print, etc.)
-- Size requirements
-- Usage scenarios
+Context: {context}
 
-Response should be one clear sentence, exactly 15-20 words."""
+Create exactly 10-15 words explaining the benefits or reasons for choosing this specific logo variation.
+Focus on practical advantages like versatility, impact, or specific use cases.
+
+Response should be one clear sentence, exactly 10-15 words."""
 
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=50,
+                max_tokens=40,
                 temperature=0.7
             )
             
             guidelines = response.choices[0].message.content.strip()
             
-            # Ensure it's within word limit
+            # Ensure it's within word limit (10-15 words)
             words = guidelines.split()
-            if len(words) > 20:
-                guidelines = ' '.join(words[:20])
-            elif len(words) < 15:
+            if len(words) > 15:
+                guidelines = ' '.join(words[:15])
+            elif len(words) < 10:
                 # Add fallback if too short
-                guidelines += f" Maintain brand consistency in all {industry} applications."
+                guidelines += f" Perfect for diverse brand applications."
                 words = guidelines.split()
-                if len(words) > 20:
-                    guidelines = ' '.join(words[:20])
+                if len(words) > 15:
+                    guidelines = ' '.join(words[:15])
             
             return guidelines
             
         except Exception as e:
-            # Fallback guidelines based on variation number
-            fallback_guidelines = {
-                1: "Primary logo for main brand applications. Use in headers, business cards, and large formats.",
-                2: "Secondary logo for compact spaces. Ideal for social media, favicons, and small applications.", 
-                3: "Simplified logo for minimal sizes. Perfect for watermarks, stamps, and tight layouts."
+            # Fallback explanations (10-15 words each)
+            fallback_explanations = {
+                1: "Choose for maximum impact and brand recognition in primary applications.",
+                2: "Perfect for constrained spaces while maintaining professional brand presence and clarity.",
+                3: "Ideal for small sizes, watermarks, and applications requiring simplified brand representation."
             }
-            return fallback_guidelines.get(variation_number, "Versatile logo for various brand applications. Maintain clear space and minimum size requirements.")
+            return fallback_explanations.get(variation_number, "Versatile option offering flexibility across diverse brand applications and formats.")
     
-    def _create_color_palette_slide(self, prs, palette, identity_data):
-        """Create comprehensive color palette with accessibility info"""
+    def _create_color_palette_slide(self, prs, palette, identity_data, company_name="", industry="", values="", audience=""):
+        """Create 4 separate color slides using pre-generated color system"""
+        print("🎨 Creating color slides with pre-generated color system...")
+        
+        # Use the enhanced color system that was generated early in the process
+        if self.enhanced_color_system:
+            color_system = self.enhanced_color_system
+        else:
+            # Fallback if somehow not generated earlier
+            print("⚠️ Color system not found, generating fallback...")
+            color_system = self._generate_fallback_color_system(palette)
+        
+        # Create 4 separate slides (Primary Colors, Secondary Colors, Primary Usage, Secondary Usage)
+        self._create_primary_colors_slide(prs, color_system['primary_colors'], identity_data)
+        self._create_secondary_colors_slide(prs, color_system['secondary_colors'], identity_data)  
+        self._create_primary_usage_slide(prs, color_system['primary_colors'], identity_data)
+        self._create_secondary_usage_slide(prs, color_system['secondary_colors'], identity_data)
+    
+    def _create_primary_colors_slide(self, prs, primary_colors, identity_data):
+        """Create Primary Colors slide with 3-4 colors and detailed specifications"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide)
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # Title
-        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
-        title_textbox = slide.shapes.add_textbox(left, top, width, height)
-        title_frame = title_textbox.text_frame
-        title_frame.text = "Color Palette"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
+        # Get brand primary color for styling
+        primary_color_hex = "#FFFF00"  # Default to yellow
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
         
-        # Color swatches with detailed info
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Color swatches in grid layout - moved upward for better balance
         col = 1
-        row = 2
-        colors_per_row = 3
+        row = 1.6  # Moved up from 1.5 to 1
+        colors_per_row = 2
         
-        for i, (color_name, hex_code) in enumerate(palette.items()):
-            if isinstance(hex_code, list):
-                hex_code = hex_code[0] if hex_code else "#CCCCCC"
-            hex_code = (hex_code or "#CCCCCC").lstrip("#")
+        for i, color_spec in enumerate(primary_colors[:4]):  # Maximum 4 primary colors
+            left, top, width, height = self.grid.get_position(
+                col + (i % colors_per_row) * 5, 
+                row + (i // colors_per_row) * 2.8,  # Reduced from 3.5 to 2.8 for less spacing
+                4, 3
+            )
             
-            if len(hex_code) == 3:
-                hex_code = ''.join([c*2 for c in hex_code])
-            if len(hex_code) != 6:
-                hex_code = "CCCCCC"
-            
-            try:
-                rgb = tuple(int(hex_code[j:j+2], 16) for j in (0, 2, 4))
-            except Exception:
-                rgb = (204, 204, 204)
-            
-            left, top, width, height = self.grid.get_position(col, row, 3, 2)
+            # Extract hex color for swatch
+            hex_color = color_spec['hex']
+            rgb = self._hex_to_rgb(hex_color)
             
             # Color swatch
             swatch = slide.shapes.add_shape(
-                MSO_SHAPE.RECTANGLE, left, top, width, height
+                MSO_SHAPE.RECTANGLE, left, top, Inches(2), Inches(1.5)
             )
             swatch.fill.solid()
             swatch.fill.fore_color.rgb = RGBColor(*rgb)
             swatch.line.color.rgb = RGBColor(255, 255, 255)
-            swatch.line.width = Pt(1)
+            swatch.line.width = Pt(2)
             
-            # Color info below swatch
-            info_left, info_top, info_width, info_height = self.grid.get_position(col, row + 2, 3, 2)
-            info_textbox = slide.shapes.add_textbox(info_left, info_top, info_width, info_height)
-            info_frame = info_textbox.text_frame
+            # Color specifications - reduced gap from color swatch
+            spec_left = left + Inches(2.2)  # Reduced from 2.5 to 2.2 for tighter spacing
+            spec_textbox = slide.shapes.add_textbox(spec_left, top, Inches(3.3), Inches(1.5))  # Increased width slightly
+            spec_frame = spec_textbox.text_frame
+            spec_frame.text = f"{color_spec['name']}\n{color_spec['hex']}\n{color_spec['rgb']}\n{color_spec['cmyk']}\n{color_spec['text_recommendation']}"
+            spec_frame.word_wrap = True
+            spec_frame.margin_left = 0
+            spec_frame.margin_right = 0
+            spec_frame.margin_top = 0
+            spec_frame.margin_bottom = 0
             
-            # Calculate CMYK (approximation)
-            r, g, b = [x/255.0 for x in rgb]
-            k = 1 - max(r, g, b)
-            c = (1-r-k) / (1-k) if k < 1 else 0
-            m = (1-g-k) / (1-k) if k < 1 else 0
-            y = (1-b-k) / (1-k) if k < 1 else 0
-            
-            # Determine text readability
-            brightness = sum(rgb) / 3
-            text_suggestion = "Use Light Text" if brightness < 128 else "Use Dark Text"
-            
-            info_content = f"{color_name.title()}\n#{hex_code.upper()}\nRGB({rgb[0]}, {rgb[1]}, {rgb[2]})\nCMYK({int(c*100)}, {int(m*100)}, {int(y*100)}, {int(k*100)})\n{text_suggestion}"
-            info_frame.text = info_content
-            info_frame.word_wrap = True
-            
-            for paragraph in info_frame.paragraphs:
-                self.styler.apply_caption_style(paragraph, size=10)
-            
-            # Move to next position
-            col += 4
-            if col > 12 - 3:
-                col = 1
-                row += 5
+            # Style the specifications text
+            for paragraph in spec_frame.paragraphs:
+                self.styler.apply_body_style(paragraph, color='white', size=10)  # Reduced from 12 to 10
+                paragraph.alignment = PP_ALIGN.LEFT
+                paragraph.space_after = Pt(3)  # Reduced spacing from 4 to 3
+        
+        # Full-width line separator
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # Title in primary color below the line
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            Inches(0.5), title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Primary Colors"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+  
+    
+    def _create_secondary_colors_slide(self, prs, secondary_colors, identity_data):
+        """Create Secondary Colors slide with 5 colors"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color for styling
+        primary_color_hex = "#FFFF00"  # Default to yellow
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+        
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Color swatches in grid layout (5 colors, 3 on top, 2 on bottom)
+        positions = [
+            (1, 1.5), (4, 1.5), (7, 1.5),  # Top row
+            (2.5, 4), (5.5, 4)  # Bottom row
+        ]
+        
+        for i, color_spec in enumerate(secondary_colors[:5]):  # Maximum 5 secondary colors
+            if i < len(positions):
+                col, row = positions[i]
+                left, top, width, height = self.grid.get_position(col, row, 3, 2)
+                
+                # Extract hex color for swatch
+                hex_color = color_spec['hex']
+                rgb = self._hex_to_rgb(hex_color)
+                
+                # Color swatch
+                swatch = slide.shapes.add_shape(
+                    MSO_SHAPE.RECTANGLE, left, top, Inches(2), Inches(1)
+                )
+                swatch.fill.solid()
+                swatch.fill.fore_color.rgb = RGBColor(*rgb)
+                swatch.line.color.rgb = RGBColor(255, 255, 255)
+                swatch.line.width = Pt(2)
+                
+                # Color specifications below swatch
+                spec_top = top + Inches(1.2)
+                spec_textbox = slide.shapes.add_textbox(left, spec_top, Inches(2), Inches(1))
+                spec_frame = spec_textbox.text_frame
+                spec_frame.text = f"{color_spec['name']}\n{color_spec['hex']}\n{color_spec['text_recommendation']}"
+                spec_frame.word_wrap = True
+                spec_frame.margin_left = 0
+                spec_frame.margin_right = 0
+                spec_frame.margin_top = 0
+                spec_frame.margin_bottom = 0
+                
+                # Style the specifications text
+                for paragraph in spec_frame.paragraphs:
+                    self.styler.apply_body_style(paragraph, color='white', size=10)
+                    paragraph.alignment = PP_ALIGN.CENTER
+                    paragraph.space_after = Pt(3)
+        
+        # Full-width line separator
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # Title in primary color below the line
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            Inches(0.5), title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Secondary Colors"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+       
+    
+    def _create_primary_usage_slide(self, prs, primary_colors, identity_data):
+        """Create Primary Color Usage slide (1/2) with usage guidelines for primary colors"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color for styling
+        primary_color_hex = self.styler.primary_color if self.styler else "#FFFF00"
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Generate primary color usage guidelines
+        primary_usage_guidelines = self._generate_primary_color_usage(primary_colors)
+        
+        # Usage guidelines content in upper portion
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 5)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = primary_usage_guidelines
+        content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
+        
+        # Style the content text - white, left-aligned, smaller size for better fit
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=14)  # Reduced from 16 to 14
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(6)  # Reduced from 8 to 6
+        
+        # Full-width line separator
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # Title in primary color below the line
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            Inches(0.5), title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Color Usage 1/2"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
         
         self._add_footer(slide, self.slide_counter)
+    
+    def _create_secondary_usage_slide(self, prs, secondary_colors, identity_data):
+        """Create Secondary Color Usage slide (2/2) with usage guidelines for secondary colors"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color for styling
+        primary_color_hex = self.styler.primary_color if self.styler else "#FFFF00"
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Generate secondary color usage guidelines
+        secondary_usage_guidelines = self._generate_secondary_color_usage(secondary_colors)
+        
+        # Usage guidelines content in upper portion
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 5)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = secondary_usage_guidelines
+        content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
+        
+        # Style the content text - white, left-aligned, smaller size for better fit
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=14)  # Reduced from 16 to 14
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(6)  # Reduced from 8 to 6
+        
+        # Full-width line separator
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # Title in primary color below the line
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            Inches(0.5), title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "Color Usage 2/2"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        self._add_footer(slide, self.slide_counter)
+    
+    def _generate_primary_color_usage(self, primary_colors):
+        """Generate shorter usage guidelines for primary colors"""
+        color_names = [color['name'] for color in primary_colors]
+        
+        usage_text = f"""Primary Color Usage
+
+Use for brand-critical elements:
+• Logos and main brand marks
+• Headlines and key text
+• CTA buttons and navigation
+• Hero sections
+
+Colors: {', '.join(color_names)}
+
+Best Practices:
+- Maximum brand recognition
+- Consistent application
+- Sufficient contrast
+- Accessibility compliance"""
+        
+        return usage_text
+    
+    def _generate_secondary_color_usage(self, secondary_colors):
+        """Generate shorter usage guidelines for secondary colors"""
+        color_names = [color['name'] for color in secondary_colors]
+        
+        usage_text = f"""Secondary Color Usage
+
+Use for supporting elements:
+• Backgrounds and subtle accents
+• Secondary text
+• Borders and dividers
+• Hover states and icons
+
+Colors: {', '.join(color_names)}
+
+Best Practices:
+- Create visual hierarchy
+- Support, don't compete
+- Maintain readability
+- Use sparingly"""
+        
+        return usage_text
+    
+    def _generate_fallback_color_system(self, original_palette):
+        """Generate fallback color system when AI fails"""
+        # Convert existing palette to new format
+        primary_colors = []
+        secondary_colors = []
+        
+        # Extract first 3 colors as primary
+        for i, (color_name, hex_code) in enumerate(list(original_palette.items())[:3]):
+            if isinstance(hex_code, list):
+                hex_code = hex_code[0] if hex_code else "#CCCCCC"
+            
+            hex_code = hex_code if hex_code.startswith('#') else f"#{hex_code}"
+            rgb = self._hex_to_rgb(hex_code)
+            
+            primary_colors.append({
+                'name': f"Primary {color_name.title()}",
+                'hex': hex_code,
+                'rgb': f"RGB({rgb[0]}, {rgb[1]}, {rgb[2]})",
+                'cmyk': self._rgb_to_cmyk_string(rgb),
+                'text_recommendation': self._get_text_recommendation(rgb)
+            })
+        
+        # Add standard secondary colors
+        secondary_palette = [
+            {'name': 'Light Background', 'hex': '#F8F9FA'},
+            {'name': 'Medium Gray', 'hex': '#6B7280'},
+            {'name': 'Dark Text', 'hex': '#1F2937'},
+            {'name': 'Accent Light', 'hex': '#E5E7EB'},
+            {'name': 'Warning Orange', 'hex': '#F59E0B'}
+        ]
+        
+        for color in secondary_palette:
+            rgb = self._hex_to_rgb(color['hex'])
+            secondary_colors.append({
+                'name': color['name'],
+                'hex': color['hex'],
+                'rgb': f"RGB({rgb[0]}, {rgb[1]}, {rgb[2]})",
+                'cmyk': self._rgb_to_cmyk_string(rgb),
+                'text_recommendation': self._get_text_recommendation(rgb)
+            })
+        
+        return {
+            'primary_colors': primary_colors,
+            'secondary_colors': secondary_colors,
+            'usage_guidelines': "Use primary colors for main brand elements and headlines. Secondary colors provide supporting elements and backgrounds. Maintain consistent usage across all brand materials."
+        }
+    
+    def _rgb_to_cmyk_string(self, rgb):
+        """Convert RGB to CMYK string format"""
+        r, g, b = [x/255.0 for x in rgb]
+        k = 1 - max(r, g, b)
+        if k == 1:
+            return "CMYK(0, 0, 0, 100)"
+        
+        c = (1 - r - k) / (1 - k)
+        m = (1 - g - k) / (1 - k)
+        y = (1 - b - k) / (1 - k)
+        
+        return f"CMYK({int(c*100)}, {int(m*100)}, {int(y*100)}, {int(k*100)})"
+    
+    def _get_text_recommendation(self, rgb):
+        """Get text color recommendation based on background color"""
+        brightness = sum(rgb) / 3
+        return "Use Light Text" if brightness < 128 else "Use Dark Text"
     
     def _create_typography_slide(self, prs, typography, identity_data):
         """Create typography showcase with different weights and sizes"""
@@ -1649,6 +1988,23 @@ Response should be one clear sentence, exactly 15-20 words."""
         # Initialize styling system
         self._initialize_styling(identity_data, company_name)
         
+        # Generate enhanced color system early so it can be applied to all slides
+        if identity_data.get("palette"):
+            print("🎨 Generating comprehensive color system with AI research...")
+            try:
+                color_system = self.enhanced_color_agent.generate_comprehensive_color_system(
+                    company_name, industry, values, audience, 
+                    brand_essence=brand_essence
+                )
+                self.enhanced_color_system = color_system
+                # Update styling to use the first primary color across all slides
+                self._update_styling_with_primary_color()
+            except Exception as e:
+                print(f"⚠️ Enhanced color generation failed, using fallback: {e}")
+                color_system = self._generate_fallback_color_system(identity_data.get("palette", {}))
+                self.enhanced_color_system = color_system
+                self._update_styling_with_primary_color()
+        
         # Create slides
         sections = ["Table of Contents"]
         
@@ -1701,9 +2057,10 @@ Response should be one clear sentence, exactly 15-20 words."""
         else:
             print("  ⚠️ No logos found in identity_data - skipping logo slide")
         
-        # 9. Color Palette
+        # 9. Color Palette (3 slides: Primary, Secondary, Usage)
         if identity_data.get("palette"):
-            self._create_color_palette_slide(prs, identity_data["palette"], identity_data)
+            self._create_color_palette_slide(prs, identity_data["palette"], identity_data, 
+                                           company_name, industry, values, audience)
         
         # 10. Typography
         self._create_typography_slide(prs, identity_data.get("typography", {}), identity_data)
