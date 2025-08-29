@@ -578,7 +578,7 @@ class EnhancedPPTXGenerator:
                 section_data.append({
                     "name": "Logo Variations",
                     "page": f"{page_num:02d}",
-                    "subsections": ["Logo Mark", "Clear Space", "Usage Guidelines"]
+                    "subsections": ["Variation 1", "Variation 2", "Variation 3"]
                 })
             elif "Color" in section_name:
                 section_data.append({
@@ -923,73 +923,149 @@ class EnhancedPPTXGenerator:
         self._add_footer(slide, self.slide_counter)
     
     def _create_logo_variations_slide(self, prs, logos, identity_data):
-        """Create logo variations with grid layout and clearspace guidelines"""
+        """Create separate slides for each logo variation with usage guidelines"""
+        # Create 3 separate slides for each logo variation
+        for i, logo_path in enumerate(logos[:3]):  # Ensure we only use first 3 logos
+            if os.path.exists(logo_path):
+                self._create_single_logo_variation_slide(prs, logo_path, i+1, identity_data)
+    
+    def _create_single_logo_variation_slide(self, prs, logo_path, variation_number, identity_data):
+        """Create a single logo variation slide with left logo and right guidelines"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide)
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # Title
-        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
-        title_textbox = slide.shapes.add_textbox(left, top, width, height)
+        # Get brand primary color (ensure it uses the agent's chosen primary color)
+        primary_color_hex = "#FFFF00"  # Default to yellow
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+        
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Left side: Logo
+        logo_left, logo_top, logo_width, logo_height = self.grid.get_position(1, 2, 5, 4)
+        
+        
+        # Add logo image
+        slide.shapes.add_picture(logo_path, logo_left, logo_top, width=logo_width, height=logo_height)
+        
+        # Right side: Usage guidelines
+        guidelines_left, guidelines_top, guidelines_width, guidelines_height = self.grid.get_position(7, 1, 5, 6)
+        
+        # Generate AI-powered usage guidelines
+        print(f"  🤖 Generating usage guidelines for Variation {variation_number}...")
+        try:
+            usage_guidelines = self._generate_logo_usage_guidelines(variation_number, identity_data)
+        except Exception as e:
+            print(f"  ⚠️ AI usage guidelines generation failed, using fallback: {e}")
+            usage_guidelines = f"Primary logo for digital and print applications. Maintain clear space and minimum size requirements."
+        
+        # Usage guidelines text
+        guidelines_textbox = slide.shapes.add_textbox(guidelines_left, guidelines_top, guidelines_width, guidelines_height)
+        guidelines_frame = guidelines_textbox.text_frame
+        guidelines_frame.text = usage_guidelines
+        guidelines_frame.word_wrap = True
+        guidelines_frame.margin_left = 0
+        guidelines_frame.margin_right = 0
+        guidelines_frame.margin_top = 0
+        guidelines_frame.margin_bottom = 0
+        
+        # Style the guidelines text - white, left-aligned, same as introduction slide
+        for paragraph in guidelines_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=16)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)
+        
+        # Full-width line separator (same width as introduction slide)
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # Title in primary color below the line (same as Introduction)
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 7, 1, 0.8)[0], title_top,
+            Inches(6), Inches(0.8)
+        )
         title_frame = title_textbox.text_frame
-        title_frame.text = f"Logo Variations ({len(logos)} designs)"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
+        title_frame.text = f"Logo Variation {variation_number}"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
         
-        # Arrange logos in grid
-        logo_col = 1
-        logo_row = 2
-        logos_per_row = 3
-        logo_size = 2
         
-        for i, logo_path in enumerate(logos):
-            if os.path.exists(logo_path):
-                try:
-                    left, top, width, height = self.grid.get_position(
-                        logo_col, logo_row, logo_size, logo_size)
-                    
-                    # Add background for logo
-                    bg_shape = slide.shapes.add_shape(
-                        MSO_SHAPE.RECTANGLE,
-                        left - Inches(0.1), top - Inches(0.1),
-                        width + Inches(0.2), height + Inches(0.2)
-                    )
-                    bg_shape.fill.solid()
-                    bg_shape.fill.fore_color.rgb = RGBColor(255, 255, 255)
-                    bg_shape.fill.transparency = 0.1
-                    bg_shape.line.fill.background()
-                    
-                    # Add logo
-                    slide.shapes.add_picture(logo_path, left, top, width=width, height=height)
-                    
-                    # Add label
-                    label_left, label_top, label_width, label_height = self.grid.get_position(
-                        logo_col, logo_row + logo_size, logo_size, 1)
-                    label_textbox = slide.shapes.add_textbox(
-                        label_left, label_top, label_width, label_height)
-                    label_frame = label_textbox.text_frame
-                    label_frame.text = f"Version {i+1}"
-                    label_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-                    self.styler.apply_caption_style(label_frame.paragraphs[0])
-                    
-                    # Move to next position
-                    logo_col += logo_size + 1
-                    if logo_col > 12 - logo_size:
-                        logo_col = 1
-                        logo_row += logo_size + 2
-                    
-                except Exception as e:
-                    print(f"Error adding logo {i+1}: {e}")
-        
-        # Add minimum size and clearspace info if we have logos
-        if logos and any(os.path.exists(logo) for logo in logos):
-            info_left, info_top, info_width, info_height = self.grid.get_position(1, 6, 11, 1)
-            info_textbox = slide.shapes.add_textbox(info_left, info_top, info_width, info_height)
-            info_frame = info_textbox.text_frame
-            info_frame.text = "Minimum size: 0.5 inches • Clearspace: 0.25 inches on all sides"
-            info_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-            self.styler.apply_caption_style(info_frame.paragraphs[0])
-        
-        self._add_footer(slide, self.slide_counter)
+    
+    def _generate_logo_usage_guidelines(self, variation_number, identity_data):
+        """Generate AI-powered logo usage guidelines (15-20 words)"""
+        try:
+            # Import OpenAI here to avoid dependency issues
+            import openai
+            import os
+            
+            # Set up OpenAI client
+            openai.api_key = os.getenv('OPENAI_API_KEY')
+            
+            # Get brand context
+            company_name = identity_data.get('company_name', 'Company')
+            industry = identity_data.get('industry', 'business')
+            
+            # Create variation-specific context
+            variation_contexts = {
+                1: "primary logo for main brand applications",
+                2: "secondary logo for compact spaces",
+                3: "simplified logo for small sizes"
+            }
+            
+            context = variation_contexts.get(variation_number, "versatile logo for various applications")
+            
+            # Generate guidelines with OpenAI
+            prompt = f"""Generate concise logo usage guidelines for {company_name} in the {industry} industry.
+            
+This is Variation {variation_number}: {context}.
+
+Create exactly 15-20 words describing when and how to use this logo variation. Focus on:
+- Application context (digital, print, etc.)
+- Size requirements
+- Usage scenarios
+
+Response should be one clear sentence, exactly 15-20 words."""
+
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=50,
+                temperature=0.7
+            )
+            
+            guidelines = response.choices[0].message.content.strip()
+            
+            # Ensure it's within word limit
+            words = guidelines.split()
+            if len(words) > 20:
+                guidelines = ' '.join(words[:20])
+            elif len(words) < 15:
+                # Add fallback if too short
+                guidelines += f" Maintain brand consistency in all {industry} applications."
+                words = guidelines.split()
+                if len(words) > 20:
+                    guidelines = ' '.join(words[:20])
+            
+            return guidelines
+            
+        except Exception as e:
+            # Fallback guidelines based on variation number
+            fallback_guidelines = {
+                1: "Primary logo for main brand applications. Use in headers, business cards, and large formats.",
+                2: "Secondary logo for compact spaces. Ideal for social media, favicons, and small applications.", 
+                3: "Simplified logo for minimal sizes. Perfect for watermarks, stamps, and tight layouts."
+            }
+            return fallback_guidelines.get(variation_number, "Versatile logo for various brand applications. Maintain clear space and minimum size requirements.")
     
     def _create_color_palette_slide(self, prs, palette, identity_data):
         """Create comprehensive color palette with accessibility info"""
