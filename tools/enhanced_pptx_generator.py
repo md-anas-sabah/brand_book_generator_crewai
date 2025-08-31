@@ -178,6 +178,15 @@ class EnhancedPPTXGenerator:
             # Update the styler's primary color
             self.styler.primary_color = new_primary_color
     
+    def _get_primary_color_hex(self):
+        """Get the primary color hex from enhanced system or fallback"""
+        if self.enhanced_color_system and self.enhanced_color_system.get('primary_colors'):
+            return self.enhanced_color_system['primary_colors'][0]['hex']
+        elif self.styler:
+            return self.styler.primary_color
+        else:
+            return "#2E86AB"  # Safe fallback
+    
     def _get_brand_color(self, palette, color_name, default):
         """Extract color from palette safely"""
         if not palette:
@@ -422,10 +431,10 @@ class EnhancedPPTXGenerator:
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
-        primary_color_hex = "#FFFF00"  # Default to yellow
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -492,10 +501,10 @@ class EnhancedPPTXGenerator:
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
-        primary_color_hex = "#FFFF00"  # Default to yellow
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -582,7 +591,7 @@ class EnhancedPPTXGenerator:
         primary_color_hex = "#FFFFFF"  # Default white
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFFFF")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -958,10 +967,10 @@ class EnhancedPPTXGenerator:
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
-        primary_color_hex = "#FFFF00"  # Default to yellow
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -1112,10 +1121,10 @@ Response should be one clear sentence, exactly 10-15 words."""
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color for styling
-        primary_color_hex = "#FFFF00"  # Default to yellow
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -1192,10 +1201,10 @@ Response should be one clear sentence, exactly 10-15 words."""
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color for styling
-        primary_color_hex = "#FFFF00"  # Default to yellow
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -1271,7 +1280,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color for styling
-        primary_color_hex = self.styler.primary_color if self.styler else "#FFFF00"
+        primary_color_hex = self._get_primary_color_hex()
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
         # Generate primary color usage guidelines
@@ -1325,7 +1334,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color for styling
-        primary_color_hex = self.styler.primary_color if self.styler else "#FFFF00"
+        primary_color_hex = self._get_primary_color_hex()
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
         # Generate secondary color usage guidelines
@@ -1799,10 +1808,10 @@ Best Practices:
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
-        primary_color_hex = "#FFFF00"  # Default to yellow
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -1853,10 +1862,10 @@ Best Practices:
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
-        primary_color_hex = "#FFFF00"  # Default to yellow
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color_hex = self._get_brand_color(palette, "primary", "#FFFF00")
+            primary_color_hex = self._get_primary_color_hex()
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
@@ -1985,25 +1994,22 @@ Best Practices:
         self.researched_fonts = self.font_research_agent.research_fonts(company_name, industry, brand_essence)
         print(f"✅ Selected fonts: {self.researched_fonts['primary_font']} (primary), {self.researched_fonts['secondary_font']} (secondary)")
         
-        # Initialize styling system
-        self._initialize_styling(identity_data, company_name)
+        # Generate enhanced color system BEFORE styling initialization
+        print("🎨 Generating comprehensive color system with AI research...")
+        try:
+            color_system = self.enhanced_color_agent.generate_comprehensive_color_system(
+                company_name, industry, values, audience, 
+                brand_essence=brand_essence
+            )
+            self.enhanced_color_system = color_system
+            print(f"✅ Enhanced color system generated with {len(color_system.get('primary_colors', []))} primary colors")
+        except Exception as e:
+            print(f"⚠️ Enhanced color generation failed, using fallback: {e}")
+            color_system = self._generate_fallback_color_system(identity_data.get("palette", {}))
+            self.enhanced_color_system = color_system
         
-        # Generate enhanced color system early so it can be applied to all slides
-        if identity_data.get("palette"):
-            print("🎨 Generating comprehensive color system with AI research...")
-            try:
-                color_system = self.enhanced_color_agent.generate_comprehensive_color_system(
-                    company_name, industry, values, audience, 
-                    brand_essence=brand_essence
-                )
-                self.enhanced_color_system = color_system
-                # Update styling to use the first primary color across all slides
-                self._update_styling_with_primary_color()
-            except Exception as e:
-                print(f"⚠️ Enhanced color generation failed, using fallback: {e}")
-                color_system = self._generate_fallback_color_system(identity_data.get("palette", {}))
-                self.enhanced_color_system = color_system
-                self._update_styling_with_primary_color()
+        # Initialize styling system AFTER color system is ready
+        self._initialize_styling(identity_data, company_name)
         
         # Create slides
         sections = ["Table of Contents"]

@@ -103,10 +103,32 @@ def _generate_palette_from_hints(color_hints, style):
         "hex_codes": [primary_color, secondary_color, accent_color] + supporting_colors
     }
 
-def get_typography(industry, style, brand_essence=None):
+def get_typography(industry, style, brand_essence=None, font_research_data=None):
     """Generate dynamic typography recommendations based on research and trends"""
     
-    # Dynamic typography pool with more variety
+    # If we have comprehensive font research data, use it (preferred method)
+    if font_research_data:
+        return {
+            "primary": font_research_data.get("primary_font", "Inter"),
+            "secondary": font_research_data.get("secondary_font", "Source Sans Pro"), 
+            "font_colors": font_research_data.get("font_colors", {
+                "primary_text": "#1A1A1A",
+                "secondary_text": "#4A4A4A", 
+                "accent_text": "#0066CC",
+                "light_text": "#6B6B6B",
+                "white_text": "#FFFFFF"
+            }),
+            "hierarchy": [
+                f"H1: {font_research_data.get('primary_font', 'Inter')} Bold 32px", 
+                f"H2: {font_research_data.get('primary_font', 'Inter')} Medium 24px", 
+                f"Body: {font_research_data.get('secondary_font', 'Source Sans Pro')} Regular 16px",
+                f"Caption: {font_research_data.get('secondary_font', 'Source Sans Pro')} Regular 14px"
+            ],
+            "description": font_research_data.get("font_rationale", "Research-driven font selection"),
+            "research_based": True
+        }
+    
+    # Fallback to style-based selection if no research data available
     typography_styles = {
         "minimalist": [
             {"primary": "Inter", "secondary": "Lato", "desc": "Ultra-clean geometric pairing"},

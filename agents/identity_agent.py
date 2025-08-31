@@ -1,15 +1,19 @@
 from tools.fal_image_tool import generate_logo_variations
 from tools.branding_resources import get_color_palette, get_typography, get_moodboard_prompt, get_photography_guidelines
+from agents.font_research_agent import FontResearchAgent
 
 class IdentityAgent:
     """
     Handles brand identity asset creation:
     - Logo variations (via FAL)
     - Color palette (local logic or LLM)
-    - Typography (local logic or LLM)
+    - Typography (enhanced with font research agent)
     - Visual style/moodboard (prompt or static)
     - Brand photography guidelines (prompt or static)
     """
+
+    def __init__(self):
+        self.font_research_agent = FontResearchAgent()
 
     def create_identity(self, company_name, industry, values, audience, logo_style, brand_essence=None):
         # 1. Logo variations
@@ -24,13 +28,21 @@ class IdentityAgent:
         else:
             palette = get_color_palette(industry, logo_style)
         
-        # 3. Typography (enhanced with brand essence insights)
-        print(f"Generating typography for {company_name}...")
+        # 3. Typography (enhanced with comprehensive font research)
+        print(f"Researching and generating typography for {company_name}...")
+        
+        # Use the font research agent for comprehensive typography research
+        font_research_data = self.font_research_agent.research_fonts(company_name, industry, brand_essence)
+        
+        # Get typography using the research data
         if brand_essence and brand_essence.get('visual_direction'):
             style_hint = brand_essence['visual_direction'].get('recommended_style', logo_style)
-            typography = get_typography(industry, style_hint, brand_essence)
+            typography = get_typography(industry, style_hint, brand_essence, font_research_data)
         else:
-            typography = get_typography(industry, logo_style, brand_essence)
+            typography = get_typography(industry, logo_style, brand_essence, font_research_data)
+        
+        # Add font research insights to typography
+        typography['font_research_insights'] = font_research_data.get('research_insights', {})
         
         # 4. Visual style / moodboard description
         print(f"Generating visual style guidelines for {company_name}...")

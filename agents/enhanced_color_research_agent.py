@@ -169,6 +169,12 @@ Format as JSON with keys: insights, trends, avoid, temperature"""
                 'avoid': ['Overly vibrant colors', 'Colors that suggest risk'],
                 'temperature': 'cool'
             },
+            'fintech': {
+                'insights': ['Blue conveys stability and trust', 'Green represents growth and money', 'Purple suggests innovation'],
+                'trends': ['Modern blues with green accents', 'Tech-forward gradients', 'Minimalist professional tones'],
+                'avoid': ['Red (suggests risk)', 'Overly playful colors'],
+                'temperature': 'cool'
+            },
             'education': {
                 'insights': ['Blue promotes learning and trust', 'Orange stimulates enthusiasm', 'Green encourages growth'],
                 'trends': ['Bright, engaging colors', 'Accessible combinations', 'Youth-friendly palettes'],
@@ -180,6 +186,48 @@ Format as JSON with keys: insights, trends, avoid, temperature"""
                 'trends': ['Bold, attention-grabbing colors', 'Seasonal palette variations', 'Brand differentiation colors'],
                 'avoid': ['Dull or muted colors', 'Colors that reduce visibility'],
                 'temperature': 'warm'
+            },
+            'media': {
+                'insights': ['Navy conveys authority and credibility', 'Red suggests urgency and breaking news', 'Black represents sophistication and premium content'],
+                'trends': ['Classic navy and black combinations', 'High contrast for readability', 'Professional editorial colors'],
+                'avoid': ['Overly bright colors that distract from content', 'Low contrast combinations'],
+                'temperature': 'cool'
+            },
+            'publishing': {
+                'insights': ['Navy builds trust and authority', 'Black suggests premium quality', 'Gray provides neutral balance'],
+                'trends': ['Editorial navy and black schemes', 'Classic serif-friendly colors', 'High readability combinations'],
+                'avoid': ['Colors that interfere with text readability', 'Overly trendy colors'],
+                'temperature': 'cool'
+            },
+            'news': {
+                'insights': ['Navy conveys credibility and trust', 'Red indicates urgency and importance', 'White ensures clean readability'],
+                'trends': ['Traditional news colors (navy, red, white)', 'High contrast for accessibility', 'Professional editorial palette'],
+                'avoid': ['Colors that suggest bias', 'Low contrast combinations'],
+                'temperature': 'cool'
+            },
+            'consulting': {
+                'insights': ['Blue builds trust and expertise', 'Gray suggests professionalism', 'Navy conveys authority'],
+                'trends': ['Conservative professional tones', 'Sophisticated color combinations', 'Executive-level palettes'],
+                'avoid': ['Overly creative or playful colors', 'Trendy colors that may date quickly'],
+                'temperature': 'cool'
+            },
+            'creative': {
+                'insights': ['Purple stimulates creativity', 'Orange promotes energy and enthusiasm', 'Teal suggests innovation'],
+                'trends': ['Bold creative combinations', 'Gradient and vibrant accents', 'Artistic color schemes'],
+                'avoid': ['Overly conservative colors', 'Monochromatic schemes'],
+                'temperature': 'warm'
+            },
+            'nonprofit': {
+                'insights': ['Blue builds trust and reliability', 'Green represents hope and growth', 'Warm colors show compassion'],
+                'trends': ['Trustworthy blues with warm accents', 'Accessible color combinations', 'Hopeful and optimistic palettes'],
+                'avoid': ['Luxury colors that suggest excess', 'Cold or unwelcoming combinations'],
+                'temperature': 'balanced'
+            },
+            'ecommerce': {
+                'insights': ['Blue builds trust for transactions', 'Green suggests security and go', 'Orange creates urgency for CTAs'],
+                'trends': ['Trust-building primary colors', 'High conversion accent colors', 'Mobile-optimized palettes'],
+                'avoid': ['Colors that reduce conversion', 'Low contrast for buttons'],
+                'temperature': 'balanced'
             }
         }
         
@@ -439,6 +487,46 @@ Write in a professional, clear style suitable for brand guidelines. Keep it comp
                 {'name': 'Corporate Blue', 'hex': '#1E40AF', 'description': 'Stability and trust'},
                 {'name': 'Success Green', 'hex': '#059669', 'description': 'Growth and prosperity'},
                 {'name': 'Premium Gold', 'hex': '#D97706', 'description': 'Value and excellence'}
+            ],
+            'fintech': [
+                {'name': 'Fintech Blue', 'hex': '#1E40AF', 'description': 'Trust and stability'},
+                {'name': 'Growth Green', 'hex': '#10B981', 'description': 'Financial growth'},
+                {'name': 'Innovation Purple', 'hex': '#7C3AED', 'description': 'Tech innovation'}
+            ],
+            'media': [
+                {'name': 'Editorial Navy', 'hex': '#1E3A8A', 'description': 'Authority and credibility'},
+                {'name': 'Premium Black', 'hex': '#1F2937', 'description': 'Sophistication'},
+                {'name': 'Accent Red', 'hex': '#DC2626', 'description': 'Urgency and importance'}
+            ],
+            'publishing': [
+                {'name': 'Publisher Navy', 'hex': '#1E3A8A', 'description': 'Trust and authority'},
+                {'name': 'Editorial Black', 'hex': '#111827', 'description': 'Premium quality'},
+                {'name': 'Classic Gray', 'hex': '#4B5563', 'description': 'Neutral balance'}
+            ],
+            'news': [
+                {'name': 'News Navy', 'hex': '#1E3A8A', 'description': 'Credibility and trust'},
+                {'name': 'Breaking Red', 'hex': '#DC2626', 'description': 'Urgency and importance'},
+                {'name': 'Clean White', 'hex': '#FFFFFF', 'description': 'Clean readability'}
+            ],
+            'consulting': [
+                {'name': 'Executive Blue', 'hex': '#1E40AF', 'description': 'Trust and expertise'},
+                {'name': 'Professional Gray', 'hex': '#4B5563', 'description': 'Sophistication'},
+                {'name': 'Authority Navy', 'hex': '#1E3A8A', 'description': 'Leadership'}
+            ],
+            'creative': [
+                {'name': 'Creative Purple', 'hex': '#7C3AED', 'description': 'Creativity and innovation'},
+                {'name': 'Energy Orange', 'hex': '#EA580C', 'description': 'Enthusiasm and energy'},
+                {'name': 'Innovation Teal', 'hex': '#0891B2', 'description': 'Fresh thinking'}
+            ],
+            'nonprofit': [
+                {'name': 'Trust Blue', 'hex': '#2563EB', 'description': 'Reliability and trust'},
+                {'name': 'Hope Green', 'hex': '#059669', 'description': 'Growth and hope'},
+                {'name': 'Compassion Orange', 'hex': '#EA580C', 'description': 'Warmth and care'}
+            ],
+            'ecommerce': [
+                {'name': 'Trust Blue', 'hex': '#2563EB', 'description': 'Transaction trust'},
+                {'name': 'Action Green', 'hex': '#10B981', 'description': 'Security and go'},
+                {'name': 'CTA Orange', 'hex': '#F59E0B', 'description': 'Urgency and action'}
             ]
         }
         
