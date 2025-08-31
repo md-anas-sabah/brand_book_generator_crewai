@@ -1491,71 +1491,64 @@ Best Practices:
         return "Use Light Text" if brightness < 128 else "Use Dark Text"
     
     def _create_typography_slide(self, prs, typography, identity_data):
-        """Create typography showcase with different weights and sizes"""
+        """Create typography slide with same design as Introduction slide"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide)
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
         
-        # Title
-        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
-        title_textbox = slide.shapes.add_textbox(left, top, width, height)
-        title_frame = title_textbox.text_frame
-        title_frame.text = "Typography"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
+        # Get brand primary color (ensure it uses the agent's chosen primary color)
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_primary_color_hex()
         
-        # Font information
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Get font information
         primary_font = self.styler.primary_font
         secondary_font = self.styler.secondary_font
         
-        # Primary font showcase
-        left, top, width, height = self.grid.get_position(1, 2, 5, 1)
-        primary_title_box = slide.shapes.add_textbox(left, top, width, height)
-        primary_title_frame = primary_title_box.text_frame
-        primary_title_frame.text = f"Primary Font: {primary_font}"
-        self.styler.apply_subtitle_style(primary_title_frame.paragraphs[0], size=20)
+        # Create typography content matching Introduction slide format
+        typography_content = f"Primary Font: {primary_font}\n\nSecondary Font: {secondary_font}\n\nFont Hierarchy:\n• Headlines: {primary_font} - Bold, 28-32pt\n• Subheadlines: {primary_font} - Bold, 20-24pt\n• Body Text: {secondary_font} - Regular, 16-18pt\n• Caption Text: {secondary_font} - Regular, 12-14pt"
         
-        # Primary font samples
-        samples = [
-            ("H1 Heading", 32, True),
-            ("H2 Heading", 24, True),
-            ("H3 Heading", 20, False),
-        ]
+        # Main content text - positioned in upper area (same as Introduction)
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 4)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = typography_content
+        content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
         
-        for i, (sample_text, size, bold) in enumerate(samples):
-            left, top, width, height = self.grid.get_position(1, 3 + i, 5, 1)
-            sample_box = slide.shapes.add_textbox(left, top, width, height)
-            sample_frame = sample_box.text_frame
-            sample_frame.text = sample_text
-            sample_frame.paragraphs[0].font.name = primary_font
-            sample_frame.paragraphs[0].font.size = Pt(size)
-            sample_frame.paragraphs[0].font.bold = bold
-            sample_frame.paragraphs[0].font.color.rgb = RGBColor(*self._hex_to_rgb(self.styler.text_color))
+        # Style the content text - white, left-aligned, same as introduction slide
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=20)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)  # Consistent spacing
         
-        # Secondary font showcase
-        left, top, width, height = self.grid.get_position(7, 2, 5, 1)
-        secondary_title_box = slide.shapes.add_textbox(left, top, width, height)
-        secondary_title_frame = secondary_title_box.text_frame
-        secondary_title_frame.text = f"Secondary Font: {secondary_font}"
-        self.styler.apply_subtitle_style(secondary_title_frame.paragraphs[0], size=20)
+        # Full-width line separator (same width as introduction slide)
+        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
         
-        # Secondary font samples
-        body_samples = [
-            ("Body Text", 16, False),
-            ("Body Bold", 16, True),
-            ("Caption Text", 12, False),
-        ]
-        
-        for i, (sample_text, size, bold) in enumerate(body_samples):
-            left, top, width, height = self.grid.get_position(7, 3 + i, 5, 1)
-            sample_box = slide.shapes.add_textbox(left, top, width, height)
-            sample_frame = sample_box.text_frame
-            sample_frame.text = sample_text
-            sample_frame.paragraphs[0].font.name = secondary_font
-            sample_frame.paragraphs[0].font.size = Pt(size)
-            sample_frame.paragraphs[0].font.bold = bold
-            sample_frame.paragraphs[0].font.color.rgb = RGBColor(*self._hex_to_rgb(self.styler.text_color))
-        
-        self._add_footer(slide, self.slide_counter)
+        # "TYPOGRAPHY" title in primary color below the line (same as Introduction)
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
+            Inches(4), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "TYPOGRAPHY"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
     
     def _create_visual_guidelines_slide(self, prs, visual_style, photography_style, identity_data):
         """Create visual and photography guidelines slide"""
