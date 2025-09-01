@@ -15,6 +15,7 @@ from agents.introduction_content_agent import IntroductionContentAgent
 from agents.brand_purpose_content_agent import BrandPurposeContentAgent
 from agents.brand_story_content_agent import BrandStoryContentAgent
 from agents.enhanced_color_research_agent import EnhancedColorResearchAgent
+from agents.iconography_agent import IconographyAgent
 
 
 class GridLayout:
@@ -137,6 +138,7 @@ class EnhancedPPTXGenerator:
         self.brand_purpose_agent = BrandPurposeContentAgent()
         self.brand_story_agent = BrandStoryContentAgent()
         self.enhanced_color_agent = EnhancedColorResearchAgent()
+        self.iconography_agent = IconographyAgent()
         self.researched_fonts = None
         self.grid = GridLayout()
         self.styler = None
@@ -1550,6 +1552,194 @@ Best Practices:
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
     
+    def _create_icons_display_slide(self, prs, iconography_data, identity_data, company_name="Brand"):
+        """Create slide to display generated icons"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color
+        primary_color_hex = self._get_primary_color_hex()
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_primary_color_hex()
+        
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Simple title text with company name
+        intro_content = f"{company_name} Icons"
+        
+        # Main content text - positioned in upper area
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 1)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = intro_content
+        content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
+        
+        # Style the content text
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=20)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)
+        
+        # Display generated icons if available
+        if iconography_data and iconography_data.get("icon_generation", {}).get("generated_icons"):
+            icons = iconography_data["icon_generation"]["generated_icons"]
+            successful_icons = [icon for icon in icons if "error" not in icon and icon.get("local_path") and icon["local_path"] not in ["Failed to download", "Error"]]
+            
+            if successful_icons:
+                # Add icons in a centered grid layout
+                icons_per_row = min(3, len(successful_icons))
+                total_rows = (len(successful_icons) + icons_per_row - 1) // icons_per_row
+                
+                # Center the grid horizontally
+                grid_width = icons_per_row * Inches(2.0)
+                start_left = (Inches(10) - grid_width) / 2 + Inches(1.0)  # Center and adjust
+                start_top = Inches(2.5)
+                icon_size = Inches(1.0)
+                spacing = Inches(2.0)
+                
+                for i, icon in enumerate(successful_icons[:6]):  # Limit to 6 icons
+                    try:
+                        row = i // icons_per_row
+                        col = i % icons_per_row
+                        icon_left = start_left + (col * spacing)
+                        icon_top = start_top + (row * Inches(1.5))
+                        
+                        # Add icon image
+                        slide.shapes.add_picture(
+                            icon["local_path"],
+                            icon_left, icon_top,
+                            icon_size, icon_size
+                        )
+                        
+                        # Add category label below icon
+                        label_top = icon_top + icon_size + Inches(0.1)
+                        label_textbox = slide.shapes.add_textbox(
+                            icon_left, label_top,
+                            icon_size, Inches(0.4)
+                        )
+                        label_frame = label_textbox.text_frame
+                        label_frame.text = icon.get("category", f"Icon {i+1}").title()
+                        label_frame.margin_left = 0
+                        label_frame.margin_right = 0
+                        label_frame.margin_top = 0
+                        label_frame.margin_bottom = 0
+                        
+                        # Style the label
+                        for paragraph in label_frame.paragraphs:
+                            self.styler.apply_body_style(paragraph, color='white', size=12)
+                            paragraph.alignment = PP_ALIGN.CENTER
+                        
+                    except Exception as e:
+                        print(f"  ⚠️ Error adding icon {i+1}: {e}")
+                        continue
+        
+        # Full-width line separator
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # "ICONOGRAPHY" title
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
+            Inches(4), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "ICONOGRAPHY"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+
+    def _create_iconography_guidelines_slide(self, prs, iconography_data, identity_data):
+        """Create slide for iconography usage guidelines"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color
+        primary_color_hex = self._get_primary_color_hex()
+        if identity_data and identity_data.get("palette"):
+            palette = identity_data["palette"]
+            primary_color_hex = self._get_primary_color_hex()
+        
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Create concise guidelines content
+        if iconography_data and iconography_data.get("system_overview"):
+            system_overview = iconography_data["system_overview"]
+            style_approach = system_overview.get("style_approach", "minimalist")
+            
+            guidelines_content = (
+                f"Style: {style_approach.title()} design\n"
+                f"Color: {primary_color_hex} on black background\n\n"
+                f"Size Requirements:\n"
+                f"• Minimum: 16px web, 0.5\" print\n"
+                f"• Recommended: 24px+ web, 0.75\"+ print\n\n"
+                f"Spacing:\n"
+                f"• Clear space: 50% of icon width\n"
+                f"• Consistent grid alignment"
+            )
+        else:
+            guidelines_content = (
+                f"Style: Minimalist design\n"
+                f"Color: {primary_color_hex} on black background\n\n"
+                f"Size Requirements:\n"
+                f"• Minimum: 16px web, 0.5\" print\n"
+                f"• Recommended: 24px+ web, 0.75\"+ print\n\n"
+                f"Spacing:\n"
+                f"• Clear space: 50% of icon width\n"
+                f"• Consistent grid alignment"
+            )
+        
+        # Main content text - positioned in upper area
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 3)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = guidelines_content
+        content_frame.word_wrap = True
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
+        
+        # Style the content text
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, color='white', size=18)
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(6)
+        
+        # Full-width line separator
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # "USAGE GUIDELINES" title
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "USAGE GUIDELINES"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
     
     def _create_text_slide(self, prs, title, content, max_words=80, identity_data=None):
         """Create text-based slide with pagination if needed"""
@@ -1948,7 +2138,7 @@ Best Practices:
             "6. Logo Variations",
             "7. Color Palette", 
             "8. Typography",
-            "9. Imagery & Visuals"
+            "9. Imagery & Visuals",
         ])
         
         # 2. Table of Contents
@@ -1992,6 +2182,22 @@ Best Practices:
         # 10. Typography
         self._create_typography_slide(prs, identity_data.get("typography", {}), identity_data)
         
+        # 9. Imagery & Visuals - Iconography subsection
+        print("  🎨 Generating brand iconography with AI research and Fal AI...")
+        try:
+            primary_color_hex = self._get_primary_color_hex()
+            iconography_system = self.iconography_agent.create_iconography_system(
+                company_name, industry, values, audience, primary_color_hex
+            )
+            # Create two separate slides: icons display and guidelines
+            self._create_icons_display_slide(prs, iconography_system, identity_data, company_name)
+            self._create_iconography_guidelines_slide(prs, iconography_system, identity_data)
+            print(f"  ✅ Iconography slides created with {iconography_system.get('system_overview', {}).get('total_icons', 0)} icons")
+        except Exception as e:
+            print(f"  ⚠️ Iconography generation failed, creating basic slides: {e}")
+            # Create basic iconography slides without generated icons
+            self._create_icons_display_slide(prs, None, identity_data, company_name)
+            self._create_iconography_guidelines_slide(prs, None, identity_data)
         
         # Save file
         base_name = company_name.lower().replace(' ', '_')
