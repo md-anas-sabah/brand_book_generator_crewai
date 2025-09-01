@@ -5,6 +5,7 @@ import json
 import uuid
 import fal_client as fal
 from decouple import config
+from PIL import Image
 
 def generate_logo_variations(company_name, industry, style, num_variations=3):
     """
@@ -22,15 +23,15 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
         
         for i in range(num_variations):
             try:
-                # Create detailed prompt for logo generation - enforce clean white/transparent background
+                # Create detailed prompt for logo generation - enforce consistent white background
                 prompt = (
                     f"Professional HD logo design for {company_name}, {industry} industry. "
-                    f"Style: {style}. Ultra-clean, minimal, modern vector design. "
-                    f"WHITE BACKGROUND ONLY - pure white background (#FFFFFF), no other background colors allowed. "
-                    f"Logo symbol in colors on white background. White background mandatory. "
+                    f"Style: {style}. Minimal, modern, flat vector design. "
+                    f"Pure white background (#FFFFFF). Clean white background only. "
+                    f"Corporate logo on white background, no other background colors. "
                     f"Ultra-flat design, absolutely no gradients, no shadows, no glow effects, no texture, no 3D effects. "
                     f"4K high-resolution, crystal clear, scalable vector quality, perfect for corporate branding. "
-                    f"Pure white background (#FFFFFF) required, ultra-sharp HD quality."
+                    f"White background mandatory for consistent processing."
                 )
                 
                 # Submit request to Ideogram V2A Turbo - enforce white/transparent background
@@ -59,11 +60,19 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
                     with open(local_path, 'wb') as f:
                         f.write(image_response.content)
                     
+                    # Convert white background to transparent
+                    transparent_path = white_to_transparent(local_path)
+                    if transparent_path:
+                        # Update local_path to transparent version for better usability
+                        logo_info_path = transparent_path
+                    else:
+                        logo_info_path = local_path
+                    
                     logo_info = {
                         "variation_number": i + 1,
                         "image_url": image_url,
-                        "local_path": local_path,
-                        "filename": filename,
+                        "local_path": logo_info_path,
+                        "filename": os.path.basename(logo_info_path),
                         "prompt": prompt,
                         "company_name": company_name,
                         "industry": industry,
@@ -140,12 +149,12 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
             try:
                 prompt = (
                     f"Professional HD logo design for {company_name}, {industry} industry. "
-                    f"Style: {style}. Ultra-clean, minimal, modern vector design. "
-                    f"WHITE BACKGROUND ONLY - pure white background (#FFFFFF), no other background colors allowed. "
-                    f"Logo symbol in colors on white background. White background mandatory. "
+                    f"Style: {style}. Minimal, modern, flat vector design. "
+                    f"Pure white background (#FFFFFF). Clean white background only. "
+                    f"Corporate logo on white background, no other background colors. "
                     f"Ultra-flat design, absolutely no gradients, no shadows, no glow effects, no texture, no 3D effects. "
                     f"4K high-resolution, crystal clear, scalable vector quality, perfect for corporate branding. "
-                    f"Pure white background (#FFFFFF) required, ultra-sharp HD quality."
+                    f"White background mandatory for consistent processing."
                 )
                 
                 result = fal.run(
@@ -171,11 +180,18 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                     with open(local_path, 'wb') as f:
                         f.write(image_response.content)
                     
+                    # Convert white background to transparent
+                    transparent_path = white_to_transparent(local_path)
+                    if transparent_path:
+                        logo_info_path = transparent_path
+                    else:
+                        logo_info_path = local_path
+                    
                     logo_variations.append({
                         "variation_number": i + 1,
                         "image_url": image_url,
-                        "local_path": local_path,
-                        "filename": filename,
+                        "local_path": logo_info_path,
+                        "filename": os.path.basename(logo_info_path),
                         "prompt": prompt,
                         "company_name": company_name,
                         "industry": industry,
@@ -506,6 +522,73 @@ def _get_enhanced_default_concepts(company_name, industry, values, audience):
         f"Technology integration and digital transformation, highlighting {company_name} modern approach to {industry} solutions",
         f"Customer success and satisfaction focus, representing {company_name} dedication to {audience} outcomes and relationships"
     ]
+
+def white_to_transparent(img_path):
+    """
+    Convert any background to transparent using AI background removal.
+    Falls back to manual white/light background removal if rembg fails.
+    Returns the new transparent image path, or None if failed.
+    """
+    try:
+        # Method 1: Try AI-powered background removal with rembg
+        try:
+            from rembg import remove
+            
+            with open(img_path, 'rb') as input_file:
+                input_data = input_file.read()
+            
+            output_data = remove(input_data)
+            
+            # Create transparent version filename
+            transparent_path = img_path.replace('.png', '_transparent.png')
+            with open(transparent_path, 'wb') as output_file:
+                output_file.write(output_data)
+            
+            print(f"✅ Created AI-removed background version: {transparent_path}")
+            return transparent_path
+            
+        except ImportError:
+            print("⚠️ rembg not installed, trying manual background removal...")
+            
+        except Exception as e:
+            print(f"⚠️ AI background removal failed: {e}, trying manual method...")
+        
+        # Method 2: Manual background removal for light backgrounds
+        img = Image.open(img_path).convert("RGBA")
+        datas = img.getdata()
+        new_data = []
+
+        for item in datas:
+            # More flexible background detection - remove light colors and gradients
+            r, g, b, a = item
+            
+            # Check if pixel is light/whitish/yellowish (common backgrounds)
+            is_background = (
+                # Very light colors (near white)
+                (r > 240 and g > 240 and b > 240) or
+                # Light yellow/orange (common AI backgrounds)
+                (r > 200 and g > 180 and b < 150 and abs(r-g) < 80) or
+                # Light gradients
+                (r > 220 and g > 200 and b > 150)
+            )
+            
+            if is_background:
+                new_data.append((255, 255, 255, 0))  # Make transparent
+            else:
+                new_data.append(item)
+
+        img.putdata(new_data)
+        
+        # Create transparent version filename
+        transparent_path = img_path.replace('.png', '_transparent.png')
+        img.save(transparent_path, "PNG")
+        
+        print(f"✅ Created manual background removal version: {transparent_path}")
+        return transparent_path
+        
+    except Exception as e:
+        print(f"❌ Failed to create transparent version: {e}")
+        return None
 
 # Example test
 if __name__ == "__main__":
