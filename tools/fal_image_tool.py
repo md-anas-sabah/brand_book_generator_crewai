@@ -60,19 +60,18 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
                     with open(local_path, 'wb') as f:
                         f.write(image_response.content)
                     
-                    # Convert white background to transparent
+                    # For logos, create both versions but don't auto-replace
+                    # (logos often have text that gets removed with background)
                     transparent_path = white_to_transparent(local_path)
-                    if transparent_path:
-                        # Update local_path to transparent version for better usability
-                        logo_info_path = transparent_path
-                    else:
-                        logo_info_path = local_path
+                    # Always use original for logos to preserve text and quality
+                    logo_info_path = local_path
                     
                     logo_info = {
                         "variation_number": i + 1,
                         "image_url": image_url,
                         "local_path": logo_info_path,
-                        "filename": os.path.basename(logo_info_path),
+                        "filename": filename,
+                        "transparent_version": transparent_path if transparent_path else None,
                         "prompt": prompt,
                         "company_name": company_name,
                         "industry": industry,
@@ -180,18 +179,16 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                     with open(local_path, 'wb') as f:
                         f.write(image_response.content)
                     
-                    # Convert white background to transparent
+                    # For logos, create both versions but preserve original
                     transparent_path = white_to_transparent(local_path)
-                    if transparent_path:
-                        logo_info_path = transparent_path
-                    else:
-                        logo_info_path = local_path
+                    logo_info_path = local_path  # Always use original for logos
                     
                     logo_variations.append({
                         "variation_number": i + 1,
                         "image_url": image_url,
                         "local_path": logo_info_path,
-                        "filename": os.path.basename(logo_info_path),
+                        "filename": filename,
+                        "transparent_version": transparent_path if transparent_path else None,
                         "prompt": prompt,
                         "company_name": company_name,
                         "industry": industry,
@@ -266,11 +263,12 @@ def generate_brand_illustrations(company_name, industry, values, audience, brand
         
         for i, concept in enumerate(illustration_concepts[:num_illustrations]):
             try:
-                # Create HD detailed prompt with white/transparent background, incorporating brand essence and research
+                # Create modern 2025 business illustration prompt
                 base_prompt = (
                     f"{concept}. "
-                    f"Ultra-HD professional business illustration style, crystal-clear vector design. "
-                    f"Color palette: ULTRAMARINE blue dominant theme, modern corporate aesthetic. "
+                    f"Modern 2025 business illustration style, inspired by Dribbble, Behance, and high-end corporate design. "
+                    f"Vibrant gradient color palette with ULTRAMARINE blue accents, paired with clean neutrals. "
+                    f"Smooth 3D isometric look, soft shadows, subtle depth, and glossy highlights for a premium feel. "
                     f"Target audience: {audience}. "
                     f"Core values represented: {values}. "
                 )
@@ -279,10 +277,10 @@ def generate_brand_illustrations(company_name, industry, values, audience, brand
                     base_prompt += f"Brand essence: {brand_essence}. "
                 
                 base_prompt += (
-                    "DESIGN style: ultra-minimalistic, professional, business-focused, 4K quality. "
-                    "Ultra-flat design approach, clean geometric shapes, sharp lines, absolutely no gradients or shadows. "
-                    "PURE WHITE BACKGROUND (#FFFFFF) mandatory, no dark backgrounds allowed. "
-                    "Corporate illustration on white background suitable for brand book presentation, scalable vector quality."
+                    "DESIGN style: futuristic, minimal yet dynamic, visually engaging, and human-centered. "
+                    "Use contemporary vector-3D hybrid style, smooth gradients, rounded shapes, soft lighting. "
+                    "PURE WHITE BACKGROUND (#FFFFFF) mandatory, modern illustration suitable for brand book, "
+                    "presentation-ready, scalable high-quality asset."
                 )
                 
                 # Submit request to Ideogram v3
@@ -311,11 +309,14 @@ def generate_brand_illustrations(company_name, industry, values, audience, brand
                     with open(local_path, 'wb') as f:
                         f.write(image_response.content)
                     
+                    # Keep original for illustrations - they're meant to have backgrounds
+                    illustration_info_path = local_path
+                    
                     illustration_info = {
                         "illustration_number": i + 1,
                         "concept": concept,
                         "image_url": image_url,
-                        "local_path": local_path,
+                        "local_path": illustration_info_path,
                         "filename": filename,
                         "prompt": base_prompt,
                         "company_name": company_name,

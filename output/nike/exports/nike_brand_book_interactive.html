@@ -1,0 +1,206 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Nike Brand Book</title>
+            <style>
+        :root {
+            --primary-color: #3B82F6;
+            --accent-color: #F87171;
+            --secondary-color: #030712;
+            --gradient-primary: linear-gradient(135deg, #3B82F6, #F87171);
+            --gradient-section: linear-gradient(180deg, #f8f9fa, #ffffff);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);  /* Use primary brand color for body text */
+            background: var(--gradient-section);
+        }
+        
+        .hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .color-swatch {
+            text-align: center;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: translateY(-4px);
+        }
+        
+        .swatch {
+            width: 100%;
+            height: 120px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+        }
+        
+        .brand-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .typography-demo {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .hero { padding: 2rem 1rem; }
+            .section { padding: 2rem 0; }
+            .container { padding: 0 1rem; }
+        }
+        </style>
+        </head>
+        <body>
+            
+        <section class="hero">
+            <div class="container">
+                <h1>Nike</h1>
+                <p style="font-size: 1.25rem; opacity: 0.9;">Brand Book & Style Guide</p>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Essence</h2>
+                <div class="brand-card">
+                    <h3>Company Profile</h3>
+                    <p><strong>Industry:</strong> Sportswear & Apparel (Athletic Footwear, Clothing, Equipment)</p>
+                    <p><strong>Target Audience:</strong> Athletes, Fitness enthusiasts, Youth, Professionals, Global lifestyle consumers</p>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Visual Identity</h2>
+                <div class="brand-card">
+                    <h3>Color Palette</h3>
+                    <div class="color-palette">
+                        
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #3B82F6;"></div>
+                        <h4>Primary</h4>
+                        <p>#3B82F6</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #030712;"></div>
+                        <h4>Secondary</h4>
+                        <p>#030712</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #F87171;"></div>
+                        <h4>Accent</h4>
+                        <p>#F87171</p>
+                    </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Narrative</h2>
+                <div class="brand-card">
+                    <h3>Brand Story</h3>
+                    <p>In the heart of every athlete, every fitness enthusiast, every young dreamer, and every global lifestyle consumer, there beats a relentless drive for greatness. It's the same pulse that fuels our passion at Nike – a passion for innovation, performance, and empowerment. 
+
+At Nike, we believe in the power of sport to unleash human potential. We are not just a brand; we are a movement, a force for change, a beacon of inspiration for athletes and dreamers around the world. Our core values of innovation, performance, inspiration, sustainability, diversity, equality, and empowerment guide every step we take, every product we create, and every athlete we support.
+
+Our brand promise is simple yet profound: to empower athletes, fitness enthusiasts, youth, professionals, and global lifestyle consumers through innovative Sportswear & Apparel solutions. We are not just here to sell clothes and shoes; we are here to revolutionize the way people move, feel, and perform. Our products are not just pieces of fabric and rubber; they are tools of transformation, catalysts for greatness, and symbols of empowerment.
+
+What sets Nike apart is our relentless commitment to pushing boundaries, challenging the status quo, and redefining what is possible. Our unique value proposition lies in our ability to create distinctive Sportswear & Apparel solutions that cater to the specific needs and aspirations of athletes, fitness enthusiasts, youth, professionals, and global lifestyle consumers. Whether you are a runner, a basketball player, a yoga enthusiast, or simply someone who wants to look and feel their best, we have something for you.
+
+But our story goes beyond products and profits. It is a story of resilience, of creativity, of responsibility, and of sustainability. We are not just a brand; we are a movement towards a better, more inclusive, and more sustainable future. We believe that by empowering individuals, we can empower communities, and by empowering communities, we can empower the world.
+
+So, to all the athletes, the dreamers, the</p>
+                </div>
+                <div class="brand-card">
+                    <h3>Voice & Tone</h3>
+                    <p>Nike's brand voice is dynamic, empowering, and inspirational. It is a perfect blend of friendly and authoritative, with a touch of playfulness. The tone is confident, energetic, and inclusive, resonating with athletes, fitness enthusiasts, youth, professionals, and global lifestyle consumers.
+
+Incorporating the values of innovation, performance, inspiration, sustainability, diversity, equality, and empowerment, Nike's voice is forward-thinking, pushing boundaries to create cutting-edge products that enhance performance and inspire people to reach their full potential. It celebrates diversity and promotes equality, empowering individuals to be the best version of themselves</p>
+                </div>
+            </div>
+        </section>
+        
+        </body>
+        </html>
+        

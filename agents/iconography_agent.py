@@ -21,21 +21,54 @@ class IconographyAgent:
         self.fal_key = config('FAL_KEY')
         os.environ['FAL_KEY'] = self.fal_key
     
-    def ensure_black_background(self, image_path: str):
+    def create_transparent_background(self, image_path: str):
         """
-        Force pitch black background using PIL post-processing
+        Convert any background to transparent using AI background removal.
+        Optimized for preserving HD quality of icons.
         
         Args:
             image_path: Path to the generated icon image
         """
         try:
-            img = Image.open(image_path).convert("RGBA")
-            black_bg = Image.new("RGBA", img.size, (0, 0, 0, 255))
-            final = Image.alpha_composite(black_bg, img)
-            final.convert("RGB").save(image_path)  # overwrite with black bg
-            print(f"    ✅ Applied pitch black background to {os.path.basename(image_path)}")
+            # Method 1: Try AI-powered background removal with rembg (best quality)
+            try:
+                from rembg import remove
+                
+                # Open original image to get dimensions
+                original_img = Image.open(image_path)
+                original_size = original_img.size
+                
+                with open(image_path, 'rb') as input_file:
+                    input_data = input_file.read()
+                
+                output_data = remove(input_data)
+                
+                # Create transparent version filename
+                transparent_path = image_path.replace('.png', '_transparent.png')
+                with open(transparent_path, 'wb') as output_file:
+                    output_file.write(output_data)
+                
+                # Verify size is preserved
+                transparent_img = Image.open(transparent_path)
+                if transparent_img.size != original_size:
+                    # Resize back to original if needed
+                    transparent_img = transparent_img.resize(original_size, Image.Resampling.LANCZOS)
+                    transparent_img.save(transparent_path, "PNG")
+                
+                print(f"    ✅ Created HD AI-removed background: {os.path.basename(transparent_path)}")
+                return transparent_path
+                
+            except ImportError:
+                print("    ⚠️ rembg not installed, using original with white background...")
+                return None
+                
+            except Exception as e:
+                print(f"    ⚠️ AI background removal failed: {e}, using original...")
+                return None
+            
         except Exception as e:
-            print(f"    ⚠️ Failed to apply black background to {os.path.basename(image_path)}: {e}")
+            print(f"    ⚠️ Failed to create transparent version: {e}")
+            return None
         
     def analyze_icon_styles(self, company_name: str, industry: str, values: str, 
                           audience: str) -> Dict:
@@ -207,15 +240,14 @@ class IconographyAgent:
         
         for i, category in enumerate(icon_categories):
             try:
-                # Create HD quality prompt with white/transparent background emphasis
+                # Create modern 2025 icon prompt
                 prompt = (
-                    f"Ultra-HD flat {icon_style} icon, centered on PURE WHITE BACKGROUND (#FFFFFF). "
-                    f"Icon symbol in {primary_color_hex} only. White background mandatory. "
-                    f"Minimalist corporate branding style for {industry} industry. "
-                    f"Ultra-clean, professional, crystal-clear, high-contrast, 4K quality. "
-                    f"Absolutely no gradients, no shadows, no glow, no lighting effects, no 3D effects, no texture. "
-                    f"Pure white background (#FFFFFF) required, ultra-sharp HD quality. "
-                    f"Representing '{category}' concept - scalable vector quality."
+                    f"Modern 2025 {icon_style} icon representing '{category}' concept for {industry} industry. "
+                    f"Contemporary design inspired by Apple, Google, and premium SaaS interfaces. "
+                    f"Icon symbol in {primary_color_hex} with subtle gradients and soft shadows. "
+                    f"Clean geometric shapes with rounded corners, minimal depth, premium finish. "
+                    f"Pure white background (#FFFFFF). Professional corporate branding style. "
+                    f"4K high-resolution, crystal clear, scalable vector quality for modern applications."
                 )
                 
                 # Generate HD icon using Fal AI Turbo with white/transparent background
@@ -230,7 +262,7 @@ class IconographyAgent:
                             "black background, dark background, colored background, "
                             "gradient background, textured background, pattern background, "
                             "realistic lighting, glow, reflections, shadows, 3D effects, "
-                            "complex details, realistic textures, low quality, blurry"
+                            "complex details, realistic textures, low quality, blurry, transparent background"
                         )
                     }
                 )
@@ -248,15 +280,22 @@ class IconographyAgent:
                     with open(local_path, 'wb') as f:
                         f.write(image_response.content)
                     
-                    # Force pitch black background using post-processing
-                    self.ensure_black_background(local_path)
+                    # Convert background to transparent
+                    transparent_path = self.create_transparent_background(local_path)
+                    if transparent_path:
+                        # Update local_path to transparent version for better usability
+                        final_path = transparent_path
+                        final_filename = os.path.basename(transparent_path)
+                    else:
+                        final_path = local_path
+                        final_filename = filename
                     
                     icon_info = {
                         "category": category,
                         "icon_number": i + 1,
                         "image_url": image_url,
-                        "local_path": local_path,
-                        "filename": filename,
+                        "local_path": final_path,
+                        "filename": final_filename,
                         "prompt": prompt,
                         "style": icon_style,
                         "color": primary_color_hex,
@@ -265,7 +304,7 @@ class IconographyAgent:
                     
                     generated_icons.append(icon_info)
                     successful_generations += 1
-                    print(f"  ✅ Generated icon for '{category}': {local_path}")
+                    print(f"  ✅ Generated icon for '{category}': {final_path}")
                     
                 else:
                     error_info = {
