@@ -163,7 +163,7 @@ class EnhancedPPTXGenerator:
             primary_color = self._get_brand_color(palette, "primary", "#2E86AB")
             print(f"🎨 Using fallback primary color: {primary_color}")
         
-        text_color = "#FFFFFF"  # Keep all content text white as requested
+        text_color = "#000000"  # Black text for white background
         
         self.styler = TextStyler(primary_font, secondary_font, primary_color, text_color)
         
@@ -227,8 +227,14 @@ class EnhancedPPTXGenerator:
             return (255, 255, 255)
     
     def _add_slide_background(self, slide, gradient=False, identity_data=None, bg_color=None):
-        """Add background to slide with optional pitch black background"""
-        if bg_color == 'pitch_black' or bg_color == 'black':
+        """Add background to slide with support for white, black, and gradient backgrounds"""
+        if bg_color == 'white':
+            # Set solid white background
+            background = slide.background
+            fill = background.fill
+            fill.solid()
+            fill.fore_color.rgb = RGBColor(255, 255, 255)  # Pure white
+        elif bg_color == 'pitch_black' or bg_color == 'black':
             # Set solid pitch black background
             background = slide.background
             fill = background.fill
@@ -257,19 +263,11 @@ class EnhancedPPTXGenerator:
             bg_shape.element.getparent().remove(bg_shape.element)
             slide.shapes._spTree.insert(1, bg_shape.element)
         else:
-            # Solid dark background
-            bg_shape = slide.shapes.add_shape(
-                MSO_SHAPE.RECTANGLE,
-                0, 0, 
-                Inches(10), Inches(7.5)
-            )
-            bg_shape.fill.solid()
-            bg_shape.fill.fore_color.rgb = RGBColor(26, 26, 26)
-            bg_shape.line.fill.background()
-            
-            # Move to back
-            bg_shape.element.getparent().remove(bg_shape.element)
-            slide.shapes._spTree.insert(1, bg_shape.element)
+            # Default: solid white background (changed from dark)
+            background = slide.background
+            fill = background.fill
+            fill.solid()
+            fill.fore_color.rgb = RGBColor(255, 255, 255)  # Default to white
     
     def _add_footer(self, slide, slide_number):
         """Add consistent footer with company name and slide number"""
@@ -399,10 +397,10 @@ class EnhancedPPTXGenerator:
         self._add_logo_as_background(slide, identity_data, opacity=0.85)
         
         # Get dynamic primary color from brand palette
-        primary_color = "#FFFFFF"  # Default white
+        primary_color = self._get_primary_color_hex()  # Use the enhanced color system
         if identity_data and identity_data.get("palette"):
             palette = identity_data["palette"]
-            primary_color = self._get_brand_color(palette, "primary", "#FFFFFF")
+            primary_color = self._get_primary_color_hex()
         
         # RIGHT SIDE: Dynamic colored line above "Brand Identity System"
         line_left, line_top, line_width, line_height = self.grid.get_position(9, 7, 3, 2)
@@ -591,9 +589,8 @@ class EnhancedPPTXGenerator:
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color from AI research
-        primary_color_hex = "#FFFFFF"  # Default white
+        primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
         if identity_data and identity_data.get("palette"):
-            palette = identity_data["palette"]
             primary_color_hex = self._get_primary_color_hex()
         
         primary_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
