@@ -1,0 +1,210 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>BBC Brand Book</title>
+            <style>
+        :root {
+            --primary-color: #F9FAFB;
+            --accent-color: #111827;
+            --secondary-color: #1D4ED8;
+            --gradient-primary: linear-gradient(135deg, #F9FAFB, #111827);
+            --gradient-section: linear-gradient(180deg, #f8f9fa, #ffffff);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);  /* Use primary brand color for body text */
+            background: var(--gradient-section);
+        }
+        
+        .hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .color-swatch {
+            text-align: center;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: translateY(-4px);
+        }
+        
+        .swatch {
+            width: 100%;
+            height: 120px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+        }
+        
+        .brand-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .typography-demo {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .hero { padding: 2rem 1rem; }
+            .section { padding: 2rem 0; }
+            .container { padding: 0 1rem; }
+        }
+        </style>
+        </head>
+        <body>
+            
+        <section class="hero">
+            <div class="container">
+                <h1>BBC</h1>
+                <p style="font-size: 1.25rem; opacity: 0.9;">Brand Book & Style Guide</p>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Essence</h2>
+                <div class="brand-card">
+                    <h3>Company Profile</h3>
+                    <p><strong>Industry:</strong> Media & Broadcasting (News, Entertainment & Digital)</p>
+                    <p><strong>Target Audience:</strong> Global citizens, News consumers, Entertainment viewers, Digital audiences, Professionals, Students</p>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Visual Identity</h2>
+                <div class="brand-card">
+                    <h3>Color Palette</h3>
+                    <div class="color-palette">
+                        
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #F9FAFB;"></div>
+                        <h4>Primary</h4>
+                        <p>#F9FAFB</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #1D4ED8;"></div>
+                        <h4>Secondary</h4>
+                        <p>#1D4ED8</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #111827;"></div>
+                        <h4>Accent</h4>
+                        <p>#111827</p>
+                    </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Narrative</h2>
+                <div class="brand-card">
+                    <h3>Brand Story</h3>
+                    <p>In a world where information is abundant yet trust is scarce, there stands a beacon of integrity and impartiality. A pioneer in the realm of Media & Broadcasting, BBC has been a steadfast companion to global citizens, news consumers, entertainment viewers, digital audiences, professionals, and students alike. 
+
+With a core value system rooted in trust, creativity, innovation, and public service, BBC has carved a niche for itself as a source of reliable information and compelling entertainment. Our commitment to diversity ensures that every voice is heard, every story is told, and every perspective is respected.
+
+At the heart of our brand lies a promise – to empower global citizens, news consumers, entertainment viewers, digital audiences, professionals, and students through innovative Media & Broadcasting solutions. We understand the power of media in shaping opinions, influencing decisions, and connecting people across the globe. With every story we tell, every show we produce, and every digital platform we create, we strive to make a difference in the lives of our audience.
+
+Our unique value proposition lies in our ability to cater to a diverse audience with distinct needs and preferences. From breaking news coverage to thought-provoking documentaries, from captivating entertainment programs to interactive digital experiences, BBC offers a comprehensive range of content that caters to the varied interests of our audience.
+
+Our brand personality is one of innovation, forward-thinking, creativity, helpfulness, and responsiveness. We are constantly pushing boundaries, exploring new formats, and embracing emerging technologies to deliver an unparalleled media experience to our audience. Whether it's through our award-winning journalism, groundbreaking documentaries, engaging entertainment shows, or interactive digital platforms, we are committed to setting new standards of excellence in the Media & Broadcasting industry.
+
+At BBC, we believe that the power of media extends far beyond entertainment – it is a tool for education, enlightenment, and empowerment. Through our work, we aim to inform, inspire, and ignite the curiosity of our audience, fostering a sense of connection and understanding in an increasingly fragmented world.
+
+Join us on</p>
+                </div>
+                <div class="brand-card">
+                    <h3>Voice & Tone</h3>
+                    <p>The brand voice for BBC is authoritative, trustworthy, and impartial. It should convey a sense of credibility and integrity, reflecting the values of trust, impartiality, and public service. At the same time, it should also be creative and innovative, showcasing the BBC's commitment to delivering high-quality content and engaging storytelling.
+
+The tone should be professional and informative, catering to a diverse audience of global citizens, news consumers, entertainment viewers, digital audiences, professionals, and students. It should be inclusive and respectful of different perspectives, reflecting the value of diversity.
+
+Overall, the BBC's brand voice should be a</p>
+                </div>
+            </div>
+        </section>
+        
+        </body>
+        </html>
+        

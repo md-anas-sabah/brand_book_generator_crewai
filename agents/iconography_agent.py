@@ -216,12 +216,13 @@ class IconographyAgent:
                     f"Representing '{category}' concept."
                 )
                 
-                # Generate icon using Fal AI with expanded negative prompt
+                # Generate icon using Fal AI Turbo with expanded negative prompt
                 result = fal.run(
-                    "fal-ai/ideogram/v2a",
+                    "fal-ai/ideogram/v2a/turbo",
                     arguments={
                         "prompt": prompt,
                         "aspect_ratio": "1:1",  # Square format for icons
+                        "expand_prompt": True,
                         "style": "auto",
                         "negative_prompt": (
                             "white background, transparent background, blank background, "

@@ -25,19 +25,19 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
                 # Create detailed prompt for logo generation - ALWAYS enforce PURE black background
                 prompt = (
                     f"Professional logo design for {company_name}, {industry} industry. "
-                    f"Style: {style}. Clean, modern, minimalistic design. "
-                    f"MUST HAVE solid pure black background (#000000), flat black background, "
-                    f"NO gradients, NO shadows, NO glow effects, NO texture on background. "
-                    f"Logo on completely flat solid black background only. "
-                    f"Simple logo design with pure black background, high-resolution, corporate branding."
+                    f"Style: {style}. Clean, simple, modern vector design. "
+                    f"MUST have transparent background only (no white, no black, no color fills). "
+                    f"Flat design, no gradients, no shadows, no glow effects, no texture. "
+                    f"High-resolution, suitable for corporate branding and scaling."
                 )
                 
-                # Submit request to Ideogram V2A - enforce black background
+                # Submit request to Ideogram V2A Turbo - enforce black background
                 result = fal.run(
-                    "fal-ai/ideogram/v2a",
+                    "fal-ai/ideogram/v2a/turbo",
                     arguments={
                         "prompt": prompt,
                         "aspect_ratio": "1:1",  # Square format for logos
+                        "expand_prompt": True,
                         "style": "auto",
                         "negative_prompt": "white background, colored background, transparent background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting"
                     }
@@ -146,10 +146,11 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                 )
                 
                 result = fal.run(
-                    "fal-ai/ideogram/v2a",
+                    "fal-ai/ideogram/v2a/turbo",
                     arguments={
                         "prompt": prompt,
                         "aspect_ratio": "1:1",
+                        "expand_prompt": True,
                         "style": "auto",
                         "negative_prompt": "white background, colored background, transparent background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting"
                     }
