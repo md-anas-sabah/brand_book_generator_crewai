@@ -16,6 +16,7 @@ from agents.brand_purpose_content_agent import BrandPurposeContentAgent
 from agents.brand_story_content_agent import BrandStoryContentAgent
 from agents.enhanced_color_research_agent import EnhancedColorResearchAgent
 from agents.iconography_agent import IconographyAgent
+from tools.fal_image_tool import generate_brand_illustrations
 
 
 class GridLayout:
@@ -1741,6 +1742,181 @@ Best Practices:
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
     
+    def _create_brand_illustrations_slide(self, prs, company_name, industry, values, audience, brand_essence="", identity_data=None):
+        """Create slide displaying AI-generated brand illustrations"""
+        print("  🎨 Generating brand illustrations with Fal.ai Ideogram v3...")
+        
+        try:
+            # Generate illustrations using Fal.ai
+            illustrations_data = generate_brand_illustrations(
+                company_name=company_name,
+                industry=industry,
+                values=values,
+                audience=audience,
+                brand_essence=brand_essence,
+                num_illustrations=6
+            )
+            
+            successful_illustrations = [
+                ill for ill in illustrations_data.get('illustrations', []) 
+                if 'error' not in ill and ill.get('local_path') and ill['local_path'] != "Failed to download"
+            ]
+            
+            if successful_illustrations:
+                self.slide_counter += 1
+                slide = prs.slides.add_slide(prs.slide_layouts[6])
+                self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+                
+                # Get brand primary color
+                primary_color_hex = self._get_primary_color_hex()
+                if identity_data and identity_data.get("palette"):
+                    primary_color_hex = self._get_primary_color_hex()
+                
+                primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+                
+                # Grid layout for illustrations (2x3 grid) - starts from top
+                grid_start_top = Inches(0.5)
+                illustration_width = Inches(2.8)
+                illustration_height = Inches(1.6)
+                margin = Inches(0.4)
+                
+                for idx, illustration in enumerate(successful_illustrations[:6]):
+                    if os.path.exists(illustration['local_path']):
+                        # Calculate position in 2x3 grid
+                        col = idx % 3
+                        row = idx // 3
+                        
+                        left = Inches(0.8) + col * (illustration_width + margin)
+                        top = grid_start_top + row * (illustration_height + margin)
+                        
+                        try:
+                            # Add illustration image
+                            slide.shapes.add_picture(
+                                illustration['local_path'],
+                                left, top,
+                                illustration_width, illustration_height
+                            )
+                            
+                            # Add concept label below each illustration
+                            label_top = top + illustration_height + Inches(0.05)
+                            label_textbox = slide.shapes.add_textbox(
+                                left, label_top,
+                                illustration_width, Inches(0.3)
+                            )
+                            label_frame = label_textbox.text_frame
+                            concept_short = illustration['concept'][:40] + "..." if len(illustration['concept']) > 40 else illustration['concept']
+                            label_frame.text = concept_short
+                            label_frame.margin_left = 0
+                            label_frame.margin_right = 0
+                            label_frame.margin_top = 0
+                            label_frame.margin_bottom = 0
+                            self.styler.apply_body_style(label_frame.paragraphs[0], size=9, color='#CCCCCC')
+                            label_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+                            
+                        except Exception as e:
+                            print(f"  ⚠️ Error adding illustration {idx+1}: {e}")
+                            continue
+                
+                # Full-width line separator at bottom (matching introduction slide pattern)
+                line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+                line_shape = slide.shapes.add_connector(
+                    MSO_CONNECTOR.STRAIGHT,
+                    Inches(0.5), line_top,
+                    Inches(9.5), line_top
+                )
+                line_shape.line.color.rgb = primary_color_rgb
+                line_shape.line.width = Pt(2)
+                
+                # "BRAND ILLUSTRATIONS" title in primary color below the line
+                title_top = line_top + Inches(0.3)
+                title_textbox = slide.shapes.add_textbox(
+                    self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
+                    Inches(6), Inches(0.8)
+                )
+                title_frame = title_textbox.text_frame
+                title_frame.text = "BRAND ILLUSTRATIONS"
+                title_frame.margin_left = 0
+                title_frame.margin_right = 0
+                title_frame.margin_top = 0
+                title_frame.margin_bottom = 0
+                self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+                title_frame.paragraphs[0].font.bold = True
+                title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+                
+                print(f"  ✅ Brand illustrations slide created with {len(successful_illustrations)} illustrations")
+                
+            else:
+                # Fallback slide with no illustrations
+                self._create_brand_illustrations_fallback_slide(prs, company_name, identity_data)
+                
+        except Exception as e:
+            print(f"  ⚠️ Brand illustrations generation failed: {e}")
+            # Create fallback slide
+            self._create_brand_illustrations_fallback_slide(prs, company_name, identity_data)
+    
+    def _create_brand_illustrations_fallback_slide(self, prs, company_name, identity_data=None):
+        """Create fallback illustrations slide without generated images"""
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        
+        # Get brand primary color
+        primary_color_hex = self._get_primary_color_hex()
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Content description positioned in upper area (matching introduction slide)
+        left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 4)
+        content_textbox = slide.shapes.add_textbox(left, top, width, height)
+        content_frame = content_textbox.text_frame
+        content_frame.text = (
+            f"Professional brand illustrations for {company_name} would include:\n\n"
+            "• Industry-specific visual concepts\n"
+            "• Brand essence representations\n"
+            "• Modern design aesthetic\n"
+            "• Consistent visual language\n"
+            "• Scalable vector graphics\n\n"
+            "Style: DESIGN approach with ULTRAMARINE color palette\n"
+            "Format: Professional business illustrations suitable for all brand touchpoints"
+        )
+        content_frame.margin_left = 0
+        content_frame.margin_right = 0
+        content_frame.margin_top = 0
+        content_frame.margin_bottom = 0
+        content_frame.word_wrap = True
+        
+        for paragraph in content_frame.paragraphs:
+            self.styler.apply_body_style(paragraph, size=20, color='white')
+            paragraph.alignment = PP_ALIGN.LEFT
+            paragraph.space_after = Pt(8)
+        
+        # Full-width line separator (matching introduction slide pattern)
+        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # "BRAND ILLUSTRATIONS" title in primary color below the line
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "BRAND ILLUSTRATIONS"
+        title_frame.margin_left = 0
+        title_frame.margin_right = 0
+        title_frame.margin_top = 0
+        title_frame.margin_bottom = 0
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        print("  ✅ Brand illustrations fallback slide created")
+    
     def _create_text_slide(self, prs, title, content, max_words=80, identity_data=None):
         """Create text-based slide with pagination if needed"""
         chunks = self._paginate_text(content, max_words)
@@ -2198,6 +2374,11 @@ Best Practices:
             # Create basic iconography slides without generated icons
             self._create_icons_display_slide(prs, None, identity_data, company_name)
             self._create_iconography_guidelines_slide(prs, None, identity_data)
+        
+        # Add brand illustrations slide after iconography
+        self._create_brand_illustrations_slide(
+            prs, company_name, industry, values, audience, brand_essence, identity_data
+        )
         
         # Save file
         base_name = company_name.lower().replace(' ', '_')
