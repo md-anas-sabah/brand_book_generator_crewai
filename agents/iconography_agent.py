@@ -167,7 +167,7 @@ class IconographyAgent:
     
     def generate_brand_icons(self, company_name: str, industry: str, values: str,
                            audience: str, primary_color_hex: str, 
-                           research_data: Dict = None) -> Dict:
+                           research_data: Dict = None, custom_categories: list = None) -> Dict:
         """
         Generate brand-consistent icons using Fal AI based on research insights
         
@@ -185,7 +185,9 @@ class IconographyAgent:
         print(f"  🎨 Generating brand icons for {company_name}...")
         
         # Get icon categories to generate
-        if research_data and research_data.get("suggested_categories"):
+        if custom_categories:
+            icon_categories = custom_categories
+        elif research_data and research_data.get("suggested_categories"):
             icon_categories = research_data["suggested_categories"]
         else:
             icon_categories = self._determine_icon_categories(industry, values, audience)
@@ -302,7 +304,7 @@ class IconographyAgent:
         return result_summary
     
     def create_iconography_system(self, company_name: str, industry: str, values: str,
-                                audience: str, primary_color_hex: str) -> Dict:
+                                audience: str, primary_color_hex: str, custom_categories: list = None) -> Dict:
         """
         Complete iconography creation workflow: research + generation
         
@@ -324,7 +326,7 @@ class IconographyAgent:
         # Step 2: Generate brand icons based on research
         icon_generation_results = self.generate_brand_icons(
             company_name, industry, values, audience, 
-            primary_color_hex, research_data
+            primary_color_hex, research_data, custom_categories
         )
         
         # Step 3: Compile complete system

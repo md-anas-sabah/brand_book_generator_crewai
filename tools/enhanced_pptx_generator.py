@@ -190,6 +190,62 @@ class EnhancedPPTXGenerator:
         else:
             return "#2E86AB"  # Safe fallback
     
+    def _get_industry_icon_categories(self, industry):
+        """Get industry-specific icon categories for generation"""
+        industry_lower = industry.lower()
+        
+        # Industry-specific icon mappings
+        industry_mappings = {
+            "finance": [
+                "wallet money icon", "credit card icon", "banking institution icon", 
+                "financial chart graph icon", "calculator math icon", "investment growth icon"
+            ],
+            "fintech": [
+                "digital wallet icon", "mobile payment icon", "cryptocurrency coin icon",
+                "trading chart icon", "financial analytics icon", "secure payment icon"  
+            ],
+            "technology": [
+                "cloud computing icon", "server database icon", "programming code icon",
+                "network connection icon", "artificial intelligence icon", "security lock icon"
+            ],
+            "healthcare": [
+                "medical cross icon", "stethoscope icon", "heart health icon",
+                "hospital building icon", "medicine pill icon", "first aid icon"
+            ],
+            "education": [
+                "book learning icon", "graduation cap icon", "school building icon",
+                "pencil writing icon", "globe world icon", "certificate diploma icon"
+            ],
+            "travel": [
+                "airplane flight icon", "world map icon", "suitcase luggage icon", 
+                "hotel accommodation icon", "camera photography icon", "compass navigation icon"
+            ],
+            "retail": [
+                "shopping bag icon", "shopping cart icon", "store building icon",
+                "price tag icon", "delivery package icon", "gift present icon"
+            ],
+            "food": [
+                "restaurant utensils icon", "chef hat icon", "food plate icon",
+                "delivery truck icon", "grocery basket icon", "recipe book icon"
+            ],
+            "real_estate": [
+                "house home icon", "building property icon", "key access icon",
+                "location pin icon", "contract document icon", "measurement ruler icon"
+            ],
+            "automotive": [
+                "car vehicle icon", "mechanic tools icon", "gas station icon",
+                "traffic light icon", "parking icon", "road highway icon"
+            ]
+        }
+        
+        # Find matching industry
+        for key, categories in industry_mappings.items():
+            if key in industry_lower:
+                return categories
+        
+        # Default to technology if no match
+        return industry_mappings["technology"]
+    
     def _get_brand_color(self, palette, color_name, default):
         """Extract color from palette safely"""
         if not palette:
@@ -2453,13 +2509,37 @@ Best Practices:
         print("  🎨 Generating brand iconography with AI research and Fal AI...")
         try:
             primary_color_hex = self._get_primary_color_hex()
-            iconography_system = self.iconography_agent.create_iconography_system(
-                company_name, industry, values, audience, primary_color_hex
+            
+            # Generate Core Functional Icons using Fal.ai
+            core_functional_categories = [
+                "home icon", "search magnifying glass icon", "menu hamburger lines icon", 
+                "settings gear icon", "user profile person icon", "notification bell icon", 
+                "download arrow down icon", "upload arrow up icon"
+            ]
+            
+            print("  🎨 Generating Core Functional Icons...")
+            core_iconography = self.iconography_agent.create_iconography_system(
+                company_name, industry, values, audience, primary_color_hex, 
+                custom_categories=core_functional_categories
             )
-            # Create two separate slides: icons display and guidelines
-            self._create_icons_display_slide(prs, iconography_system, identity_data, company_name)
-            self._create_iconography_guidelines_slide(prs, iconography_system, identity_data)
-            print(f"  ✅ Iconography slides created with {iconography_system.get('system_overview', {}).get('total_icons', 0)} icons")
+            
+            # Generate Industry-Specific Icons using Fal.ai
+            industry_categories = self._get_industry_icon_categories(industry)
+            
+            print(f"  🎨 Generating {industry.title()} Industry Icons...")
+            industry_iconography = self.iconography_agent.create_iconography_system(
+                company_name, industry, values, audience, primary_color_hex,
+                custom_categories=industry_categories
+            )
+            
+            # Create slides with generated icons
+            self._create_icons_display_slide(prs, core_iconography, identity_data, f"{company_name} - Core Functional Icons")
+            self._create_icons_display_slide(prs, industry_iconography, identity_data, f"{company_name} - {industry.title()} Industry Icons")
+            self._create_iconography_guidelines_slide(prs, core_iconography, identity_data)
+            
+            total_core = len(core_iconography.get('icon_generation', {}).get('generated_icons', []))
+            total_industry = len(industry_iconography.get('icon_generation', {}).get('generated_icons', []))
+            print(f"  ✅ Generated {total_core + total_industry} professional icons: {total_core} core + {total_industry} industry-specific")
         except Exception as e:
             print(f"  ⚠️ Iconography generation failed, creating basic slides: {e}")
             # Create basic iconography slides without generated icons
