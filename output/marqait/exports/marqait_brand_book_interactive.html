@@ -1,0 +1,206 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Marqait Brand Book</title>
+            <style>
+        :root {
+            --primary-color: #6B7280;
+            --accent-color: #2563EB;
+            --secondary-color: #D1D5DB;
+            --gradient-primary: linear-gradient(135deg, #6B7280, #2563EB);
+            --gradient-section: linear-gradient(180deg, #f8f9fa, #ffffff);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--primary-color);  /* Use primary brand color for body text */
+            background: var(--gradient-section);
+        }
+        
+        .hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .color-swatch {
+            text-align: center;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: translateY(-4px);
+        }
+        
+        .swatch {
+            width: 100%;
+            height: 120px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+        }
+        
+        .brand-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .typography-demo {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .hero { padding: 2rem 1rem; }
+            .section { padding: 2rem 0; }
+            .container { padding: 0 1rem; }
+        }
+        </style>
+        </head>
+        <body>
+            
+        <section class="hero">
+            <div class="container">
+                <h1>Marqait</h1>
+                <p style="font-size: 1.25rem; opacity: 0.9;">Brand Book & Style Guide</p>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Essence</h2>
+                <div class="brand-card">
+                    <h3>Company Profile</h3>
+                    <p><strong>Industry:</strong> AI-Powered Marketing Automation Platform (Marketing Technology)</p>
+                    <p><strong>Target Audience:</strong> Startups, Small-to-mid-sized businesses, Marketing teams, Entrepreneurs, Digital brands</p>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Visual Identity</h2>
+                <div class="brand-card">
+                    <h3>Color Palette</h3>
+                    <div class="color-palette">
+                        
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #6B7280;"></div>
+                        <h4>Primary</h4>
+                        <p>#6B7280</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #D1D5DB;"></div>
+                        <h4>Secondary</h4>
+                        <p>#D1D5DB</p>
+                    </div>
+                    
+                    <div class="color-swatch">
+                        <div class="swatch" style="background-color: #2563EB;"></div>
+                        <h4>Accent</h4>
+                        <p>#2563EB</p>
+                    </div>
+                    
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Brand Narrative</h2>
+                <div class="brand-card">
+                    <h3>Brand Story</h3>
+                    <p>In the ever-evolving world of marketing, where competition is fierce and trends change in the blink of an eye, there stands a beacon of innovation and empowerment – Marqait.
+
+Born out of a passion for simplifying the complex world of marketing, Marqait is not just a company; it is a movement, a revolution in the making. Our story begins with a group of forward-thinking individuals who saw a gap in the market and decided to fill it with something truly extraordinary.
+
+At the heart of Marqait lies a commitment to innovation and simplicity. We understand the challenges that startups, small-to-mid-sized businesses, marketing teams, entrepreneurs, and digital brands face in navigating the digital landscape. That's why we have created a cutting-edge AI-Powered Marketing Automation Platform that is not only accessible but also empowers our clients to achieve remarkable results.
+
+Our core values – innovation, simplicity, AI-driven strategy, accessibility, empowerment, agility, and results – are more than just words on a page; they are the guiding principles that drive everything we do. We believe in harnessing the power of artificial intelligence to transform the way marketing is done, making it more efficient, effective, and targeted than ever before.
+
+With Marqait by your side, you are not just a player in the game – you are a game-changer. Our distinctive AI-Powered Marketing Automation Platform is tailored to meet the unique needs of startups, small-to-mid-sized businesses, marketing teams, entrepreneurs, and digital brands. We don't believe in a one-size-fits-all approach; instead, we work closely with our clients to develop personalized strategies that deliver tangible results.
+
+Our brand personality is a reflection of who we are – innovative, forward-thinking, and creative. We are not afraid to push the boundaries, challenge the status quo, and explore new possibilities. With Marqait, the sky is not the limit – it's just the beginning.
+
+So, if you are ready to take your marketing to</p>
+                </div>
+                <div class="brand-card">
+                    <h3>Voice & Tone</h3>
+                    <p>Marqait's brand voice and tone should be friendly, innovative, and empowering. It should convey a sense of simplicity and accessibility while demonstrating expertise in AI-driven marketing strategies. The tone should be authoritative when discussing results and strategies, while maintaining a friendly and approachable demeanor to resonate with startups, small-to-mid-sized businesses, marketing teams, entrepreneurs, and digital brands. The messaging should inspire confidence in the platform's agility and ability to empower businesses to achieve their marketing goals effectively.</p>
+                </div>
+            </div>
+        </section>
+        
+        </body>
+        </html>
+        

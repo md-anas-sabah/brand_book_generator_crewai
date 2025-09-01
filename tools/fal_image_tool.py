@@ -22,16 +22,18 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
         
         for i in range(num_variations):
             try:
-                # Create detailed prompt for logo generation - ALWAYS enforce PURE black background
+                # Create detailed prompt for logo generation - enforce clean white/transparent background
                 prompt = (
-                    f"Professional logo design for {company_name}, {industry} industry. "
-                    f"Style: {style}. Clean, simple, modern vector design. "
-                    f"MUST have transparent background only (no white, no black, no color fills). "
-                    f"Flat design, no gradients, no shadows, no glow effects, no texture. "
-                    f"High-resolution, suitable for corporate branding and scaling."
+                    f"Professional HD logo design for {company_name}, {industry} industry. "
+                    f"Style: {style}. Ultra-clean, minimal, modern vector design. "
+                    f"WHITE BACKGROUND ONLY - pure white background (#FFFFFF), no other background colors allowed. "
+                    f"Logo symbol in colors on white background. White background mandatory. "
+                    f"Ultra-flat design, absolutely no gradients, no shadows, no glow effects, no texture, no 3D effects. "
+                    f"4K high-resolution, crystal clear, scalable vector quality, perfect for corporate branding. "
+                    f"Pure white background (#FFFFFF) required, ultra-sharp HD quality."
                 )
                 
-                # Submit request to Ideogram V2A Turbo - enforce black background
+                # Submit request to Ideogram V2A Turbo - enforce white/transparent background
                 result = fal.run(
                     "fal-ai/ideogram/v2a/turbo",
                     arguments={
@@ -39,7 +41,7 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
                         "aspect_ratio": "1:1",  # Square format for logos
                         "expand_prompt": True,
                         "style": "auto",
-                        "negative_prompt": "white background, colored background, transparent background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting"
+                        "negative_prompt": "black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting, dark themes"
                     }
                 )
                 
@@ -137,12 +139,13 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
         for i in range(num_variations):
             try:
                 prompt = (
-                    f"Professional logo design for {company_name}, {industry} industry. "
-                    f"Style: {style}. Clean, modern, minimalistic design. "
-                    f"MUST HAVE solid pure black background (#000000), flat black background, "
-                    f"NO gradients, NO shadows, NO glow effects, NO texture on background. "
-                    f"Logo on completely flat solid black background only. "
-                    f"Simple logo design with pure black background, high-resolution, corporate branding."
+                    f"Professional HD logo design for {company_name}, {industry} industry. "
+                    f"Style: {style}. Ultra-clean, minimal, modern vector design. "
+                    f"WHITE BACKGROUND ONLY - pure white background (#FFFFFF), no other background colors allowed. "
+                    f"Logo symbol in colors on white background. White background mandatory. "
+                    f"Ultra-flat design, absolutely no gradients, no shadows, no glow effects, no texture, no 3D effects. "
+                    f"4K high-resolution, crystal clear, scalable vector quality, perfect for corporate branding. "
+                    f"Pure white background (#FFFFFF) required, ultra-sharp HD quality."
                 )
                 
                 result = fal.run(
@@ -152,7 +155,7 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                         "aspect_ratio": "1:1",
                         "expand_prompt": True,
                         "style": "auto",
-                        "negative_prompt": "white background, colored background, transparent background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting"
+                        "negative_prompt": "black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting, dark themes"
                     }
                 )
                 
@@ -247,10 +250,10 @@ def generate_brand_illustrations(company_name, industry, values, audience, brand
         
         for i, concept in enumerate(illustration_concepts[:num_illustrations]):
             try:
-                # Create detailed prompt incorporating brand essence and research
+                # Create HD detailed prompt with white/transparent background, incorporating brand essence and research
                 base_prompt = (
                     f"{concept}. "
-                    f"Professional business illustration style, clean vector design. "
+                    f"Ultra-HD professional business illustration style, crystal-clear vector design. "
                     f"Color palette: ULTRAMARINE blue dominant theme, modern corporate aesthetic. "
                     f"Target audience: {audience}. "
                     f"Core values represented: {values}. "
@@ -260,9 +263,10 @@ def generate_brand_illustrations(company_name, industry, values, audience, brand
                     base_prompt += f"Brand essence: {brand_essence}. "
                 
                 base_prompt += (
-                    "DESIGN style: minimalistic, professional, business-focused. "
-                    "Flat design approach, geometric shapes, clean lines, no gradients or shadows. "
-                    "Corporate illustration suitable for brand book presentation."
+                    "DESIGN style: ultra-minimalistic, professional, business-focused, 4K quality. "
+                    "Ultra-flat design approach, clean geometric shapes, sharp lines, absolutely no gradients or shadows. "
+                    "PURE WHITE BACKGROUND (#FFFFFF) mandatory, no dark backgrounds allowed. "
+                    "Corporate illustration on white background suitable for brand book presentation, scalable vector quality."
                 )
                 
                 # Submit request to Ideogram v3

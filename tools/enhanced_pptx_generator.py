@@ -392,8 +392,8 @@ class EnhancedPPTXGenerator:
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         
-        # Pitch black background instead of gradient
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        # White background instead of gradient
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # FULL BACKGROUND LOGO with slight opacity reduction
         self._add_logo_as_background(slide, identity_data, opacity=0.85)
@@ -431,7 +431,7 @@ class EnhancedPPTXGenerator:
         """Create introduction slide with AI-generated company overview"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -463,9 +463,9 @@ class EnhancedPPTXGenerator:
         content_frame.margin_top = 0
         content_frame.margin_bottom = 0
         
-        # Style the content text - white, left-aligned, same as index slide
+        # Style the content text - black, left-aligned, same as index slide
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=20)
+            self.styler.apply_body_style(paragraph, color='black', size=20)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)  # Consistent spacing
         
@@ -501,7 +501,7 @@ class EnhancedPPTXGenerator:
         """Create brand purpose slide with AI-generated mission and values"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -551,9 +551,9 @@ class EnhancedPPTXGenerator:
         content_frame.margin_top = 0
         content_frame.margin_bottom = 0
         
-        # Style the content text - white, left-aligned, same as introduction slide
+        # Style the content text - black, left-aligned, same as introduction slide
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=20)
+            self.styler.apply_body_style(paragraph, color='black', size=20)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)  # Consistent spacing
         
@@ -587,8 +587,8 @@ class EnhancedPPTXGenerator:
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         
-        # Pitch black background
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        # White background
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color from AI research
         primary_color_hex = "#FFFFFF"  # Default white
@@ -688,7 +688,7 @@ class EnhancedPPTXGenerator:
                 section_frame.margin_right = 0
                 section_frame.margin_top = 0
                 section_frame.margin_bottom = 0
-                self.styler.apply_body_style(section_frame.paragraphs[0], size=12, color='white')
+                self.styler.apply_body_style(section_frame.paragraphs[0], size=12, color='black')
                 section_frame.paragraphs[0].font.bold = True
                 
                 # Brand colored accent line (moved closer)
@@ -752,12 +752,17 @@ class EnhancedPPTXGenerator:
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide)
         
+        # Get brand primary color
+        primary_color_hex = self._get_primary_color_hex()
+        if identity_data and identity_data.get("palette"):
+            primary_color_hex = self._get_primary_color_hex()
+        
         # Title
         left, top, width, height = self.grid.get_position(1, 0, 10, 1)
         title_textbox = slide.shapes.add_textbox(left, top, width, height)
         title_frame = title_textbox.text_frame
         title_frame.text = "Company Profile"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
         
         profile = brand_essence.get("company_profile", {})
         
@@ -821,12 +826,17 @@ class EnhancedPPTXGenerator:
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide)
         
+        # Get brand primary color
+        primary_color_hex = self._get_primary_color_hex()
+        if identity_data and identity_data.get("palette"):
+            primary_color_hex = self._get_primary_color_hex()
+        
         # Title
         left, top, width, height = self.grid.get_position(1, 0, 10, 1)
         title_textbox = slide.shapes.add_textbox(left, top, width, height)
         title_frame = title_textbox.text_frame
         title_frame.text = "Market Analysis & Insights"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
         
         analysis = brand_essence.get("market_analysis", {})
         
@@ -882,12 +892,17 @@ class EnhancedPPTXGenerator:
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide)
         
+        # Get brand primary color
+        primary_color_hex = self._get_primary_color_hex()
+        if identity_data and identity_data.get("palette"):
+            primary_color_hex = self._get_primary_color_hex()
+        
         # Title
         left, top, width, height = self.grid.get_position(1, 0, 10, 1)
         title_textbox = slide.shapes.add_textbox(left, top, width, height)
         title_frame = title_textbox.text_frame
         title_frame.text = "Brand Positioning"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
         
         positioning = brand_essence.get("brand_positioning", {})
         
@@ -967,7 +982,7 @@ class EnhancedPPTXGenerator:
         """Create a single logo variation slide with left logo and right guidelines"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -1005,9 +1020,9 @@ class EnhancedPPTXGenerator:
         guidelines_frame.margin_top = 0
         guidelines_frame.margin_bottom = 0
         
-        # Style the guidelines text - white, left-aligned, same as introduction slide
+        # Style the guidelines text - black, left-aligned, same as introduction slide
         for paragraph in guidelines_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=16)
+            self.styler.apply_body_style(paragraph, color='black', size=16)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)
         
@@ -1121,7 +1136,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         """Create Primary Colors slide with 3-4 colors and detailed specifications"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color for styling
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -1169,7 +1184,7 @@ Response should be one clear sentence, exactly 10-15 words."""
             
             # Style the specifications text
             for paragraph in spec_frame.paragraphs:
-                self.styler.apply_body_style(paragraph, color='white', size=10)  # Reduced from 12 to 10
+                self.styler.apply_body_style(paragraph, color='black', size=10)  # Reduced from 12 to 10
                 paragraph.alignment = PP_ALIGN.LEFT
                 paragraph.space_after = Pt(3)  # Reduced spacing from 4 to 3
         
@@ -1201,7 +1216,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         """Create Secondary Colors slide with 5 colors"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color for styling
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -1248,7 +1263,7 @@ Response should be one clear sentence, exactly 10-15 words."""
                 
                 # Style the specifications text
                 for paragraph in spec_frame.paragraphs:
-                    self.styler.apply_body_style(paragraph, color='white', size=10)
+                    self.styler.apply_body_style(paragraph, color='black', size=10)
                     paragraph.alignment = PP_ALIGN.CENTER
                     paragraph.space_after = Pt(3)
         
@@ -1280,7 +1295,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         """Create Primary Color Usage slide (1/2) with usage guidelines for primary colors"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color for styling
         primary_color_hex = self._get_primary_color_hex()
@@ -1300,9 +1315,9 @@ Response should be one clear sentence, exactly 10-15 words."""
         content_frame.margin_top = 0
         content_frame.margin_bottom = 0
         
-        # Style the content text - white, left-aligned, smaller size for better fit
+        # Style the content text - black, left-aligned, smaller size for better fit
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=14)  # Reduced from 16 to 14
+            self.styler.apply_body_style(paragraph, color='black', size=14)  # Reduced from 16 to 14
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(6)  # Reduced from 8 to 6
         
@@ -1334,7 +1349,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         """Create Secondary Color Usage slide (2/2) with usage guidelines for secondary colors"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color for styling
         primary_color_hex = self._get_primary_color_hex()
@@ -1354,9 +1369,9 @@ Response should be one clear sentence, exactly 10-15 words."""
         content_frame.margin_top = 0
         content_frame.margin_bottom = 0
         
-        # Style the content text - white, left-aligned, smaller size for better fit
+        # Style the content text - black, left-aligned, smaller size for better fit
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=14)  # Reduced from 16 to 14
+            self.styler.apply_body_style(paragraph, color='black', size=14)  # Reduced from 16 to 14
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(6)  # Reduced from 8 to 6
         
@@ -1497,7 +1512,7 @@ Best Practices:
         """Create typography slide with same design as Introduction slide"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -1525,9 +1540,9 @@ Best Practices:
         content_frame.margin_top = 0
         content_frame.margin_bottom = 0
         
-        # Style the content text - white, left-aligned, same as introduction slide
+        # Style the content text - black, left-aligned, same as introduction slide
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=20)
+            self.styler.apply_body_style(paragraph, color='black', size=20)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)  # Consistent spacing
         
@@ -1557,7 +1572,7 @@ Best Practices:
         """Create slide to display generated icons"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color
         primary_color_hex = self._get_primary_color_hex()
@@ -1583,7 +1598,7 @@ Best Practices:
         
         # Style the content text
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=20)
+            self.styler.apply_body_style(paragraph, color='black', size=20)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)
         
@@ -1633,7 +1648,7 @@ Best Practices:
                         
                         # Style the label
                         for paragraph in label_frame.paragraphs:
-                            self.styler.apply_body_style(paragraph, color='white', size=12)
+                            self.styler.apply_body_style(paragraph, color='black', size=12)
                             paragraph.alignment = PP_ALIGN.CENTER
                         
                     except Exception as e:
@@ -1666,7 +1681,7 @@ Best Practices:
         """Create slide for iconography usage guidelines"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color
         primary_color_hex = self._get_primary_color_hex()
@@ -1716,7 +1731,7 @@ Best Practices:
         
         # Style the content text
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=18)
+            self.styler.apply_body_style(paragraph, color='black', size=18)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(6)
         
@@ -1743,7 +1758,7 @@ Best Practices:
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
     
     def _create_brand_illustrations_slide(self, prs, company_name, industry, values, audience, brand_essence="", identity_data=None):
-        """Create slide displaying AI-generated brand illustrations"""
+        """Create slide displaying AI-generated brand illustrations with improved layout and organization"""
         print("  🎨 Generating brand illustrations with Fal.ai Ideogram v3...")
         
         try:
@@ -1765,7 +1780,7 @@ Best Practices:
             if successful_illustrations:
                 self.slide_counter += 1
                 slide = prs.slides.add_slide(prs.slide_layouts[6])
-                self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+                self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
                 
                 # Get brand primary color
                 primary_color_hex = self._get_primary_color_hex()
@@ -1774,48 +1789,122 @@ Best Practices:
                 
                 primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
                 
-                # Grid layout for illustrations (2x3 grid) - starts from top
-                grid_start_top = Inches(0.5)
-                illustration_width = Inches(2.8)
-                illustration_height = Inches(1.6)
-                margin = Inches(0.4)
+                # Enhanced grid layout with consistent spacing and framing
+                grid_start_top = Inches(0.4)
+                illustration_width = Inches(2.6)
+                illustration_height = Inches(1.5)
+                horizontal_spacing = Inches(0.5)  # Equal spacing between columns
+                vertical_spacing = Inches(0.3)    # Consistent vertical spacing
                 
-                for idx, illustration in enumerate(successful_illustrations[:6]):
+                # Define illustration categories for organized grouping
+                external_concepts = []  # Innovation, excellence, solutions
+                internal_concepts = []  # Strategy, teamwork, technology
+                
+                # Categorize illustrations by concept keywords
+                for ill in successful_illustrations[:6]:
+                    concept_lower = ill.get('concept', '').lower()
+                    if any(keyword in concept_lower for keyword in ['innovation', 'excellence', 'solution', 'growth', 'success', 'achievement']):
+                        external_concepts.append(ill)
+                    else:
+                        internal_concepts.append(ill)
+                
+                # Ensure we have balanced rows (3 per row)
+                organized_illustrations = []
+                # Top row: External-facing themes
+                organized_illustrations.extend(external_concepts[:3])
+                # Bottom row: Internal-facing themes  
+                organized_illustrations.extend(internal_concepts[:3])
+                
+                # Fill remaining slots if needed
+                remaining_slots = 6 - len(organized_illustrations)
+                if remaining_slots > 0:
+                    remaining_illustrations = [ill for ill in successful_illustrations if ill not in organized_illustrations]
+                    organized_illustrations.extend(remaining_illustrations[:remaining_slots])
+                
+                for idx, illustration in enumerate(organized_illustrations[:6]):
                     if os.path.exists(illustration['local_path']):
-                        # Calculate position in 2x3 grid
+                        # Calculate position in organized 2x3 grid
                         col = idx % 3
                         row = idx // 3
                         
-                        left = Inches(0.8) + col * (illustration_width + margin)
-                        top = grid_start_top + row * (illustration_height + margin)
+                        # Centered layout with equal padding
+                        left = Inches(1.0) + col * (illustration_width + horizontal_spacing)
+                        top = grid_start_top + row * (illustration_height + vertical_spacing + Inches(0.4))  # Space for labels
                         
                         try:
-                            # Add illustration image
+                            # Add standardized background frame for consistent appearance
+                            frame_shape = slide.shapes.add_shape(
+                                MSO_SHAPE.RECTANGLE,
+                                left - Inches(0.05), top - Inches(0.05),
+                                illustration_width + Inches(0.1), illustration_height + Inches(0.1)
+                            )
+                            frame_shape.fill.solid()
+                            frame_shape.fill.fore_color.rgb = RGBColor(248, 248, 248)  # Light gray frame for consistency
+                            frame_shape.line.color.rgb = primary_color_rgb
+                            frame_shape.line.width = Pt(1)
+                            
+                            # Add illustration image with consistent sizing
                             slide.shapes.add_picture(
                                 illustration['local_path'],
                                 left, top,
                                 illustration_width, illustration_height
                             )
                             
+                            # Add category label above each illustration
+                            category_label = "External Focus" if idx < 3 else "Internal Focus"
+                            category_top = top - Inches(0.25)
+                            category_textbox = slide.shapes.add_textbox(
+                                left, category_top,
+                                illustration_width, Inches(0.2)
+                            )
+                            category_frame = category_textbox.text_frame
+                            category_frame.text = category_label
+                            category_frame.margin_left = 0
+                            category_frame.margin_right = 0
+                            category_frame.margin_top = 0
+                            category_frame.margin_bottom = 0
+                            self.styler.apply_body_style(category_frame.paragraphs[0], size=8, color=primary_color_hex)
+                            category_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+                            category_frame.paragraphs[0].font.bold = True
+                            
                             # Add concept label below each illustration
-                            label_top = top + illustration_height + Inches(0.05)
+                            label_top = top + illustration_height + Inches(0.08)
                             label_textbox = slide.shapes.add_textbox(
                                 left, label_top,
-                                illustration_width, Inches(0.3)
+                                illustration_width, Inches(0.25)
                             )
                             label_frame = label_textbox.text_frame
-                            concept_short = illustration['concept'][:40] + "..." if len(illustration['concept']) > 40 else illustration['concept']
+                            concept_short = illustration['concept'][:35] + "..." if len(illustration['concept']) > 35 else illustration['concept']
                             label_frame.text = concept_short
                             label_frame.margin_left = 0
                             label_frame.margin_right = 0
                             label_frame.margin_top = 0
                             label_frame.margin_bottom = 0
-                            self.styler.apply_body_style(label_frame.paragraphs[0], size=9, color='#CCCCCC')
+                            self.styler.apply_body_style(label_frame.paragraphs[0], size=9, color='#666666')
                             label_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
                             
                         except Exception as e:
                             print(f"  ⚠️ Error adding illustration {idx+1}: {e}")
                             continue
+                
+                # Usage guidelines section
+                guidelines_top = grid_start_top + 2 * (illustration_height + vertical_spacing + Inches(0.4)) + Inches(0.3)
+                guidelines_textbox = slide.shapes.add_textbox(
+                    Inches(1.0), guidelines_top,
+                    Inches(8.0), Inches(0.8)
+                )
+                guidelines_frame = guidelines_textbox.text_frame
+                guidelines_frame.text = (
+                    "USAGE NOTES: These illustrations define the visual storytelling style of the brand. "
+                    "Use them consistently across presentations, reports, and marketing materials to maintain brand coherence."
+                )
+                guidelines_frame.margin_left = 0
+                guidelines_frame.margin_right = 0
+                guidelines_frame.margin_top = 0
+                guidelines_frame.margin_bottom = 0
+                guidelines_frame.word_wrap = True
+                self.styler.apply_body_style(guidelines_frame.paragraphs[0], size=10, color='black')
+                guidelines_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
                 
                 # Full-width line separator at bottom (matching introduction slide pattern)
                 line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
@@ -1843,7 +1932,7 @@ Best Practices:
                 title_frame.paragraphs[0].font.bold = True
                 title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
                 
-                print(f"  ✅ Brand illustrations slide created with {len(successful_illustrations)} illustrations")
+                print(f"  ✅ Enhanced brand illustrations slide created with {len(organized_illustrations)} organized illustrations")
                 
             else:
                 # Fallback slide with no illustrations
@@ -1858,7 +1947,7 @@ Best Practices:
         """Create fallback illustrations slide without generated images"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color
         primary_color_hex = self._get_primary_color_hex()
@@ -1885,7 +1974,7 @@ Best Practices:
         content_frame.word_wrap = True
         
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, size=20, color='white')
+            self.styler.apply_body_style(paragraph, size=20, color='black')
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)
         
@@ -1921,6 +2010,11 @@ Best Practices:
         """Create text-based slide with pagination if needed"""
         chunks = self._paginate_text(content, max_words)
         
+        # Get brand primary color
+        primary_color_hex = self._get_primary_color_hex()
+        if identity_data and identity_data.get("palette"):
+            primary_color_hex = self._get_primary_color_hex()
+        
         for idx, chunk in enumerate(chunks):
             self.slide_counter += 1
             slide = prs.slides.add_slide(prs.slide_layouts[6])
@@ -1932,7 +2026,7 @@ Best Practices:
             title_frame = title_textbox.text_frame
             slide_title = f"{title} ({idx+1}/{len(chunks)})" if len(chunks) > 1 else title
             title_frame.text = slide_title
-            self.styler.apply_title_style(title_frame.paragraphs[0])
+            self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
             
             # Content
             left, top, width, height = self.grid.get_position(1, 2, 10, 4)
@@ -2092,7 +2186,7 @@ Best Practices:
         """Create a single brand purpose slide with same design as Introduction slide"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -2114,9 +2208,9 @@ Best Practices:
         content_frame.margin_top = 0
         content_frame.margin_bottom = 0
         
-        # Style the content text - white, left-aligned, same as introduction slide
+        # Style the content text - black, left-aligned, same as introduction slide
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=20)
+            self.styler.apply_body_style(paragraph, color='black', size=20)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)  # Consistent spacing
         
@@ -2146,7 +2240,7 @@ Best Practices:
         """Create brand story slide with same design as Introduction slide"""
         self.slide_counter += 1
         slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='pitch_black')
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
         # Get brand primary color (ensure it uses the agent's chosen primary color)
         primary_color_hex = self._get_primary_color_hex()  # Use enhanced color system
@@ -2168,9 +2262,9 @@ Best Practices:
         content_frame.margin_top = 0
         content_frame.margin_bottom = 0
         
-        # Style the content text - white, left-aligned, same as introduction slide
+        # Style the content text - black, left-aligned, same as introduction slide
         for paragraph in content_frame.paragraphs:
-            self.styler.apply_body_style(paragraph, color='white', size=20)
+            self.styler.apply_body_style(paragraph, color='black', size=20)
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)  # Consistent spacing
         

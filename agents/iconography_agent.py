@@ -205,18 +205,18 @@ class IconographyAgent:
         
         for i, category in enumerate(icon_categories):
             try:
-                # Create strengthened prompt with background emphasis first
+                # Create HD quality prompt with white/transparent background emphasis
                 prompt = (
-                    f"Flat {icon_style} icon, centered on a pure solid pitch black (#000000) background. "
-                    f"Icon symbol in {primary_color_hex} only. "
+                    f"Ultra-HD flat {icon_style} icon, centered on PURE WHITE BACKGROUND (#FFFFFF). "
+                    f"Icon symbol in {primary_color_hex} only. White background mandatory. "
                     f"Minimalist corporate branding style for {industry} industry. "
-                    f"Simple, clean, professional, high-contrast. "
-                    f"No gradients, no shadows, no glow, no lighting effects, no 3D. "
-                    f"Strictly keep background pitch black (#000000). "
-                    f"Representing '{category}' concept."
+                    f"Ultra-clean, professional, crystal-clear, high-contrast, 4K quality. "
+                    f"Absolutely no gradients, no shadows, no glow, no lighting effects, no 3D effects, no texture. "
+                    f"Pure white background (#FFFFFF) required, ultra-sharp HD quality. "
+                    f"Representing '{category}' concept - scalable vector quality."
                 )
                 
-                # Generate icon using Fal AI Turbo with expanded negative prompt
+                # Generate HD icon using Fal AI Turbo with white/transparent background
                 result = fal.run(
                     "fal-ai/ideogram/v2a/turbo",
                     arguments={
@@ -225,10 +225,10 @@ class IconographyAgent:
                         "expand_prompt": True,
                         "style": "auto",
                         "negative_prompt": (
-                            "white background, transparent background, blank background, "
-                            "gradient background, colored background, textured background, "
+                            "black background, dark background, colored background, "
+                            "gradient background, textured background, pattern background, "
                             "realistic lighting, glow, reflections, shadows, 3D effects, "
-                            "complex details, realistic textures"
+                            "complex details, realistic textures, low quality, blurry"
                         )
                     }
                 )
