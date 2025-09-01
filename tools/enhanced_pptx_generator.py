@@ -623,11 +623,11 @@ class EnhancedPPTXGenerator:
                     "page": f"{page_num:02d}",
                     "subsections": ["Brand Font", "Font Usage", "Text Hierarchy"]
                 })
-            elif "Visual" in section_name:
+            elif "Imagery & Visuals" in section_name:
                 section_data.append({
-                    "name": "Visual Guidelines",
+                    "name": "Imagery & Visuals",
                     "page": f"{page_num:02d}",
-                    "subsections": ["Visual Style", "Photography", "Imagery"]
+                    "subsections": ["Iconography", "Illustrations", "Merchandise"]
                 })
             else:
                 section_data.append({
@@ -1550,78 +1550,6 @@ Best Practices:
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
     
-    def _create_visual_guidelines_slide(self, prs, visual_style, photography_style, identity_data):
-        """Create visual and photography guidelines slide"""
-        self.slide_counter += 1
-        slide = prs.slides.add_slide(prs.slide_layouts[6])
-        self._add_slide_background(slide)
-        
-        # Title
-        left, top, width, height = self.grid.get_position(1, 0, 10, 1)
-        title_textbox = slide.shapes.add_textbox(left, top, width, height)
-        title_frame = title_textbox.text_frame
-        title_frame.text = "Visual & Photography Guidelines"
-        self.styler.apply_title_style(title_frame.paragraphs[0])
-        
-        # Left side - Visual style bullets
-        left, top, width, height = self.grid.get_position(1, 2, 5, 4)
-        visual_textbox = slide.shapes.add_textbox(left, top, width, height)
-        visual_frame = visual_textbox.text_frame
-        
-        visual_content = ["Visual Style Guidelines:"]
-        if visual_style:
-            visual_points = visual_style.split(",")
-            for point in visual_points[:5]:
-                visual_content.append(f"• {point.strip()}")
-        
-        visual_frame.text = "\n".join(visual_content)
-        visual_frame.word_wrap = True
-        self.styler.apply_subtitle_style(visual_frame.paragraphs[0], size=18)
-        for paragraph in visual_frame.paragraphs[1:]:
-            self.styler.apply_body_style(paragraph, size=14)
-        
-        # Right side - Photography style
-        right_left, right_top, right_width, right_height = self.grid.get_position(7, 2, 5, 4)
-        photo_textbox = slide.shapes.add_textbox(right_left, right_top, right_width, right_height)
-        photo_frame = photo_textbox.text_frame
-        
-        photo_content = ["Photography Guidelines:"]
-        if photography_style:
-            photo_points = photography_style.split(",")
-            for point in photo_points[:5]:
-                photo_content.append(f"• {point.strip()}")
-        
-        photo_frame.text = "\n".join(photo_content)
-        photo_frame.word_wrap = True
-        self.styler.apply_subtitle_style(photo_frame.paragraphs[0], size=18)
-        for paragraph in photo_frame.paragraphs[1:]:
-            self.styler.apply_body_style(paragraph, size=14)
-        
-        # Placeholder rectangles for example images
-        for i in range(3):
-            col = 7 + i * 2
-            placeholder_left, placeholder_top, placeholder_width, placeholder_height = self.grid.get_position(col, 6, 1, 1)
-            placeholder = slide.shapes.add_shape(
-                MSO_SHAPE.RECTANGLE,
-                placeholder_left, placeholder_top,
-                placeholder_width, placeholder_height
-            )
-            placeholder.fill.solid()
-            placeholder.fill.fore_color.rgb = RGBColor(64, 64, 64)
-            placeholder.line.color.rgb = RGBColor(128, 128, 128)
-            placeholder.line.width = Pt(1)
-            
-            # Add "Example Image" text
-            img_text = slide.shapes.add_textbox(
-                placeholder_left, placeholder_top + placeholder_height/3,
-                placeholder_width, placeholder_height/3
-            )
-            img_frame = img_text.text_frame
-            img_frame.text = "Example"
-            img_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-            self.styler.apply_caption_style(img_frame.paragraphs[0], size=8)
-        
-        self._add_footer(slide, self.slide_counter)
     
     def _create_text_slide(self, prs, title, content, max_words=80, identity_data=None):
         """Create text-based slide with pagination if needed"""
@@ -2020,7 +1948,7 @@ Best Practices:
             "6. Logo Variations",
             "7. Color Palette", 
             "8. Typography",
-            "9. Visual & Photography Guidelines"
+            "9. Imagery & Visuals"
         ])
         
         # 2. Table of Contents
@@ -2064,13 +1992,6 @@ Best Practices:
         # 10. Typography
         self._create_typography_slide(prs, identity_data.get("typography", {}), identity_data)
         
-        # 11. Visual & Photography Guidelines
-        self._create_visual_guidelines_slide(
-            prs,
-            identity_data.get("visual_style", ""),
-            identity_data.get("photography_style", ""),
-            identity_data
-        )
         
         # Save file
         base_name = company_name.lower().replace(' ', '_')
