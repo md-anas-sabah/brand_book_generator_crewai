@@ -781,7 +781,7 @@ class EnhancedPPTXGenerator:
                     sub_frame.margin_left = 0
                     sub_frame.margin_top = 0
                     sub_frame.margin_bottom = 0
-                    self.styler.apply_body_style(sub_frame.paragraphs[0], size=9, color='#CCCCCC')
+                    self.styler.apply_body_style(sub_frame.paragraphs[0], size=9, color='#666666')
                     
                     current_top += 0.25
                 

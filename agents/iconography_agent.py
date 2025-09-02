@@ -240,14 +240,14 @@ class IconographyAgent:
         
         for i, category in enumerate(icon_categories):
             try:
-                # Create modern 2025 icon prompt
+                # Create simple flat icon prompt
                 prompt = (
-                    f"Modern 2025 {icon_style} icon representing '{category}' concept for {industry} industry. "
-                    f"Contemporary design inspired by Apple, Google, and premium SaaS interfaces. "
-                    f"Icon symbol in {primary_color_hex} with subtle gradients and soft shadows. "
-                    f"Clean geometric shapes with rounded corners, minimal depth, premium finish. "
-                    f"Pure white background (#FFFFFF). Professional corporate branding style. "
-                    f"4K high-resolution, crystal clear, scalable vector quality for modern applications."
+                    f"Simple flat icon representing '{category}' concept, {industry} industry style. "
+                    f"Ultra-flat 2D design, solid colors only, no gradients, no shadows, no 3D effects. "
+                    f"Icon symbol in {primary_color_hex} color on pure white background (#FFFFFF). "
+                    f"Minimalist, clean geometric shapes, sharp edges, vector style. "
+                    f"Corporate icon set style, simple and professional, easy to recognize. "
+                    f"Flat design only, no depth, no lighting, no textures, scalable vector quality."
                 )
                 
                 # Generate HD icon using Fal AI Turbo with white/transparent background

@@ -23,15 +23,14 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
         
         for i in range(num_variations):
             try:
-                # Create detailed prompt for logo generation - enforce consistent white background
+                # Create logo prompt with aggressive white background enforcement
                 prompt = (
-                    f"Professional HD logo design for {company_name}, {industry} industry. "
-                    f"Style: {style}. Minimal, modern, flat vector design. "
-                    f"Pure white background (#FFFFFF). Clean white background only. "
-                    f"Corporate logo on white background, no other background colors. "
-                    f"Ultra-flat design, absolutely no gradients, no shadows, no glow effects, no texture, no 3D effects. "
-                    f"4K high-resolution, crystal clear, scalable vector quality, perfect for corporate branding. "
-                    f"White background mandatory for consistent processing."
+                    f"Logo for {company_name} on SOLID WHITE BACKGROUND. {industry} industry. "
+                    f"Style: {style}. Simple flat vector logo design. "
+                    f"WHITE BACKGROUND ONLY. Pure white (#FFFFFF) background, no other colors. "
+                    f"No yellow, no orange, no cream, no gray backgrounds allowed. "
+                    f"Flat design, no shadows, no 3D effects, no gradients anywhere. "
+                    f"Clean simple logo on pure white background, vector quality."
                 )
                 
                 # Submit request to Ideogram V2A Turbo - enforce white/transparent background
@@ -42,7 +41,7 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
                         "aspect_ratio": "1:1",  # Square format for logos
                         "expand_prompt": True,
                         "style": "auto",
-                        "negative_prompt": "black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting, dark themes"
+                        "negative_prompt": "yellow background, orange background, gold background, cream background, beige background, gray background, grey background, black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, any colored lighting, dark themes, blue background, green background, red background, purple background"
                     }
                 )
                 
@@ -147,13 +146,12 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
         for i in range(num_variations):
             try:
                 prompt = (
-                    f"Professional HD logo design for {company_name}, {industry} industry. "
-                    f"Style: {style}. Minimal, modern, flat vector design. "
-                    f"Pure white background (#FFFFFF). Clean white background only. "
-                    f"Corporate logo on white background, no other background colors. "
-                    f"Ultra-flat design, absolutely no gradients, no shadows, no glow effects, no texture, no 3D effects. "
-                    f"4K high-resolution, crystal clear, scalable vector quality, perfect for corporate branding. "
-                    f"White background mandatory for consistent processing."
+                    f"Logo for {company_name} on SOLID WHITE BACKGROUND. {industry} industry. "
+                    f"Style: {style}. Simple flat vector logo design. "
+                    f"WHITE BACKGROUND ONLY. Pure white (#FFFFFF) background, no other colors. "
+                    f"No yellow, no orange, no cream, no gray backgrounds allowed. "
+                    f"Flat design, no shadows, no 3D effects, no gradients anywhere. "
+                    f"Clean simple logo on pure white background, vector quality."
                 )
                 
                 result = fal.run(
@@ -163,7 +161,7 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                         "aspect_ratio": "1:1",
                         "expand_prompt": True,
                         "style": "auto",
-                        "negative_prompt": "black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, orange glow, blue glow, any colored lighting, dark themes"
+                        "negative_prompt": "yellow background, orange background, gold background, cream background, beige background, gray background, grey background, black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, any colored lighting, dark themes, blue background, green background, red background, purple background"
                     }
                 )
                 
