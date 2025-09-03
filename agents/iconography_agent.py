@@ -17,55 +17,55 @@ class IconographyAgent:
         """Initialize the IconographyAgent with API configurations"""
         self.serper_api_key = os.getenv('SERPER_API_KEY')
         
-        # Industry-specific icon mappings
+        # Industry-specific icon mappings - realistic app icons
         self.icon_mappings = {
             "technology": {
-                "core": ["mdi:laptop", "mdi:cellphone", "mdi:network", "mdi:database", "mdi:cloud", 
-                        "mdi:security", "mdi:code-tags", "mdi:wifi", "mdi:server", "mdi:monitor",
-                        "mdi:keyboard", "mdi:mouse", "mdi:headphones", "mdi:microphone", "mdi:camera"],
-                "industry": ["mdi:rocket", "mdi:chip", "mdi:memory", "mdi:harddisk", "mdi:ethernet",
-                           "mdi:api", "mdi:bug", "mdi:cog", "mdi:settings", "mdi:tools",
-                           "mdi:web", "mdi:application", "mdi:terminal", "mdi:code-braces", "mdi:github"]
+                "core": ["mdi:home", "mdi:cog", "mdi:account", "mdi:code-tags", "mdi:database", 
+                        "mdi:server", "mdi:cloud", "mdi:security", "mdi:api", "mdi:bug",
+                        "mdi:console", "mdi:monitor", "mdi:keyboard", "mdi:mouse", "mdi:chip"],
+                "industry": ["mdi:github", "mdi:gitlab", "mdi:docker", "mdi:kubernetes", "mdi:aws",
+                           "mdi:google-cloud", "mdi:microsoft-azure", "mdi:slack", "mdi:discord", "mdi:telegram",
+                           "mdi:linkedin", "mdi:stack-overflow", "mdi:reddit", "mdi:twitter", "mdi:youtube"]
             },
             "business": {
-                "core": ["mdi:account-group", "mdi:briefcase", "mdi:handshake", "mdi:chart-line", "mdi:target",
-                        "mdi:finance", "mdi:calendar", "mdi:email", "mdi:phone", "mdi:home-city",
-                        "mdi:office-building", "mdi:presentation", "mdi:clipboard-text", "mdi:pen", "mdi:folder"],
-                "industry": ["mdi:trending-up", "mdi:cash", "mdi:calculator", "mdi:bank", "mdi:credit-card",
-                           "mdi:scale-balance", "mdi:gavel", "mdi:shield-check", "mdi:medal", "mdi:trophy",
-                           "mdi:lightbulb", "mdi:puzzle", "mdi:arrow-decision", "mdi:timeline", "mdi:graph"]
+                "core": ["mdi:home", "mdi:account", "mdi:cog", "mdi:briefcase", "mdi:office-building",
+                        "mdi:handshake", "mdi:chart-line", "mdi:presentation", "mdi:calendar", "mdi:email",
+                        "mdi:phone", "mdi:message", "mdi:file-document", "mdi:folder", "mdi:printer"],
+                "industry": ["mdi:linkedin", "mdi:microsoft", "mdi:google", "mdi:zoom", "mdi:teams",
+                           "mdi:slack", "mdi:dropbox", "mdi:onedrive", "mdi:facebook", "mdi:twitter",
+                           "mdi:instagram", "mdi:whatsapp", "mdi:telegram", "mdi:skype", "mdi:email"]
             },
             "healthcare": {
-                "core": ["mdi:hospital-box", "mdi:heart", "mdi:medical-bag", "mdi:pill", "mdi:needle",
-                        "mdi:stethoscope", "mdi:ambulance", "mdi:wheelchair", "mdi:bandage", "mdi:thermometer",
-                        "mdi:dna", "mdi:microscope", "mdi:test-tube", "mdi:clipboard-pulse", "mdi:account-heart"],
-                "industry": ["mdi:tooth", "mdi:eye", "mdi:brain", "mdi:lungs", "mdi:bone",
-                           "mdi:baby", "mdi:human-pregnant", "mdi:meditation", "mdi:yoga", "mdi:weight-lifter",
-                           "mdi:fruit-grapes", "mdi:leaf", "mdi:water", "mdi:sleep", "mdi:run"]
+                "core": ["mdi:home", "mdi:account", "mdi:cog", "mdi:hospital-box", "mdi:heart",
+                        "mdi:medical-bag", "mdi:pill", "mdi:stethoscope", "mdi:calendar", "mdi:phone",
+                        "mdi:email", "mdi:bell", "mdi:clipboard-pulse", "mdi:thermometer", "mdi:bandage"],
+                "industry": ["mdi:doctor", "mdi:ambulance", "mdi:wheelchair", "mdi:dna", "mdi:microscope",
+                           "mdi:test-tube", "mdi:tooth", "mdi:eye", "mdi:brain", "mdi:baby",
+                           "mdi:meditation", "mdi:yoga", "mdi:leaf", "mdi:water", "mdi:run"]
             },
             "education": {
-                "core": ["mdi:school", "mdi:book-open", "mdi:pencil", "mdi:graduation-cap", "mdi:library",
-                        "mdi:teach", "mdi:blackboard", "mdi:calculator", "mdi:notebook", "mdi:backpack",
-                        "mdi:lamp-desk", "mdi:bookmark", "mdi:certificate", "mdi:trophy-award", "mdi:puzzle"],
-                "industry": ["mdi:science-beaker", "mdi:atom", "mdi:telescope", "mdi:earth", "mdi:language",
-                           "mdi:music-note", "mdi:palette", "mdi:theater", "mdi:basketball", "mdi:soccer",
-                           "mdi:piano", "mdi:violin", "mdi:camera-retro", "mdi:video", "mdi:microphone"]
+                "core": ["mdi:home", "mdi:account", "mdi:cog", "mdi:school", "mdi:book-open",
+                        "mdi:graduation-cap", "mdi:library", "mdi:pencil", "mdi:calculator", "mdi:calendar",
+                        "mdi:email", "mdi:bell", "mdi:certificate", "mdi:trophy-award", "mdi:notebook"],
+                "industry": ["mdi:blackboard", "mdi:teach", "mdi:backpack", "mdi:science-beaker", "mdi:atom",
+                           "mdi:telescope", "mdi:earth", "mdi:music-note", "mdi:palette", "mdi:theater",
+                           "mdi:basketball", "mdi:piano", "mdi:camera-retro", "mdi:video", "mdi:puzzle"]
             },
             "retail": {
-                "core": ["mdi:shopping", "mdi:cart", "mdi:store", "mdi:tag", "mdi:currency-usd",
-                        "mdi:gift", "mdi:package", "mdi:truck", "mdi:map-marker", "mdi:clock",
-                        "mdi:star", "mdi:heart", "mdi:share", "mdi:comment", "mdi:thumbs-up"],
-                "industry": ["mdi:tshirt-crew", "mdi:shoe-heel", "mdi:watch", "mdi:sunglasses", "mdi:ring",
-                           "mdi:food", "mdi:coffee", "mdi:cake", "mdi:flower", "mdi:book",
-                           "mdi:toy-brick", "mdi:gamepad", "mdi:music", "mdi:movie", "mdi:home"]
+                "core": ["mdi:home", "mdi:account", "mdi:cog", "mdi:shopping", "mdi:cart",
+                        "mdi:store", "mdi:tag", "mdi:currency-usd", "mdi:gift", "mdi:package",
+                        "mdi:truck", "mdi:star", "mdi:heart", "mdi:phone", "mdi:email"],
+                "industry": ["mdi:tshirt-crew", "mdi:shoe-heel", "mdi:watch", "mdi:sunglasses", "mdi:food",
+                           "mdi:coffee", "mdi:cake", "mdi:flower", "mdi:book", "mdi:toy-brick",
+                           "mdi:gamepad", "mdi:music", "mdi:movie", "mdi:share", "mdi:thumbs-up"]
             },
             "finance": {
-                "core": ["mdi:bank", "mdi:cash", "mdi:credit-card", "mdi:chart-line", "mdi:calculator",
-                        "mdi:security", "mdi:shield-check", "mdi:lock", "mdi:key", "mdi:safe",
-                        "mdi:trending-up", "mdi:trending-down", "mdi:scale-balance", "mdi:gavel", "mdi:handshake"],
+                "core": ["mdi:home", "mdi:account", "mdi:cog", "mdi:bank", "mdi:cash",
+                        "mdi:credit-card", "mdi:chart-line", "mdi:calculator", "mdi:security", "mdi:shield-check",
+                        "mdi:lock", "mdi:trending-up", "mdi:phone", "mdi:email", "mdi:bell"],
                 "industry": ["mdi:bitcoin", "mdi:currency-eth", "mdi:piggy-bank", "mdi:wallet", "mdi:receipt",
-                           "mdi:file-document", "mdi:stamp", "mdi:signature", "mdi:percent", "mdi:plus-minus",
-                           "mdi:arrow-up-bold", "mdi:arrow-down-bold", "mdi:swap-horizontal", "mdi:timer", "mdi:alarm"]
+                           "mdi:file-document", "mdi:signature", "mdi:percent", "mdi:arrow-up-bold", "mdi:arrow-down-bold",
+                           "mdi:swap-horizontal", "mdi:safe", "mdi:scale-balance", "mdi:handshake", "mdi:timer"]
             }
         }
     
@@ -142,28 +142,86 @@ class IconographyAgent:
         
         return svg_content
     
-    def get_industry_icons(self, industry: str, category: str = "core", count: int = 15) -> List[str]:
+    def get_industry_icons(self, industry: str, category: str = "core", count: int = 15, 
+                          company_values: str = "", audience: str = "") -> List[str]:
         """
-        Get industry-specific icon names
+        Get industry-specific icon names with value-based customization
         
         Args:
             industry: Industry name
-            category: "core" or "industry"
+            category: "core" or "industry" 
             count: Number of icons to return
+            company_values: Company values to influence icon selection
+            audience: Target audience to influence icon selection
             
         Returns:
             List of icon names
         """
         industry_lower = industry.lower()
+        values_lower = company_values.lower() if company_values else ""
+        audience_lower = audience.lower() if audience else ""
         
         # Find matching industry
+        base_icons = []
         for key in self.icon_mappings:
             if key in industry_lower or industry_lower in key:
-                icons = self.icon_mappings[key].get(category, [])
-                return icons[:count]
+                base_icons = self.icon_mappings[key].get(category, [])
+                break
         
         # Fallback to business icons
-        return self.icon_mappings["business"][category][:count]
+        if not base_icons:
+            base_icons = self.icon_mappings["business"][category]
+        
+        # Customize icons based on company values and audience
+        customized_icons = self._customize_icons_by_values(base_icons, values_lower, audience_lower)
+        
+        return customized_icons[:count]
+    
+    def _customize_icons_by_values(self, base_icons: List[str], values: str, audience: str) -> List[str]:
+        """Customize icon selection based on company values and audience"""
+        icons = base_icons.copy()
+        
+        # Value-based icon additions/replacements
+        value_mappings = {
+            "family": ["mdi:home-heart", "mdi:baby", "mdi:family"],
+            "innovation": ["mdi:lightbulb", "mdi:rocket", "mdi:creation"],
+            "trust": ["mdi:shield-check", "mdi:handshake", "mdi:verification"],
+            "sustainability": ["mdi:leaf", "mdi:recycle", "mdi:earth"],
+            "community": ["mdi:account-group", "mdi:hands-helping", "mdi:heart"],
+            "quality": ["mdi:star", "mdi:medal", "mdi:check-circle"],
+            "security": ["mdi:lock", "mdi:shield", "mdi:security"],
+            "creativity": ["mdi:palette", "mdi:brush", "mdi:creation"],
+            "education": ["mdi:school", "mdi:book-open", "mdi:graduation-cap"],
+            "health": ["mdi:heart", "mdi:medical-bag", "mdi:fitness"]
+        }
+        
+        # Audience-based icon additions
+        audience_mappings = {
+            "young": ["mdi:gamepad", "mdi:music", "mdi:camera"],
+            "professional": ["mdi:briefcase", "mdi:presentation", "mdi:chart-line"],
+            "family": ["mdi:home-heart", "mdi:baby", "mdi:family"],
+            "senior": ["mdi:accessibility", "mdi:heart", "mdi:phone"],
+            "student": ["mdi:school", "mdi:book", "mdi:pencil"],
+            "enterprise": ["mdi:office-building", "mdi:handshake", "mdi:security"]
+        }
+        
+        # Add relevant icons based on values (replace last few icons)
+        additions = []
+        for value_key, value_icons in value_mappings.items():
+            if value_key in values:
+                additions.extend(value_icons[:2])  # Add top 2 relevant icons
+        
+        # Add relevant icons based on audience
+        for audience_key, audience_icons in audience_mappings.items():
+            if audience_key in audience:
+                additions.extend(audience_icons[:1])  # Add top 1 relevant icon
+        
+        # Replace some base icons with value/audience-specific ones
+        if additions:
+            # Keep first 10 base icons, replace last 5 with additions
+            icons = icons[:10] + additions[:5]
+        
+        return icons
     
     def create_transparent_background(self, image_path: str):
         """
@@ -503,11 +561,11 @@ class IconographyAgent:
         """
         print(f"  🎨 Creating Iconify-based iconography system for {company_name}...")
         
-        # Get 15 core functional icons
-        core_icon_names = self.get_industry_icons(industry, "core", 15)
+        # Get 15 core functional icons with value/audience customization
+        core_icon_names = self.get_industry_icons(industry, "core", 15, values, audience)
         
-        # Get 15 industry-specific icons
-        industry_icon_names = self.get_industry_icons(industry, "industry", 15)
+        # Get 15 industry-specific icons with value/audience customization  
+        industry_icon_names = self.get_industry_icons(industry, "industry", 15, values, audience)
         
         # Download and color all icons
         core_icons = []

@@ -1716,15 +1716,15 @@ Best Practices:
                 max_rows = 3  
                 max_icons = min(15, len(successful_icons))
                 
-                # Use full slide width with minimal margins
+                # Use full slide width with minimal margins - compact layout
                 slide_width = Inches(10)
-                margin = Inches(0.5)  # Minimal margin
+                margin = Inches(0.3)  # Very minimal margin
                 available_width = slide_width - (2 * margin)
-                icon_size = Inches(1.2)  # Larger icons
+                icon_size = Inches(0.9)  # Smaller icons
                 spacing_x = available_width / icons_per_row  # Even distribution
                 start_left = margin + (spacing_x - icon_size) / 2  # Center icons in columns
-                start_top = Inches(2.2)  # Start position
-                spacing_y = Inches(1.8)  # Vertical spacing between rows
+                start_top = Inches(1.8)  # Start higher
+                spacing_y = Inches(1.2)  # Reduced vertical spacing
                 
                 for i, icon in enumerate(successful_icons[:max_icons]):  # Limit to 15 icons
                     try:
@@ -1768,23 +1768,7 @@ Best Practices:
                                     icon_size, icon_size
                                 )
                         
-                        # Add icon name label below icon
-                        label_top = icon_top + icon_size + Inches(0.05)
-                        label_textbox = slide.shapes.add_textbox(
-                            icon_left, label_top,
-                            icon_size, Inches(0.3)
-                        )
-                        label_frame = label_textbox.text_frame
-                        label_frame.text = icon.get("name", f"Icon {i+1}")
-                        label_frame.margin_left = 0
-                        label_frame.margin_right = 0
-                        label_frame.margin_top = 0
-                        label_frame.margin_bottom = 0
-                        
-                        # Style the label
-                        for paragraph in label_frame.paragraphs:
-                            self.styler.apply_body_style(paragraph, color='black', size=10)
-                            paragraph.alignment = PP_ALIGN.CENTER
+                        # No labels - clean icon-only layout
                         
                     except Exception as e:
                         print(f"  ⚠️ Error adding icon {i+1}: {e}")
