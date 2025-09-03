@@ -699,6 +699,130 @@ def generate_brand_merchandise_with_logo(company_name, logo_image_path, brand_co
         print(f"[FAL ERROR]: Error in merchandise generation: {str(e)}")
         return None
 
+def generate_brand_mugs_with_logo(company_name, logo_image_path, brand_color="#000000"):
+    """
+    Generate brand mug mockups using Flux Pro Kontext with image-to-image.
+    Uses the actual logo from the first slide as reference image for editing.
+    Creates 3 realistic mug mockups: white, black, and primary color with smart text color.
+    """
+    try:
+        # Ensure FAL_KEY is set in environment
+        os.environ['FAL_KEY'] = config('FAL_KEY')
+        
+        # Create output directory
+        os.makedirs("output", exist_ok=True)
+        
+        # Check if logo file exists
+        if not os.path.exists(logo_image_path):
+            print(f"❌ Logo file not found: {logo_image_path}")
+            return None
+        
+        # Smart color detection for primary color mug
+        def is_light_color(hex_color):
+            """Check if a color is light (needs black text) or dark (needs white text)"""
+            # Remove # if present
+            hex_color = hex_color.lstrip('#')
+            # Convert to RGB
+            r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+            # Calculate luminance (0-255)
+            luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+            return luminance > 128  # Light if > 128
+        
+        # Determine logo color for primary color mug
+        primary_is_light = is_light_color(brand_color)
+        primary_logo_color = "black logo and text" if primary_is_light else "white logo and text"
+        
+        mug_images = {}
+        
+        # Define mug configurations: (color_name, mug_color, logo_color_description)
+        mug_configs = [
+            ("White", "white", "black logo and text"),
+            ("Black", "black", "white logo and text"), 
+            ("Primary", brand_color, primary_logo_color)
+        ]
+        
+        print(f"🎯 Using logo reference: {logo_image_path}")
+        print(f"🎨 Primary color: {brand_color} ({'light' if primary_is_light else 'dark'}) - using {primary_logo_color}")
+        
+        for color_name, mug_color, logo_color_desc in mug_configs:
+            try:
+                # Create editing instruction prompt for Kontext (mug-focused)
+                prompt = (
+                    f"Transform this logo into a professional product photo: place it centered on a {mug_color} coffee mug. "
+                    f"Make the logo {logo_color_desc} on the mug surface. "
+                    f"Create realistic mug mockup with ceramic texture, proper lighting, "
+                    f"clean studio background. Maintain logo clarity and professional e-commerce photo quality. "
+                    f"Front view of the mug with handle visible."
+                )
+                
+                # Read logo image and convert to base64 for API
+                with open(logo_image_path, 'rb') as img_file:
+                    import base64
+                    logo_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+                    logo_data_url = f"data:image/png;base64,{logo_base64}"
+                
+                # Submit request to Flux Pro Kontext
+                result = fal.run(
+                    "fal-ai/flux-pro/kontext",
+                    arguments={
+                        "prompt": prompt,
+                        "image_url": logo_data_url,  # Reference logo image for editing
+                        "guidance_scale": 7.5,  # Prompt adherence strength
+                        "num_inference_steps": 28,  # Generation steps
+                        "seed": None,  # For reproducible results
+                        "enable_safety_checker": True
+                    }
+                )
+                
+                image_url = result['images'][0]['url']
+                
+                # Download and save the image locally
+                image_response = requests.get(image_url)
+                if image_response.status_code == 200:
+                    # Create unique filename
+                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                    unique_id = str(uuid.uuid4())[:8]
+                    filename = f"{company_name.lower().replace(' ', '_')}_mug_{color_name.lower()}_{timestamp}_{unique_id}.png"
+                    local_path = os.path.join("output", filename)
+                    
+                    with open(local_path, 'wb') as f:
+                        f.write(image_response.content)
+                    
+                    mug_images[color_name] = local_path
+                    print(f"✅ Generated {color_name} mug: {filename}")
+                    
+                else:
+                    print(f"❌ Failed to download {color_name} mug: {image_response.status_code}")
+                    
+            except Exception as e:
+                print(f"❌ Error generating {color_name} mug: {e}")
+                continue
+        
+        if mug_images:
+            result_summary = {
+                "mug_images": mug_images,
+                "total_requested": 3,
+                "successful_generations": len(mug_images),
+                "company_name": company_name,
+                "brand_color": brand_color,
+                "logo_reference": logo_image_path,
+                "primary_color_is_light": primary_is_light
+            }
+            
+            print(f"\n☕ Mug Generation Summary:")
+            print(f"Successfully generated: {len(mug_images)} mugs")
+            print(f"Mug colors: {list(mug_images.keys())}")
+            print(f"Using logo reference: {logo_image_path}")
+            
+            return result_summary
+        else:
+            print("❌ No mug images were successfully generated")
+            return None
+            
+    except Exception as e:
+        print(f"[FAL ERROR]: Error in mug generation: {str(e)}")
+        return None
+
 # Example test
 if __name__ == "__main__":
     # Test the updated function

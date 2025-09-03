@@ -4,17 +4,17 @@
     "logos": [],
     "colors": {
       "primary": "#059669",
-      "secondary": "#A855F7",
-      "accent": "#DC2626",
+      "secondary": "#6D28D9",
+      "accent": "#0F172A",
       "supporting": [
-        "#E11D48",
+        "#F87171",
         "#000000"
       ],
       "hex_codes": [
         "#059669",
-        "#A855F7",
-        "#DC2626",
-        "#E11D48",
+        "#6D28D9",
+        "#0F172A",
+        "#F87171",
         "#000000"
       ]
     },

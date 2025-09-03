@@ -1888,16 +1888,7 @@ Best Practices:
             slide = prs.slides.add_slide(prs.slide_layouts[6])
             self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
             
-            # Title
-            title_textbox = slide.shapes.add_textbox(
-                self.grid.get_position(0.5, 0.8, 1, 0.8)[0], Inches(0.8),
-                Inches(6), Inches(0.8)
-            )
-            title_frame = title_textbox.text_frame
-            title_frame.text = "BRAND APPAREL"
-            self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
-            title_frame.paragraphs[0].font.bold = True
-            title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+            primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
             
             # Generate t-shirt mockups using Flux Pro with logo reference
             from tools.fal_image_tool import generate_brand_merchandise_with_logo
@@ -1938,7 +1929,29 @@ Best Practices:
                             print(f"    ⚠️ Failed to add {color_name} t-shirt: {e}")
                             continue
                 
-                print(f"  ✅ Brand merchandise slide created with {len(merchandise_images)} t-shirt mockups using exact logo")
+                # Full-width line separator (same as Introduction slide)
+                line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+                line_shape = slide.shapes.add_connector(
+                    MSO_CONNECTOR.STRAIGHT,
+                    Inches(0.5), line_top,
+                    Inches(9.5), line_top
+                )
+                line_shape.line.color.rgb = primary_color_rgb
+                line_shape.line.width = Pt(2)
+                
+                # "BRAND APPAREL" title below the line (same as Introduction pattern)
+                title_top = line_top + Inches(0.3)
+                title_textbox = slide.shapes.add_textbox(
+                    self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
+                    Inches(6), Inches(0.8)
+                )
+                title_frame = title_textbox.text_frame
+                title_frame.text = "BRAND APPAREL"
+                self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+                title_frame.paragraphs[0].font.bold = True
+                title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+                
+                print(f"  ✅ Brand apparel slide created with {len(merchandise_images)} t-shirt mockups using exact logo")
                 
             else:
                 # Fallback slide if generation fails
@@ -1957,16 +1970,7 @@ Best Practices:
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
         
-        # Title
-        title_textbox = slide.shapes.add_textbox(
-            self.grid.get_position(0.5, 0.8, 1, 0.8)[0], Inches(0.8),
-            Inches(6), Inches(0.8)
-        )
-        title_frame = title_textbox.text_frame
-        title_frame.text = "BRAND APPAREL"
-        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
-        title_frame.paragraphs[0].font.bold = True
-        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
         # Content explaining merchandise concept
         content_textbox = slide.shapes.add_textbox(
@@ -2008,7 +2012,189 @@ Best Practices:
             shape.fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(bg_color))
             shape.line.color.rgb = RGBColor(200, 200, 200)
         
-        print(f"  ✅ Fallback merchandise slide created for {company_name}")
+        # Full-width line separator (same as Introduction slide)
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # "BRAND APPAREL" title below the line (same as Introduction pattern)
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "BRAND APPAREL"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        print(f"  ✅ Fallback brand apparel slide created for {company_name}")
+    
+    def _create_brand_mugs_slide(self, prs, company_name, logo_file_path, identity_data=None):
+        """Create slide displaying brand mug mockups using the exact logo from first slide"""
+        print("  ☕ Generating brand mugs with exact logo using Flux Pro Kontext...")
+        
+        try:
+            # Get primary color for styling and smart mug color
+            primary_color_hex = identity_data.get('primary_color_hex', '#000000') if identity_data else '#000000'
+            
+            self.slide_counter += 1
+            slide = prs.slides.add_slide(prs.slide_layouts[6])
+            self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
+            
+            primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+            
+            # Generate mug mockups using Flux Pro with logo reference
+            from tools.fal_image_tool import generate_brand_mugs_with_logo
+            
+            mug_data = generate_brand_mugs_with_logo(
+                company_name=company_name,
+                logo_image_path=logo_file_path,
+                brand_color=primary_color_hex
+            )
+            
+            if mug_data and mug_data.get('mug_images'):
+                mug_images = mug_data['mug_images']
+                
+                # Layout for 3 mugs with gaps and smaller size (same as t-shirts)
+                mug_width = Inches(2.5)  # Smaller width
+                mug_height = Inches(3.2)  # Smaller height  
+                gap = Inches(0.8)  # Gap between images
+                total_width = (mug_width * 3) + (gap * 2)  # Total width needed
+                start_x = (Inches(10) - total_width) / 2  # Center the images
+                start_y = Inches(2.5)  # Top position
+                
+                mug_order = ["White", "Black", "Primary"]  # Consistent order
+                
+                for i, color_name in enumerate(mug_order):
+                    if color_name in mug_images:
+                        try:
+                            x_pos = start_x + (mug_width + gap) * i
+                            
+                            # Add mug image with gaps
+                            slide.shapes.add_picture(
+                                mug_images[color_name], 
+                                x_pos, start_y, 
+                                width=mug_width, 
+                                height=mug_height
+                            )
+                            
+                        except Exception as e:
+                            print(f"    ⚠️ Failed to add {color_name} mug: {e}")
+                            continue
+                
+                # Full-width line separator (same as Introduction slide)
+                line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+                line_shape = slide.shapes.add_connector(
+                    MSO_CONNECTOR.STRAIGHT,
+                    Inches(0.5), line_top,
+                    Inches(9.5), line_top
+                )
+                line_shape.line.color.rgb = primary_color_rgb
+                line_shape.line.width = Pt(2)
+                
+                # "BRAND MUGS" title below the line (same as Introduction pattern)
+                title_top = line_top + Inches(0.3)
+                title_textbox = slide.shapes.add_textbox(
+                    self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
+                    Inches(6), Inches(0.8)
+                )
+                title_frame = title_textbox.text_frame
+                title_frame.text = "BRAND MUGS"
+                self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+                title_frame.paragraphs[0].font.bold = True
+                title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+                
+                print(f"  ✅ Brand mugs slide created with {len(mug_images)} mug mockups using exact logo")
+                
+            else:
+                # Fallback slide if generation fails
+                self._create_brand_mugs_fallback_slide(prs, company_name, identity_data)
+                
+        except Exception as e:
+            print(f"  ⚠️ Mug generation failed: {e}")
+            # Create fallback slide
+            self._create_brand_mugs_fallback_slide(prs, company_name, identity_data)
+    
+    def _create_brand_mugs_fallback_slide(self, prs, company_name, identity_data=None):
+        """Create fallback mug slide without generated images"""
+        primary_color_hex = identity_data.get('primary_color_hex', '#000000') if identity_data else '#000000'
+        
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
+        
+        primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+        
+        # Content explaining mug concept
+        content_textbox = slide.shapes.add_textbox(
+            Inches(1), Inches(2),
+            Inches(8), Inches(4)
+        )
+        content_frame = content_textbox.text_frame
+        content_frame.text = (
+            f"BRAND MUGS\n\n"
+            f"Coffee mugs and drinkware serve as daily brand touchpoints that extend {company_name}'s "
+            f"visual identity into workplace and personal environments. Key mug applications include:\n\n"
+            f"• OFFICE MUGS: White, black, and brand color variations for corporate settings\n"
+            f"• PROMOTIONAL DRINKWARE: Branded mugs for events and client gifts\n"
+            f"• RETAIL MERCHANDISE: Consumer products featuring consistent brand elements\n\n"
+            f"All drinkware maintains brand consistency with proper logo placement, "
+            f"appropriate color combinations, and quality materials that reflect {company_name}'s standards."
+        )
+        self.styler.apply_body_style(content_frame.paragraphs[0], size=14, color='#333333')
+        content_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        # Add placeholder boxes representing mugs with gaps and smaller size
+        box_width = Inches(2.5)  # Smaller width
+        box_height = Inches(1.2)  # Smaller height
+        gap = Inches(0.8)  # Gap between boxes
+        total_width = (box_width * 3) + (gap * 2)
+        start_x = (Inches(10) - total_width) / 2  # Center the boxes
+        y_pos = Inches(6.5)
+        
+        colors = ["#FFFFFF", "#000000", primary_color_hex]  # White, Black, Primary
+        
+        for i, bg_color in enumerate(colors):
+            x_pos = start_x + (box_width + gap) * i
+            
+            # Create rectangle representing mug (no labels)
+            shape = slide.shapes.add_shape(
+                MSO_SHAPE.RECTANGLE, x_pos, y_pos, box_width, box_height
+            )
+            shape.fill.solid()
+            shape.fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(bg_color))
+            shape.line.color.rgb = RGBColor(200, 200, 200)
+        
+        # Full-width line separator (same as Introduction slide)
+        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_shape = slide.shapes.add_connector(
+            MSO_CONNECTOR.STRAIGHT,
+            Inches(0.5), line_top,
+            Inches(9.5), line_top
+        )
+        line_shape.line.color.rgb = primary_color_rgb
+        line_shape.line.width = Pt(2)
+        
+        # "BRAND MUGS" title below the line (same as Introduction pattern)
+        title_top = line_top + Inches(0.3)
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "BRAND MUGS"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        print(f"  ✅ Fallback brand mugs slide created for {company_name}")
     
     def _create_brand_illustrations_slide(self, prs, company_name, industry, values, audience, brand_essence="", identity_data=None):
         """Create slide displaying AI-generated brand illustrations with improved layout and organization"""
@@ -2746,14 +2932,23 @@ Best Practices:
             self._create_icons_display_slide(prs, None, identity_data, company_name)
             self._create_iconography_guidelines_slide(prs, None, identity_data)
         
-        # Add brand merchandise slide with exact logo from first slide
+        # Add brand apparel slide with exact logo from first slide
         if identity_data.get("logos") and len(identity_data["logos"]) > 0:
             first_logo_path = identity_data["logos"][0]  # Use first logo as reference
-            print(f"  👕 Creating merchandise slide using logo: {first_logo_path}")
+            print(f"  👕 Creating brand apparel slide using logo: {first_logo_path}")
             self._create_merchandise_slide_with_logo(prs, company_name, first_logo_path, identity_data)
         else:
-            print("  ⚠️ No logos found - creating fallback merchandise slide")
+            print("  ⚠️ No logos found - creating fallback brand apparel slide")
             self._create_merchandise_fallback_slide(prs, company_name, identity_data)
+        
+        # Add brand mugs slide with exact logo from first slide
+        if identity_data.get("logos") and len(identity_data["logos"]) > 0:
+            first_logo_path = identity_data["logos"][0]  # Use first logo as reference
+            print(f"  ☕ Creating brand mugs slide using logo: {first_logo_path}")
+            self._create_brand_mugs_slide(prs, company_name, first_logo_path, identity_data)
+        else:
+            print("  ⚠️ No logos found - creating fallback brand mugs slide")
+            self._create_brand_mugs_fallback_slide(prs, company_name, identity_data)
         
         # Save file
         base_name = company_name.lower().replace(' ', '_')
