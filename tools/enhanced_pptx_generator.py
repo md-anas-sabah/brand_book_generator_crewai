@@ -2586,16 +2586,16 @@ Best Practices:
             print("  🎨 Generating Core Functional Icons...")
             core_iconography = self.iconography_agent.create_iconography_system(
                 company_name, industry, values, audience, primary_color_hex, 
-                custom_categories=core_functional_categories
+                custom_categories=core_functional_categories, icon_type="core"
             )
             
-            # Generate Industry-Specific Icons using Fal.ai
+            # Generate Industry-Specific Icons
             industry_categories = self._get_industry_icon_categories(industry)
             
             print(f"  🎨 Generating {industry.title()} Industry Icons...")
             industry_iconography = self.iconography_agent.create_iconography_system(
                 company_name, industry, values, audience, primary_color_hex,
-                custom_categories=industry_categories
+                custom_categories=industry_categories, icon_type="industry"
             )
             
             # Create slides with generated icons

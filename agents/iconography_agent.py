@@ -545,7 +545,7 @@ class IconographyAgent:
         return result_summary
     
     def create_iconography_system(self, company_name: str, industry: str, values: str,
-                                audience: str, primary_color_hex: str, custom_categories: list = None) -> Dict:
+                                audience: str, primary_color_hex: str, custom_categories: list = None, icon_type: str = "both") -> Dict:
         """
         Complete iconography creation workflow using Iconify API
         
@@ -561,50 +561,107 @@ class IconographyAgent:
         """
         print(f"  🎨 Creating Iconify-based iconography system for {company_name}...")
         
-        # Get 15 core functional icons with value/audience customization
-        core_icon_names = self.get_industry_icons(industry, "core", 15, values, audience)
-        
-        # Get 15 industry-specific icons with value/audience customization  
-        industry_icon_names = self.get_industry_icons(industry, "industry", 15, values, audience)
-        
-        # Download and color all icons
-        core_icons = []
-        industry_icons = []
-        
-        print(f"  📥 Downloading and coloring 15 core icons with {primary_color_hex}...")
-        for icon_name in core_icon_names:
-            icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
-            if icon_path:
-                core_icons.append({
-                    "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
-                    "path": icon_path,
-                    "icon_id": icon_name,
-                    "color": primary_color_hex
-                })
-        
-        print(f"  📥 Downloading and coloring 15 industry-specific icons with {primary_color_hex}...")
-        for icon_name in industry_icon_names:
-            icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
-            if icon_path:
-                industry_icons.append({
-                    "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
-                    "path": icon_path,
-                    "icon_id": icon_name,
-                    "color": primary_color_hex
-                })
-        
-        return {
-            "core_icons": core_icons,
-            "industry_icons": industry_icons,
-            "total_icons": len(core_icons) + len(industry_icons),
-            "color_applied": primary_color_hex,
-            "source": "Iconify API",
-            "industry": industry,
-            "icon_generation": {
-                "generated_icons": core_icons + industry_icons,
-                "style_notes": f"Professional SVG icons from Iconify, colored with brand color {primary_color_hex}"
+        # Get icons based on requested type
+        if icon_type == "core":
+            # Only core icons for first slide
+            core_icon_names = self.get_industry_icons(industry, "core", 15, values, audience)
+            
+            print(f"  📥 Downloading and coloring 15 core icons with {primary_color_hex}...")
+            core_icons = []
+            for icon_name in core_icon_names:
+                icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
+                if icon_path:
+                    core_icons.append({
+                        "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
+                        "path": icon_path,
+                        "icon_id": icon_name,
+                        "color": primary_color_hex
+                    })
+            
+            return {
+                "core_icons": core_icons,
+                "industry_icons": [],
+                "total_icons": len(core_icons),
+                "color_applied": primary_color_hex,
+                "source": "Iconify API",
+                "industry": industry,
+                "icon_generation": {
+                    "generated_icons": core_icons,
+                    "style_notes": f"Core app icons from Iconify, colored with brand color {primary_color_hex}"
+                }
             }
-        }
+            
+        elif icon_type == "industry":
+            # Only industry icons for second slide
+            industry_icon_names = self.get_industry_icons(industry, "industry", 15, values, audience)
+            
+            print(f"  📥 Downloading and coloring 15 industry-specific icons with {primary_color_hex}...")
+            industry_icons = []
+            for icon_name in industry_icon_names:
+                icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
+                if icon_path:
+                    industry_icons.append({
+                        "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
+                        "path": icon_path,
+                        "icon_id": icon_name,
+                        "color": primary_color_hex
+                    })
+            
+            return {
+                "core_icons": [],
+                "industry_icons": industry_icons,
+                "total_icons": len(industry_icons),
+                "color_applied": primary_color_hex,
+                "source": "Iconify API",
+                "industry": industry,
+                "icon_generation": {
+                    "generated_icons": industry_icons,
+                    "style_notes": f"Industry-specific icons from Iconify, colored with brand color {primary_color_hex}"
+                }
+            }
+            
+        else:
+            # Both types (legacy support)
+            core_icon_names = self.get_industry_icons(industry, "core", 15, values, audience)
+            industry_icon_names = self.get_industry_icons(industry, "industry", 15, values, audience)
+            
+            core_icons = []
+            industry_icons = []
+            
+            print(f"  📥 Downloading and coloring 15 core icons with {primary_color_hex}...")
+            for icon_name in core_icon_names:
+                icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
+                if icon_path:
+                    core_icons.append({
+                        "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
+                        "path": icon_path,
+                        "icon_id": icon_name,
+                        "color": primary_color_hex
+                    })
+            
+            print(f"  📥 Downloading and coloring 15 industry-specific icons with {primary_color_hex}...")
+            for icon_name in industry_icon_names:
+                icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
+                if icon_path:
+                    industry_icons.append({
+                        "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
+                        "path": icon_path,
+                        "icon_id": icon_name,
+                        "color": primary_color_hex
+                    })
+            
+            return {
+                "core_icons": core_icons,
+                "industry_icons": industry_icons,
+                "total_icons": len(core_icons) + len(industry_icons),
+                "color_applied": primary_color_hex,
+                "source": "Iconify API",
+                "industry": industry,
+                "icon_generation": {
+                    "generated_icons": core_icons + industry_icons,
+                    "style_notes": f"Professional SVG icons from Iconify, colored with brand color {primary_color_hex}"
+                }
+            }
 
 # Example usage and testing
 if __name__ == "__main__":
