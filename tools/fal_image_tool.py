@@ -593,6 +593,112 @@ def white_to_transparent(img_path):
         print(f"❌ Failed to create transparent version: {e}")
         return None
 
+def generate_brand_merchandise_with_logo(company_name, logo_image_path, brand_color="#000000"):
+    """
+    Generate brand merchandise mockups (t-shirts) using Flux Pro Kontext with image-to-image.
+    Uses the actual logo from the first slide as reference image for editing.
+    Creates 3 realistic t-shirt mockups: white, black, and yellow with the exact same logo.
+    """
+    try:
+        # Ensure FAL_KEY is set in environment
+        os.environ['FAL_KEY'] = config('FAL_KEY')
+        
+        # Create output directory
+        os.makedirs("output", exist_ok=True)
+        
+        # Check if logo file exists
+        if not os.path.exists(logo_image_path):
+            print(f"❌ Logo file not found: {logo_image_path}")
+            return None
+        
+        merchandise_images = {}
+        
+        # Define t-shirt configurations: (color_name, shirt_color, logo_color_description)
+        shirt_configs = [
+            ("White", "white", "black logo and text"),
+            ("Black", "black", "white logo and text"), 
+            ("Yellow", "yellow", "black logo and text")
+        ]
+        
+        print(f"🎯 Using logo reference: {logo_image_path}")
+        
+        for color_name, shirt_color, logo_color_desc in shirt_configs:
+            try:
+                # Create editing instruction prompt for Kontext (editing-focused prompt)
+                prompt = (
+                    f"Transform this logo into a professional product photo: place it centered on a {shirt_color} t-shirt chest. "
+                    f"Make the logo {logo_color_desc} on the t-shirt fabric. "
+                    f"Create realistic merchandise mockup with natural fabric texture, proper lighting, "
+                    f"clean studio background. Maintain logo clarity and professional e-commerce photo quality."
+                )
+                
+                # Read logo image and convert to base64 for API
+                with open(logo_image_path, 'rb') as img_file:
+                    import base64
+                    logo_base64 = base64.b64encode(img_file.read()).decode('utf-8')
+                    logo_data_url = f"data:image/png;base64,{logo_base64}"
+                
+                # Submit request to Flux Pro Kontext (correct image-to-image model)
+                result = fal.run(
+                    "fal-ai/flux-pro/kontext",
+                    arguments={
+                        "prompt": prompt,
+                        "image_url": logo_data_url,  # Reference logo image for editing
+                        "guidance_scale": 7.5,  # Prompt adherence strength (default for Kontext)
+                        "num_inference_steps": 28,  # Generation steps
+                        "seed": None,  # For reproducible results
+                        "enable_safety_checker": True
+                    }
+                )
+                
+                image_url = result['images'][0]['url']
+                
+                # Download and save the image locally
+                image_response = requests.get(image_url)
+                if image_response.status_code == 200:
+                    # Create unique filename
+                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                    unique_id = str(uuid.uuid4())[:8]
+                    filename = f"{company_name.lower().replace(' ', '_')}_tshirt_{color_name.lower()}_{timestamp}_{unique_id}.png"
+                    local_path = os.path.join("output", filename)
+                    
+                    with open(local_path, 'wb') as f:
+                        f.write(image_response.content)
+                    
+                    merchandise_images[color_name] = local_path
+                    print(f"✅ Generated {color_name} t-shirt: {filename}")
+                    
+                else:
+                    print(f"❌ Failed to download {color_name} t-shirt: {image_response.status_code}")
+                    
+            except Exception as e:
+                print(f"❌ Error generating {color_name} t-shirt: {e}")
+                continue
+        
+        if merchandise_images:
+            result_summary = {
+                "merchandise_images": merchandise_images,
+                "total_requested": 3,
+                "successful_generations": len(merchandise_images),
+                "company_name": company_name,
+                "brand_color": brand_color,
+                "logo_reference": logo_image_path
+            }
+            
+            print(f"\n🎉 Merchandise Generation Summary:")
+            print(f"Successfully generated: {len(merchandise_images)} t-shirts")
+            print(f"T-shirt colors: {list(merchandise_images.keys())}")
+            print(f"Using logo reference: {logo_image_path}")
+            
+            return result_summary
+        else:
+            print("❌ No merchandise images were successfully generated")
+            return None
+            
+    except Exception as e:
+        print(f"[FAL ERROR]: Error in merchandise generation: {str(e)}")
+        return None
+
 # Example test
 if __name__ == "__main__":
     # Test the updated function

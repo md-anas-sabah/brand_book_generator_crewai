@@ -721,7 +721,7 @@ class EnhancedPPTXGenerator:
                 section_data.append({
                     "name": "Imagery & Visuals",
                     "page": f"{page_num:02d}",
-                    "subsections": ["Iconography", "Illustrations", "Merchandise"]
+                    "subsections": ["Iconography", "Merchandise"]
                 })
             else:
                 section_data.append({
@@ -1876,6 +1876,169 @@ Best Practices:
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
     
+    def _create_merchandise_slide_with_logo(self, prs, company_name, logo_file_path, identity_data=None):
+        """Create slide displaying brand merchandise mockups using the exact logo from first slide"""
+        print("  👕 Generating brand merchandise with exact logo using Flux Pro Kontext...")
+        
+        try:
+            # Get primary color for styling
+            primary_color_hex = identity_data.get('primary_color_hex', '#000000') if identity_data else '#000000'
+            
+            self.slide_counter += 1
+            slide = prs.slides.add_slide(prs.slide_layouts[6])
+            self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
+            
+            # Title
+            title_textbox = slide.shapes.add_textbox(
+                self.grid.get_position(0.5, 0.8, 1, 0.8)[0], Inches(0.8),
+                Inches(6), Inches(0.8)
+            )
+            title_frame = title_textbox.text_frame
+            title_frame.text = "BRAND MERCHANDISE"
+            self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+            title_frame.paragraphs[0].font.bold = True
+            title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+            
+            # Generate t-shirt mockups using Flux Pro with logo reference
+            from tools.fal_image_tool import generate_brand_merchandise_with_logo
+            
+            merchandise_data = generate_brand_merchandise_with_logo(
+                company_name=company_name,
+                logo_image_path=logo_file_path,
+                brand_color=primary_color_hex
+            )
+            
+            if merchandise_data and merchandise_data.get('merchandise_images'):
+                merchandise_images = merchandise_data['merchandise_images']
+                
+                # Layout for 3 t-shirts in a row with zero left/right margins
+                slide_width = Inches(10)  # Total slide width
+                shirt_width = slide_width / 3  # Divide equally among 3 shirts
+                shirt_height = Inches(4)  # Height for t-shirts
+                start_x = Inches(0)  # Start from left edge (zero margin)
+                start_y = Inches(2)  # Top position
+                
+                shirt_order = ["White", "Black", "Yellow"]  # Consistent order
+                
+                for i, color_name in enumerate(shirt_order):
+                    if color_name in merchandise_images:
+                        try:
+                            x_pos = start_x + (shirt_width * i)
+                            
+                            # Add t-shirt image with zero margins
+                            slide.shapes.add_picture(
+                                merchandise_images[color_name], 
+                                x_pos, start_y, 
+                                width=shirt_width, 
+                                height=shirt_height
+                            )
+                            
+                            # Add color label below each shirt
+                            label_textbox = slide.shapes.add_textbox(
+                                x_pos, start_y + shirt_height + Inches(0.1),
+                                shirt_width, Inches(0.4)
+                            )
+                            label_frame = label_textbox.text_frame
+                            label_frame.text = f"{color_name.upper()} T-SHIRT"
+                            self.styler.apply_body_style(label_frame.paragraphs[0], size=12, color='#666666')
+                            label_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+                            label_frame.paragraphs[0].font.bold = True
+                            
+                        except Exception as e:
+                            print(f"    ⚠️ Failed to add {color_name} t-shirt: {e}")
+                            continue
+                
+                # Add description text at the bottom
+                desc_textbox = slide.shapes.add_textbox(
+                    Inches(0.5), Inches(7),
+                    Inches(9), Inches(0.8)
+                )
+                desc_frame = desc_textbox.text_frame
+                desc_frame.text = (
+                    f"Brand merchandise featuring the exact {company_name} logo from our brand identity. "
+                    f"These mockups demonstrate consistent logo application across different t-shirt colors while "
+                    f"maintaining brand recognition and visual impact."
+                )
+                self.styler.apply_body_style(desc_frame.paragraphs[0], size=14, color='#333333')
+                desc_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+                
+                print(f"  ✅ Brand merchandise slide created with {len(merchandise_images)} t-shirt mockups using exact logo")
+                
+            else:
+                # Fallback slide if generation fails
+                self._create_merchandise_fallback_slide(prs, company_name, identity_data)
+                
+        except Exception as e:
+            print(f"  ⚠️ Merchandise generation failed: {e}")
+            # Create fallback slide
+            self._create_merchandise_fallback_slide(prs, company_name, identity_data)
+    
+    def _create_merchandise_fallback_slide(self, prs, company_name, identity_data=None):
+        """Create fallback merchandise slide without generated images"""
+        primary_color_hex = identity_data.get('primary_color_hex', '#000000') if identity_data else '#000000'
+        
+        self.slide_counter += 1
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+        self._add_slide_background(slide, gradient=False, identity_data=identity_data, bg_color='white')
+        
+        # Title
+        title_textbox = slide.shapes.add_textbox(
+            self.grid.get_position(0.5, 0.8, 1, 0.8)[0], Inches(0.8),
+            Inches(6), Inches(0.8)
+        )
+        title_frame = title_textbox.text_frame
+        title_frame.text = "BRAND MERCHANDISE"
+        self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
+        title_frame.paragraphs[0].font.bold = True
+        title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        # Content explaining merchandise concept
+        content_textbox = slide.shapes.add_textbox(
+            Inches(1), Inches(2),
+            Inches(8), Inches(4)
+        )
+        content_frame = content_textbox.text_frame
+        content_frame.text = (
+            f"MERCHANDISE APPLICATIONS\n\n"
+            f"Brand merchandise serves as powerful marketing tools that extend {company_name}'s "
+            f"visual identity into everyday items. Key merchandise categories include:\n\n"
+            f"• T-SHIRTS: White, black, and colored variations with consistent logo placement\n"
+            f"• APPAREL: Hoodies, caps, and accessories featuring brand colors\n"
+            f"• PROMOTIONAL ITEMS: Branded materials for marketing and events\n\n"
+            f"All merchandise maintains brand consistency with proper logo usage, "
+            f"approved color combinations, and quality standards that reflect {company_name}'s values."
+        )
+        self.styler.apply_body_style(content_frame.paragraphs[0], size=14, color='#333333')
+        content_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
+        
+        # Add placeholder boxes representing t-shirts with zero margins
+        slide_width = Inches(10)
+        box_width = slide_width / 3
+        colors = [("WHITE", "#FFFFFF", "#000000"), 
+                 ("BLACK", "#000000", "#FFFFFF"), 
+                 ("YELLOW", "#FFD700", "#000000")]
+        
+        for i, (label, bg_color, text_color) in enumerate(colors):
+            x_pos = Inches(0) + (box_width * i)  # Zero left margin
+            y_pos = Inches(6.5)
+            
+            # Create rectangle representing t-shirt
+            shape = slide.shapes.add_shape(
+                MSO_SHAPE.RECTANGLE, x_pos, y_pos, box_width, Inches(1)
+            )
+            shape.fill.solid()
+            shape.fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(bg_color))
+            shape.line.color.rgb = RGBColor(200, 200, 200)
+            
+            # Add label
+            text_frame = shape.text_frame
+            text_frame.text = f"{label} T-SHIRT"
+            text_frame.paragraphs[0].font.size = Pt(10)
+            text_frame.paragraphs[0].font.color.rgb = RGBColor(*self._hex_to_rgb(text_color))
+            text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
+        
+        print(f"  ✅ Fallback merchandise slide created for {company_name}")
+    
     def _create_brand_illustrations_slide(self, prs, company_name, industry, values, audience, brand_essence="", identity_data=None):
         """Create slide displaying AI-generated brand illustrations with improved layout and organization"""
         print("  🎨 Generating brand illustrations with Fal.ai Ideogram v3...")
@@ -2612,10 +2775,14 @@ Best Practices:
             self._create_icons_display_slide(prs, None, identity_data, company_name)
             self._create_iconography_guidelines_slide(prs, None, identity_data)
         
-        # Add brand illustrations slide after iconography
-        self._create_brand_illustrations_slide(
-            prs, company_name, industry, values, audience, brand_essence, identity_data
-        )
+        # Add brand merchandise slide with exact logo from first slide
+        if identity_data.get("logos") and len(identity_data["logos"]) > 0:
+            first_logo_path = identity_data["logos"][0]  # Use first logo as reference
+            print(f"  👕 Creating merchandise slide using logo: {first_logo_path}")
+            self._create_merchandise_slide_with_logo(prs, company_name, first_logo_path, identity_data)
+        else:
+            print("  ⚠️ No logos found - creating fallback merchandise slide")
+            self._create_merchandise_fallback_slide(prs, company_name, identity_data)
         
         # Save file
         base_name = company_name.lower().replace(' ', '_')
