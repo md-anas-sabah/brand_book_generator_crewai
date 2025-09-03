@@ -1894,7 +1894,7 @@ Best Practices:
                 Inches(6), Inches(0.8)
             )
             title_frame = title_textbox.text_frame
-            title_frame.text = "BRAND MERCHANDISE"
+            title_frame.text = "BRAND APPAREL"
             self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
             title_frame.paragraphs[0].font.bold = True
             title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
@@ -1911,21 +1911,22 @@ Best Practices:
             if merchandise_data and merchandise_data.get('merchandise_images'):
                 merchandise_images = merchandise_data['merchandise_images']
                 
-                # Layout for 3 t-shirts in a row with zero left/right margins
-                slide_width = Inches(10)  # Total slide width
-                shirt_width = slide_width / 3  # Divide equally among 3 shirts
-                shirt_height = Inches(4)  # Height for t-shirts
-                start_x = Inches(0)  # Start from left edge (zero margin)
-                start_y = Inches(2)  # Top position
+                # Layout for 3 t-shirts with gaps and smaller size
+                shirt_width = Inches(2.5)  # Smaller width
+                shirt_height = Inches(3.2)  # Smaller height  
+                gap = Inches(0.8)  # Gap between images
+                total_width = (shirt_width * 3) + (gap * 2)  # Total width needed
+                start_x = (Inches(10) - total_width) / 2  # Center the images
+                start_y = Inches(2.5)  # Top position
                 
                 shirt_order = ["White", "Black", "Yellow"]  # Consistent order
                 
                 for i, color_name in enumerate(shirt_order):
                     if color_name in merchandise_images:
                         try:
-                            x_pos = start_x + (shirt_width * i)
+                            x_pos = start_x + (shirt_width + gap) * i
                             
-                            # Add t-shirt image with zero margins
+                            # Add t-shirt image with gaps
                             slide.shapes.add_picture(
                                 merchandise_images[color_name], 
                                 x_pos, start_y, 
@@ -1933,34 +1934,9 @@ Best Practices:
                                 height=shirt_height
                             )
                             
-                            # Add color label below each shirt
-                            label_textbox = slide.shapes.add_textbox(
-                                x_pos, start_y + shirt_height + Inches(0.1),
-                                shirt_width, Inches(0.4)
-                            )
-                            label_frame = label_textbox.text_frame
-                            label_frame.text = f"{color_name.upper()} T-SHIRT"
-                            self.styler.apply_body_style(label_frame.paragraphs[0], size=12, color='#666666')
-                            label_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-                            label_frame.paragraphs[0].font.bold = True
-                            
                         except Exception as e:
                             print(f"    ⚠️ Failed to add {color_name} t-shirt: {e}")
                             continue
-                
-                # Add description text at the bottom
-                desc_textbox = slide.shapes.add_textbox(
-                    Inches(0.5), Inches(7),
-                    Inches(9), Inches(0.8)
-                )
-                desc_frame = desc_textbox.text_frame
-                desc_frame.text = (
-                    f"Brand merchandise featuring the exact {company_name} logo from our brand identity. "
-                    f"These mockups demonstrate consistent logo application across different t-shirt colors while "
-                    f"maintaining brand recognition and visual impact."
-                )
-                self.styler.apply_body_style(desc_frame.paragraphs[0], size=14, color='#333333')
-                desc_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
                 
                 print(f"  ✅ Brand merchandise slide created with {len(merchandise_images)} t-shirt mockups using exact logo")
                 
@@ -1987,7 +1963,7 @@ Best Practices:
             Inches(6), Inches(0.8)
         )
         title_frame = title_textbox.text_frame
-        title_frame.text = "BRAND MERCHANDISE"
+        title_frame.text = "BRAND APPAREL"
         self.styler.apply_title_style(title_frame.paragraphs[0], size=28, color=primary_color_hex)
         title_frame.paragraphs[0].font.bold = True
         title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
@@ -2011,31 +1987,26 @@ Best Practices:
         self.styler.apply_body_style(content_frame.paragraphs[0], size=14, color='#333333')
         content_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
         
-        # Add placeholder boxes representing t-shirts with zero margins
-        slide_width = Inches(10)
-        box_width = slide_width / 3
-        colors = [("WHITE", "#FFFFFF", "#000000"), 
-                 ("BLACK", "#000000", "#FFFFFF"), 
-                 ("YELLOW", "#FFD700", "#000000")]
+        # Add placeholder boxes representing t-shirts with gaps and smaller size
+        box_width = Inches(2.5)  # Smaller width
+        box_height = Inches(1.2)  # Smaller height
+        gap = Inches(0.8)  # Gap between boxes
+        total_width = (box_width * 3) + (gap * 2)
+        start_x = (Inches(10) - total_width) / 2  # Center the boxes
+        y_pos = Inches(6.5)
         
-        for i, (label, bg_color, text_color) in enumerate(colors):
-            x_pos = Inches(0) + (box_width * i)  # Zero left margin
-            y_pos = Inches(6.5)
+        colors = ["#FFFFFF", "#000000", "#FFD700"]  # White, Black, Yellow
+        
+        for i, bg_color in enumerate(colors):
+            x_pos = start_x + (box_width + gap) * i
             
-            # Create rectangle representing t-shirt
+            # Create rectangle representing t-shirt (no labels)
             shape = slide.shapes.add_shape(
-                MSO_SHAPE.RECTANGLE, x_pos, y_pos, box_width, Inches(1)
+                MSO_SHAPE.RECTANGLE, x_pos, y_pos, box_width, box_height
             )
             shape.fill.solid()
             shape.fill.fore_color.rgb = RGBColor(*self._hex_to_rgb(bg_color))
             shape.line.color.rgb = RGBColor(200, 200, 200)
-            
-            # Add label
-            text_frame = shape.text_frame
-            text_frame.text = f"{label} T-SHIRT"
-            text_frame.paragraphs[0].font.size = Pt(10)
-            text_frame.paragraphs[0].font.color.rgb = RGBColor(*self._hex_to_rgb(text_color))
-            text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         
         print(f"  ✅ Fallback merchandise slide created for {company_name}")
     

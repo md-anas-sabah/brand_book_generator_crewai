@@ -1,0 +1,71 @@
+{
+  "company": "Chaayos",
+  "assets": {
+    "logos": [],
+    "colors": {
+      "primary": "#059669",
+      "secondary": "#A855F7",
+      "accent": "#DC2626",
+      "supporting": [
+        "#E11D48",
+        "#000000"
+      ],
+      "hex_codes": [
+        "#059669",
+        "#A855F7",
+        "#DC2626",
+        "#E11D48",
+        "#000000"
+      ]
+    },
+    "typography": {
+      "primary": "Inter",
+      "secondary": "Source Sans Pro",
+      "font_colors": {
+        "primary_text": "#1A1A1A",
+        "secondary_text": "#4A4A4A",
+        "accent_text": "#0066CC",
+        "light_text": "#6B6B6B",
+        "white_text": "#FFFFFF"
+      },
+      "hierarchy": [
+        "H1: Inter Bold 32px",
+        "H2: Inter Medium 24px",
+        "Body: Source Sans Pro Regular 16px",
+        "Caption: Source Sans Pro Regular 14px"
+      ],
+      "description": "Inter selected as primary font (scored 22 points from 9 fonts evaluated) for its professional appeal and excellent readability in Food & Beverage (Tea Caf\u00e9s, Quick-service Restaurants) sector. Source Sans Pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. Font colors optimized for readability and brand consistency. Font choices align with brand personality traits: innovative, forward-thinking.",
+      "research_based": true,
+      "font_research_insights": {
+        "industry_fonts": [
+          "Inter",
+          "Source Sans Pro"
+        ],
+        "personality_alignment": [
+          "Inter",
+          "Source Sans Pro",
+          "Poppins",
+          "Montserrat"
+        ],
+        "competitor_analysis": {
+          "search_performed": true,
+          "trends_found": [],
+          "common_fonts": [
+            "Inter"
+          ]
+        },
+        "typography_trends": {
+          "current_trends": [],
+          "recommended_styles": []
+        }
+      }
+    },
+    "collateral": []
+  },
+  "formats": [
+    "PNG",
+    "SVG",
+    "PDF"
+  ],
+  "usage_rights": "Internal use only"
+}
