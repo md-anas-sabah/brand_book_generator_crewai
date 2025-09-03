@@ -190,6 +190,44 @@ class EnhancedPPTXGenerator:
         else:
             return "#2E86AB"  # Safe fallback
     
+    def _convert_svg_to_png(self, svg_path: str, size: int = 128) -> str:
+        """Convert SVG to PNG for PPTX compatibility"""
+        try:
+            # Try using cairosvg if available
+            try:
+                import cairosvg
+                png_path = svg_path.replace('.svg', '.png')
+                cairosvg.svg2png(
+                    url=svg_path, 
+                    write_to=png_path,
+                    output_width=size,
+                    output_height=size
+                )
+                return png_path
+            except ImportError:
+                pass
+            
+            # Try using Pillow with svg2png (wand) if available  
+            try:
+                from PIL import Image
+                from wand.image import Image as WandImage
+                
+                png_path = svg_path.replace('.svg', '.png')
+                with WandImage(filename=svg_path, width=size, height=size) as img:
+                    img.format = 'png'
+                    img.save(filename=png_path)
+                return png_path
+            except ImportError:
+                pass
+            
+            # Fallback - return None to trigger placeholder
+            print(f"  ⚠️ SVG conversion libraries not available for {svg_path}")
+            return None
+            
+        except Exception as e:
+            print(f"  ❌ Error converting SVG to PNG: {e}")
+            return None
+    
     def _get_industry_icon_categories(self, industry):
         """Get industry-specific icon categories for generation"""
         industry_lower = industry.lower()
@@ -1635,8 +1673,11 @@ Best Practices:
         
         primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
         
-        # Simple title text with company name
-        intro_content = f"{company_name} Icons"
+        # Simple title text with company name (avoiding duplication)
+        if "Icons" in company_name:
+            intro_content = company_name
+        else:
+            intro_content = f"{company_name} Icons"
         
         # Main content text - positioned in upper area
         left, top, width, height = self.grid.get_position(0.5, 0.8, 10, 1)
@@ -1655,45 +1696,86 @@ Best Practices:
             paragraph.alignment = PP_ALIGN.LEFT
             paragraph.space_after = Pt(8)
         
-        # Display generated icons if available
+        # Display generated icons if available (15 icons in 5x3 grid)
         if iconography_data and iconography_data.get("icon_generation", {}).get("generated_icons"):
             icons = iconography_data["icon_generation"]["generated_icons"]
-            successful_icons = [icon for icon in icons if "error" not in icon and icon.get("local_path") and icon["local_path"] not in ["Failed to download", "Error"]]
+            # Handle both old AI format and new Iconify format
+            successful_icons = []
+            for icon in icons:
+                if isinstance(icon, dict):
+                    # New Iconify format
+                    if icon.get("path"):
+                        successful_icons.append(icon)
+                    # Old AI format
+                    elif "error" not in icon and icon.get("local_path") and icon["local_path"] not in ["Failed to download", "Error"]:
+                        successful_icons.append(icon)
             
             if successful_icons:
-                # Add icons in a centered grid layout
-                icons_per_row = min(3, len(successful_icons))
-                total_rows = (len(successful_icons) + icons_per_row - 1) // icons_per_row
+                # 3 rows x 5 columns layout for 15 icons (1-5, 6-10, 11-15)
+                icons_per_row = 5
+                max_rows = 3  
+                max_icons = min(15, len(successful_icons))
                 
-                # Center the grid horizontally
-                grid_width = icons_per_row * Inches(2.0)
-                start_left = (Inches(10) - grid_width) / 2 + Inches(1.0)  # Center and adjust
-                start_top = Inches(2.5)
-                icon_size = Inches(1.0)
-                spacing = Inches(2.0)
+                # Use full slide width with minimal margins
+                slide_width = Inches(10)
+                margin = Inches(0.5)  # Minimal margin
+                available_width = slide_width - (2 * margin)
+                icon_size = Inches(1.2)  # Larger icons
+                spacing_x = available_width / icons_per_row  # Even distribution
+                start_left = margin + (spacing_x - icon_size) / 2  # Center icons in columns
+                start_top = Inches(2.2)  # Start position
+                spacing_y = Inches(1.8)  # Vertical spacing between rows
                 
-                for i, icon in enumerate(successful_icons[:6]):  # Limit to 6 icons
+                for i, icon in enumerate(successful_icons[:max_icons]):  # Limit to 15 icons
                     try:
                         row = i // icons_per_row
                         col = i % icons_per_row
-                        icon_left = start_left + (col * spacing)
-                        icon_top = start_top + (row * Inches(1.5))
+                        icon_left = start_left + (col * spacing_x)
+                        icon_top = start_top + (row * spacing_y)
                         
-                        # Add icon image
-                        slide.shapes.add_picture(
-                            icon["local_path"],
-                            icon_left, icon_top,
-                            icon_size, icon_size
-                        )
+                        # Get icon path (support both formats)
+                        icon_path = icon.get("path") or icon.get("local_path")
                         
-                        # Add category label below icon
-                        label_top = icon_top + icon_size + Inches(0.1)
+                        # Add SVG icon (for Iconify) or image (for AI)
+                        if icon_path and os.path.exists(icon_path):
+                            if icon_path.endswith('.svg'):
+                                # Convert SVG to PNG for PPTX compatibility
+                                png_path = self._convert_svg_to_png(icon_path, int(icon_size.inches * 96))
+                                if png_path and os.path.exists(png_path):
+                                    slide.shapes.add_picture(
+                                        png_path,
+                                        icon_left, icon_top,
+                                        icon_size, icon_size
+                                    )
+                                else:
+                                    # SVG conversion failed - create colored shape placeholder
+                                    shape = slide.shapes.add_shape(
+                                        MSO_SHAPE.RECTANGLE,
+                                        icon_left, icon_top,
+                                        icon_size, icon_size
+                                    )
+                                    # Apply logo color to shape
+                                    primary_color_hex = self._get_primary_color_hex()
+                                    primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))
+                                    shape.fill.solid()
+                                    shape.fill.fore_color.rgb = primary_color_rgb
+                                    shape.line.color.rgb = primary_color_rgb
+                            else:
+                                # Handle regular image files
+                                slide.shapes.add_picture(
+                                    icon_path,
+                                    icon_left, icon_top,
+                                    icon_size, icon_size
+                                )
+                        
+                        # Add icon name label below icon
+                        label_top = icon_top + icon_size + Inches(0.05)
                         label_textbox = slide.shapes.add_textbox(
                             icon_left, label_top,
-                            icon_size, Inches(0.4)
+                            icon_size, Inches(0.3)
                         )
                         label_frame = label_textbox.text_frame
-                        label_frame.text = icon.get("category", f"Icon {i+1}").title()
+                        label_frame.text = icon.get("name", f"Icon {i+1}")
                         label_frame.margin_left = 0
                         label_frame.margin_right = 0
                         label_frame.margin_top = 0
@@ -1701,7 +1783,7 @@ Best Practices:
                         
                         # Style the label
                         for paragraph in label_frame.paragraphs:
-                            self.styler.apply_body_style(paragraph, color='black', size=12)
+                            self.styler.apply_body_style(paragraph, color='black', size=10)
                             paragraph.alignment = PP_ALIGN.CENTER
                         
                     except Exception as e:

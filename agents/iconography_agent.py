@@ -4,22 +4,166 @@ import requests
 from typing import List, Dict, Optional
 from datetime import datetime
 import uuid
-import fal_client as fal
-from decouple import config
 from tools.serper_search import search_google
 from PIL import Image
 
 class IconographyAgent:
     """
     Agent responsible for generating brand-consistent iconography through web research
-    and AI icon generation using Fal AI.
+    and Iconify API for professional SVG icons.
     """
     
     def __init__(self):
         """Initialize the IconographyAgent with API configurations"""
         self.serper_api_key = os.getenv('SERPER_API_KEY')
-        self.fal_key = config('FAL_KEY')
-        os.environ['FAL_KEY'] = self.fal_key
+        
+        # Industry-specific icon mappings
+        self.icon_mappings = {
+            "technology": {
+                "core": ["mdi:laptop", "mdi:cellphone", "mdi:network", "mdi:database", "mdi:cloud", 
+                        "mdi:security", "mdi:code-tags", "mdi:wifi", "mdi:server", "mdi:monitor",
+                        "mdi:keyboard", "mdi:mouse", "mdi:headphones", "mdi:microphone", "mdi:camera"],
+                "industry": ["mdi:rocket", "mdi:chip", "mdi:memory", "mdi:harddisk", "mdi:ethernet",
+                           "mdi:api", "mdi:bug", "mdi:cog", "mdi:settings", "mdi:tools",
+                           "mdi:web", "mdi:application", "mdi:terminal", "mdi:code-braces", "mdi:github"]
+            },
+            "business": {
+                "core": ["mdi:account-group", "mdi:briefcase", "mdi:handshake", "mdi:chart-line", "mdi:target",
+                        "mdi:finance", "mdi:calendar", "mdi:email", "mdi:phone", "mdi:home-city",
+                        "mdi:office-building", "mdi:presentation", "mdi:clipboard-text", "mdi:pen", "mdi:folder"],
+                "industry": ["mdi:trending-up", "mdi:cash", "mdi:calculator", "mdi:bank", "mdi:credit-card",
+                           "mdi:scale-balance", "mdi:gavel", "mdi:shield-check", "mdi:medal", "mdi:trophy",
+                           "mdi:lightbulb", "mdi:puzzle", "mdi:arrow-decision", "mdi:timeline", "mdi:graph"]
+            },
+            "healthcare": {
+                "core": ["mdi:hospital-box", "mdi:heart", "mdi:medical-bag", "mdi:pill", "mdi:needle",
+                        "mdi:stethoscope", "mdi:ambulance", "mdi:wheelchair", "mdi:bandage", "mdi:thermometer",
+                        "mdi:dna", "mdi:microscope", "mdi:test-tube", "mdi:clipboard-pulse", "mdi:account-heart"],
+                "industry": ["mdi:tooth", "mdi:eye", "mdi:brain", "mdi:lungs", "mdi:bone",
+                           "mdi:baby", "mdi:human-pregnant", "mdi:meditation", "mdi:yoga", "mdi:weight-lifter",
+                           "mdi:fruit-grapes", "mdi:leaf", "mdi:water", "mdi:sleep", "mdi:run"]
+            },
+            "education": {
+                "core": ["mdi:school", "mdi:book-open", "mdi:pencil", "mdi:graduation-cap", "mdi:library",
+                        "mdi:teach", "mdi:blackboard", "mdi:calculator", "mdi:notebook", "mdi:backpack",
+                        "mdi:lamp-desk", "mdi:bookmark", "mdi:certificate", "mdi:trophy-award", "mdi:puzzle"],
+                "industry": ["mdi:science-beaker", "mdi:atom", "mdi:telescope", "mdi:earth", "mdi:language",
+                           "mdi:music-note", "mdi:palette", "mdi:theater", "mdi:basketball", "mdi:soccer",
+                           "mdi:piano", "mdi:violin", "mdi:camera-retro", "mdi:video", "mdi:microphone"]
+            },
+            "retail": {
+                "core": ["mdi:shopping", "mdi:cart", "mdi:store", "mdi:tag", "mdi:currency-usd",
+                        "mdi:gift", "mdi:package", "mdi:truck", "mdi:map-marker", "mdi:clock",
+                        "mdi:star", "mdi:heart", "mdi:share", "mdi:comment", "mdi:thumbs-up"],
+                "industry": ["mdi:tshirt-crew", "mdi:shoe-heel", "mdi:watch", "mdi:sunglasses", "mdi:ring",
+                           "mdi:food", "mdi:coffee", "mdi:cake", "mdi:flower", "mdi:book",
+                           "mdi:toy-brick", "mdi:gamepad", "mdi:music", "mdi:movie", "mdi:home"]
+            },
+            "finance": {
+                "core": ["mdi:bank", "mdi:cash", "mdi:credit-card", "mdi:chart-line", "mdi:calculator",
+                        "mdi:security", "mdi:shield-check", "mdi:lock", "mdi:key", "mdi:safe",
+                        "mdi:trending-up", "mdi:trending-down", "mdi:scale-balance", "mdi:gavel", "mdi:handshake"],
+                "industry": ["mdi:bitcoin", "mdi:currency-eth", "mdi:piggy-bank", "mdi:wallet", "mdi:receipt",
+                           "mdi:file-document", "mdi:stamp", "mdi:signature", "mdi:percent", "mdi:plus-minus",
+                           "mdi:arrow-up-bold", "mdi:arrow-down-bold", "mdi:swap-horizontal", "mdi:timer", "mdi:alarm"]
+            }
+        }
+    
+    def get_iconify_icon(self, icon_name: str, logo_color: str = None, size: int = 64) -> str:
+        """
+        Download SVG icon from Iconify API and apply logo color
+        
+        Args:
+            icon_name: Icon name (e.g., "mdi:home")
+            logo_color: Logo color to apply to icon (e.g., "#FF5733")
+            size: Icon size in pixels
+            
+        Returns:
+            Path to saved colored SVG file
+        """
+        try:
+            # Create output directory
+            os.makedirs("output/icons", exist_ok=True)
+            
+            # Download SVG from Iconify API
+            url = f"https://api.iconify.design/{icon_name}.svg"
+            params = {"height": size, "width": size}
+            
+            response = requests.get(url, params=params, timeout=10)
+            if response.status_code != 200:
+                print(f"⚠️ Failed to download icon {icon_name}: {response.status_code}")
+                return None
+            
+            svg_content = response.text
+            
+            # Apply logo color if provided
+            if logo_color:
+                svg_content = self._apply_color_to_svg(svg_content, logo_color)
+            
+            # Save colored SVG
+            icon_filename = f"{icon_name.replace(':', '_')}_{logo_color[1:] if logo_color else 'default'}.svg"
+            icon_path = os.path.join("output/icons", icon_filename)
+            
+            with open(icon_path, "w", encoding="utf-8") as f:
+                f.write(svg_content)
+            
+            return icon_path
+            
+        except Exception as e:
+            print(f"❌ Error getting Iconify icon {icon_name}: {e}")
+            return None
+    
+    def _apply_color_to_svg(self, svg_content: str, color: str) -> str:
+        """
+        Apply color to SVG content
+        
+        Args:
+            svg_content: Original SVG content
+            color: Color to apply (hex format)
+            
+        Returns:
+            Modified SVG content with applied color
+        """
+        # Method 1: Replace existing fill colors
+        import re
+        
+        # Replace common fill attributes
+        svg_content = re.sub(r'fill="[^"]*"', f'fill="{color}"', svg_content)
+        svg_content = re.sub(r"fill='[^']*'", f'fill="{color}"', svg_content)
+        
+        # Method 2: Add fill to SVG root if no fill found
+        if 'fill=' not in svg_content:
+            svg_content = svg_content.replace('<svg', f'<svg fill="{color}"')
+        
+        # Replace currentColor references
+        svg_content = svg_content.replace('currentColor', color)
+        svg_content = svg_content.replace('#000', color)
+        svg_content = svg_content.replace('#000000', color)
+        
+        return svg_content
+    
+    def get_industry_icons(self, industry: str, category: str = "core", count: int = 15) -> List[str]:
+        """
+        Get industry-specific icon names
+        
+        Args:
+            industry: Industry name
+            category: "core" or "industry"
+            count: Number of icons to return
+            
+        Returns:
+            List of icon names
+        """
+        industry_lower = industry.lower()
+        
+        # Find matching industry
+        for key in self.icon_mappings:
+            if key in industry_lower or industry_lower in key:
+                icons = self.icon_mappings[key].get(category, [])
+                return icons[:count]
+        
+        # Fallback to business icons
+        return self.icon_mappings["business"][category][:count]
     
     def create_transparent_background(self, image_path: str):
         """
@@ -345,52 +489,64 @@ class IconographyAgent:
     def create_iconography_system(self, company_name: str, industry: str, values: str,
                                 audience: str, primary_color_hex: str, custom_categories: list = None) -> Dict:
         """
-        Complete iconography creation workflow: research + generation
+        Complete iconography creation workflow using Iconify API
         
         Args:
             company_name: Name of the company
             industry: Company's industry
             values: Company core values
             audience: Target audience
-            primary_color_hex: Primary brand color in hex format
+            primary_color_hex: Primary brand color in hex format (logo color)
             
         Returns:
-            Complete iconography system data
+            Complete iconography system with 30 colored SVG icons
         """
-        print(f"  🎨 Creating complete iconography system for {company_name}...")
+        print(f"  🎨 Creating Iconify-based iconography system for {company_name}...")
         
-        # Step 1: Research icon styles and trends
-        research_data = self.analyze_icon_styles(company_name, industry, values, audience)
+        # Get 15 core functional icons
+        core_icon_names = self.get_industry_icons(industry, "core", 15)
         
-        # Step 2: Generate brand icons based on research
-        icon_generation_results = self.generate_brand_icons(
-            company_name, industry, values, audience, 
-            primary_color_hex, research_data, custom_categories
-        )
+        # Get 15 industry-specific icons
+        industry_icon_names = self.get_industry_icons(industry, "industry", 15)
         
-        # Step 3: Compile complete system
-        iconography_system = {
-            "company_name": company_name,
-            "research_analysis": research_data,
-            "icon_generation": icon_generation_results,
-            "system_overview": {
-                "total_icons": icon_generation_results["successful_generations"],
-                "style_approach": icon_generation_results["icon_style"],
-                "color_system": primary_color_hex,
-                "background_standard": "#000000",
-                "industry_context": industry,
-                "research_informed": True
-            },
-            "usage_guidelines": {
-                "minimum_size": "16px for web, 0.5 inches for print",
-                "spacing": "Minimum clear space of 50% icon width around each icon",
-                "color_usage": f"Primary: {primary_color_hex}, Background: #000000 only",
-                "applications": ["Digital interfaces", "Print materials", "Presentations", "Marketing collateral"]
+        # Download and color all icons
+        core_icons = []
+        industry_icons = []
+        
+        print(f"  📥 Downloading and coloring 15 core icons with {primary_color_hex}...")
+        for icon_name in core_icon_names:
+            icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
+            if icon_path:
+                core_icons.append({
+                    "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
+                    "path": icon_path,
+                    "icon_id": icon_name,
+                    "color": primary_color_hex
+                })
+        
+        print(f"  📥 Downloading and coloring 15 industry-specific icons with {primary_color_hex}...")
+        for icon_name in industry_icon_names:
+            icon_path = self.get_iconify_icon(icon_name, primary_color_hex, size=128)
+            if icon_path:
+                industry_icons.append({
+                    "name": icon_name.replace("mdi:", "").replace("-", " ").title(),
+                    "path": icon_path,
+                    "icon_id": icon_name,
+                    "color": primary_color_hex
+                })
+        
+        return {
+            "core_icons": core_icons,
+            "industry_icons": industry_icons,
+            "total_icons": len(core_icons) + len(industry_icons),
+            "color_applied": primary_color_hex,
+            "source": "Iconify API",
+            "industry": industry,
+            "icon_generation": {
+                "generated_icons": core_icons + industry_icons,
+                "style_notes": f"Professional SVG icons from Iconify, colored with brand color {primary_color_hex}"
             }
         }
-        
-        print(f"  ✅ Iconography system complete with {iconography_system['system_overview']['total_icons']} icons")
-        return iconography_system
 
 # Example usage and testing
 if __name__ == "__main__":
