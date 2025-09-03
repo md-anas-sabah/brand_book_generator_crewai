@@ -1,11 +1,11 @@
 # tools/branding_resources.py
 
-def get_color_palette(industry, style, color_hints=None):
-    """Generate color palette with optional research-based hints"""
+def get_color_palette(industry, style, color_hints=None, logo_color=None):
+    """Generate color palette with optional research-based hints and user-specified logo color"""
     
     # Dynamic palettes based on research hints
     if color_hints:
-        hint_palette = _generate_palette_from_hints(color_hints, style)
+        hint_palette = _generate_palette_from_hints(color_hints, style, logo_color)
         if hint_palette:
             return hint_palette
     
@@ -37,12 +37,19 @@ def get_color_palette(industry, style, color_hints=None):
     }
     
     base_palette = industry_palettes.get(industry.lower(), {"primary": "#333", "secondary": "#BBB", "accent": "#00B894"})
+    
+    # If user provided logo_color, use it as primary color
+    if logo_color:
+        normalized_logo_color = _normalize_color_input(logo_color)
+        if normalized_logo_color:
+            base_palette["primary"] = normalized_logo_color
+    
     base_palette["supporting"] = ["#E5E7EB", "#6B7280"]
     base_palette["hex_codes"] = [base_palette["primary"], base_palette["secondary"], base_palette["accent"], "#E5E7EB", "#6B7280"]
     
     return base_palette
 
-def _generate_palette_from_hints(color_hints, style):
+def _generate_palette_from_hints(color_hints, style, logo_color=None):
     """Generate dynamic palette from research-based color hints"""
     # Enhanced color map with multiple variations per color
     color_variations = {
@@ -84,8 +91,13 @@ def _generate_palette_from_hints(color_hints, style):
         index = max(0, min(len(variations) - 1, base_index + random.randint(-1, 1)))
         return variations[index]
     
-    # Use shuffled hints to ensure variety
-    primary_color = get_color_variation(shuffled_hints[0], 0)  # Darker shade
+    # Use logo_color as primary if provided, otherwise use shuffled hints
+    if logo_color:
+        normalized_logo_color = _normalize_color_input(logo_color)
+        primary_color = normalized_logo_color if normalized_logo_color else get_color_variation(shuffled_hints[0], 0)
+    else:
+        primary_color = get_color_variation(shuffled_hints[0], 0)  # Darker shade
+    
     secondary_color = get_color_variation(shuffled_hints[1] if len(shuffled_hints) > 1 else "gray", 2)  # Medium shade
     accent_color = get_color_variation(shuffled_hints[2] if len(shuffled_hints) > 2 else shuffled_hints[0], 1)  # Brighter shade
     
@@ -290,6 +302,53 @@ def get_messaging_prompt(company, industry, values, audience):
         f"List 3-5 key value propositions tailored to {audience}. "
         "Each should be 1-2 sentences max, actionable and distinct."
     )
+
+def _normalize_color_input(color_input):
+    """Normalize various color input formats to hex"""
+    if not color_input:
+        return None
+    
+    color_input = color_input.strip()
+    
+    # If it's already a hex color
+    if color_input.startswith('#') and len(color_input) == 7:
+        return color_input
+    
+    # If it's hex without #
+    if len(color_input) == 6 and all(c in '0123456789ABCDEFabcdef' for c in color_input):
+        return '#' + color_input
+    
+    # If it's RGB format like "rgb(255, 255, 255)" or "255, 255, 255"
+    import re
+    rgb_match = re.match(r'rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', color_input.lower())
+    if rgb_match:
+        r, g, b = map(int, rgb_match.groups())
+        return f"#{r:02x}{g:02x}{b:02x}"
+    
+    # If it's comma-separated RGB like "255, 255, 255"
+    rgb_parts = [x.strip() for x in color_input.split(',')]
+    if len(rgb_parts) == 3:
+        try:
+            r, g, b = map(int, rgb_parts)
+            if all(0 <= x <= 255 for x in [r, g, b]):
+                return f"#{r:02x}{g:02x}{b:02x}"
+        except ValueError:
+            pass
+    
+    # Color name mapping
+    color_names = {
+        'red': '#DC2626', 'blue': '#2563EB', 'green': '#059669', 'yellow': '#F59E0B',
+        'purple': '#7C3AED', 'orange': '#EA580C', 'pink': '#EC4899', 'teal': '#0891B2',
+        'gray': '#6B7280', 'grey': '#6B7280', 'black': '#1F2937', 'white': '#FFFFFF',
+        'navy': '#1E40AF', 'burgundy': '#7F1D1D', 'coral': '#FB7185', 'mint': '#6EE7B7',
+        'sage': '#84CC16', 'gold': '#D97706', 'silver': '#9CA3AF', 'brown': '#92400E'
+    }
+    
+    if color_input.lower() in color_names:
+        return color_names[color_input.lower()]
+    
+    print(f"⚠️ Could not normalize color input '{color_input}', using default")
+    return None
 
 def get_marketing_copy_prompts(company, industry, values, audience):
     return {

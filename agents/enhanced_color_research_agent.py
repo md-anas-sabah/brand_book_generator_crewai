@@ -25,7 +25,7 @@ class EnhancedColorResearchAgent:
             openai.api_key = self.openai_api_key
     
     def generate_comprehensive_color_system(self, company_name: str, industry: str, 
-                                          values: str, audience: str, brand_essence: Dict = None) -> Dict:
+                                          values: str, audience: str, brand_essence: Dict = None, logo_color: str = None) -> Dict:
         """
         Generate comprehensive color system with primary colors, secondary colors, and usage guidelines
         
@@ -42,7 +42,7 @@ class EnhancedColorResearchAgent:
         color_research = self._research_industry_colors(company_name, industry, values)
         
         # Step 2: Generate primary colors (3-4 colors)
-        primary_colors = self._generate_primary_colors(company_name, industry, values, audience, color_research)
+        primary_colors = self._generate_primary_colors(company_name, industry, values, audience, color_research, logo_color)
         
         # Step 3: Generate secondary colors (5 colors)
         secondary_colors = self._generate_secondary_colors(primary_colors, company_name, industry)
@@ -245,18 +245,24 @@ Format as JSON with keys: insights, trends, avoid, temperature"""
         }
     
     def _generate_primary_colors(self, company_name: str, industry: str, values: str, 
-                                audience: str, research: Dict) -> List[Dict]:
+                                audience: str, research: Dict, logo_color: str = None) -> List[Dict]:
         """Generate 3-4 primary colors with detailed specifications"""
         try:
             if self.openai_api_key:
                 from openai import OpenAI
                 client = OpenAI(api_key=self.openai_api_key)
                 
+                logo_color_instruction = ""
+                if logo_color:
+                    normalized_logo_color = self._normalize_color_input(logo_color)
+                    if normalized_logo_color:
+                        logo_color_instruction = f"\n- User's preferred logo color: {normalized_logo_color} (MUST be included as the first primary color)"
+                
                 prompt = f"""Generate 3-4 primary brand colors for {company_name} in {industry} industry.
 
 Company Context:
 - Values: {values}
-- Target Audience: {audience}
+- Target Audience: {audience}{logo_color_instruction}
 
 Color Research Insights:
 - Key insights: {', '.join(research.get('insights', []))}
@@ -265,11 +271,12 @@ Color Research Insights:
 
 Requirements:
 1. Generate 3-4 distinct primary colors
-2. Each color should have a name (e.g., "Primary Blue", "Accent Green")
-3. Provide HEX codes that work well together
-4. Consider accessibility and contrast
-5. Ensure colors align with industry psychology
-6. Make colors distinctive and memorable
+2. {'If a logo color is specified, use it as the first primary color' if logo_color else 'Each color should have a name (e.g., "Primary Blue", "Accent Green")'}
+3. Each color should have a descriptive name
+4. Provide HEX codes that work well together
+5. Consider accessibility and contrast
+6. Ensure colors align with industry psychology
+7. Make colors distinctive and memorable
 
 Return as JSON array:
 [
@@ -306,7 +313,7 @@ Return as JSON array:
         except Exception as e:
             print(f"❌ Primary color generation failed: {e}")
         
-        return self._generate_fallback_primary_colors(industry, research)
+        return self._generate_fallback_primary_colors(industry, research, logo_color)
     
     def _generate_secondary_colors(self, primary_colors: List[Dict], company_name: str, industry: str) -> List[Dict]:
         """Generate 5 secondary/accent colors that complement the primary palette"""
@@ -470,7 +477,54 @@ Write in a professional, clear style suitable for brand guidelines. Keep it comp
         
         return self._generate_fallback_usage_guidelines(company_name, industry)
     
-    def _generate_fallback_primary_colors(self, industry: str, research: Dict) -> List[Dict]:
+    def _normalize_color_input(self, color_input):
+        """Normalize various color input formats to hex"""
+        if not color_input:
+            return None
+        
+        color_input = color_input.strip()
+        
+        # If it's already a hex color
+        if color_input.startswith('#') and len(color_input) == 7:
+            return color_input
+        
+        # If it's hex without #
+        if len(color_input) == 6 and all(c in '0123456789ABCDEFabcdef' for c in color_input):
+            return '#' + color_input
+        
+        # If it's RGB format like "rgb(255, 255, 255)" or "255, 255, 255"
+        import re
+        rgb_match = re.match(r'rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', color_input.lower())
+        if rgb_match:
+            r, g, b = map(int, rgb_match.groups())
+            return f"#{r:02x}{g:02x}{b:02x}"
+        
+        # If it's comma-separated RGB like "255, 255, 255"
+        rgb_parts = [x.strip() for x in color_input.split(',')]
+        if len(rgb_parts) == 3:
+            try:
+                r, g, b = map(int, rgb_parts)
+                if all(0 <= x <= 255 for x in [r, g, b]):
+                    return f"#{r:02x}{g:02x}{b:02x}"
+            except ValueError:
+                pass
+        
+        # Color name mapping
+        color_names = {
+            'red': '#DC2626', 'blue': '#2563EB', 'green': '#059669', 'yellow': '#F59E0B',
+            'purple': '#7C3AED', 'orange': '#EA580C', 'pink': '#EC4899', 'teal': '#0891B2',
+            'gray': '#6B7280', 'grey': '#6B7280', 'black': '#1F2937', 'white': '#FFFFFF',
+            'navy': '#1E40AF', 'burgundy': '#7F1D1D', 'coral': '#FB7185', 'mint': '#6EE7B7',
+            'sage': '#84CC16', 'gold': '#D97706', 'silver': '#9CA3AF', 'brown': '#92400E'
+        }
+        
+        if color_input.lower() in color_names:
+            return color_names[color_input.lower()]
+        
+        print(f"⚠️ Could not normalize color input '{color_input}', using default")
+        return None
+    
+    def _generate_fallback_primary_colors(self, industry: str, research: Dict, logo_color: str = None) -> List[Dict]:
         """Generate fallback primary colors based on industry"""
         industry_palettes = {
             'technology': [
@@ -533,10 +587,23 @@ Write in a professional, clear style suitable for brand guidelines. Keep it comp
         # Find matching industry or use default
         for key in industry_palettes:
             if key.lower() in industry.lower():
-                colors = industry_palettes[key]
+                colors = industry_palettes[key].copy()  # Create a copy to avoid modifying original
                 break
         else:
-            colors = industry_palettes['technology']  # Default
+            colors = industry_palettes['technology'].copy()  # Default
+        
+        # If logo_color is provided, use it as the first primary color
+        if logo_color:
+            normalized_logo_color = self._normalize_color_input(logo_color)
+            if normalized_logo_color:
+                # Create logo color entry
+                logo_color_entry = {
+                    'name': 'Logo Primary', 
+                    'hex': normalized_logo_color, 
+                    'description': 'User-specified logo color'
+                }
+                # Insert at the beginning and limit to 4 colors total
+                colors = [logo_color_entry] + colors[:3]
         
         # Add detailed specifications
         detailed_colors = []

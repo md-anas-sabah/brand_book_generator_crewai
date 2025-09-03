@@ -98,6 +98,7 @@ class BrandBookOrchestrator:
         values = input("Company values (comma-separated): ").strip()
         audience = input("Target audience: ").strip()
         logo_style = input("Logo/brand style (minimalistic, modern, elegant, etc): ").strip()
+        logo_color = input("Preferred logo color (hex #RRGGBB, RGB, or color name): ").strip()
         
         print(f"\n🎯 Creating comprehensive brand book for {company_name}...")
         print("=" * 80)
@@ -126,7 +127,7 @@ class BrandBookOrchestrator:
         print("-" * 60)
         
         identity_data = self.identity_agent.create_identity(
-            company_name, industry, values, audience, logo_style, brand_essence
+            company_name, industry, values, audience, logo_style, brand_essence, logo_color
         )
         
         # Enhance visual system
@@ -220,7 +221,7 @@ class BrandBookOrchestrator:
         print("  Generating professional PowerPoint presentation...")
         enhanced_pptx_path = self._create_professional_pptx(
             company_name, identity_data, literature_data, brand_essence, visual_system,
-            industry, values, audience
+            industry, values, audience, logo_color
         )
         
         # Final summary
@@ -406,14 +407,14 @@ class BrandBookOrchestrator:
     
     def _create_professional_pptx(self, company_name: str, identity_data: dict,
                                  literature_data: dict, brand_essence: dict, visual_system: dict,
-                                 industry: str, values: str, audience: str) -> str:
+                                 industry: str, values: str, audience: str, logo_color: str = None) -> str:
         """Create professional PowerPoint matching top agency standards with AI-generated content"""
         print("  Creating professional-grade presentation design...")
         
         # Generate comprehensive PPTX with AI-powered content and black background
         pptx_path = self.pptx_generator.create_pptx(
             company_name, identity_data, literature_data, brand_essence,
-            industry, values, audience
+            industry, values, audience, logo_color
         )
         
         print("  ✨ Professional presentation created with AI-powered content and agency-level design")

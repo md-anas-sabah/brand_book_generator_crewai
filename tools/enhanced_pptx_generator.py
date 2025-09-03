@@ -2409,7 +2409,7 @@ Best Practices:
         return parts if parts else [content]
 
     def create_pptx(self, company_name, identity_data, literature_data, brand_essence=None, 
-                   industry="", values="", audience=""):
+                   industry="", values="", audience="", logo_color=None):
         """Create comprehensive brand book presentation with AI-generated content"""
         prs = Presentation()
         
@@ -2433,7 +2433,7 @@ Best Practices:
         try:
             color_system = self.enhanced_color_agent.generate_comprehensive_color_system(
                 company_name, industry, values, audience, 
-                brand_essence=brand_essence
+                brand_essence=brand_essence, logo_color=logo_color
             )
             self.enhanced_color_system = color_system
             print(f"✅ Enhanced color system generated with {len(color_system.get('primary_colors', []))} primary colors")

@@ -7,7 +7,7 @@ import fal_client as fal
 from decouple import config
 from PIL import Image
 
-def generate_logo_variations(company_name, industry, style, num_variations=3):
+def generate_logo_variations(company_name, industry, style, num_variations=3, logo_color=None):
     """
     Calls FAL API using fal_client to generate logo variations with Ideogram V2A.
     Returns list of saved local file paths to generated logos.
@@ -23,10 +23,14 @@ def generate_logo_variations(company_name, industry, style, num_variations=3):
         
         for i in range(num_variations):
             try:
-                # Create logo prompt with aggressive white background enforcement
+                # Create logo prompt with aggressive white background enforcement and user color
+                color_instruction = ""
+                if logo_color:
+                    color_instruction = f"Logo elements in {logo_color} color. "
+                
                 prompt = (
                     f"Logo for {company_name} on SOLID WHITE BACKGROUND. {industry} industry. "
-                    f"Style: {style}. Simple flat vector logo design. "
+                    f"Style: {style}. Simple flat vector logo design. {color_instruction}"
                     f"WHITE BACKGROUND ONLY. Pure white (#FFFFFF) background, no other colors. "
                     f"No yellow, no orange, no cream, no gray backgrounds allowed. "
                     f"Flat design, no shadows, no 3D effects, no gradients anywhere. "

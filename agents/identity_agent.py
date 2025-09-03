@@ -15,18 +15,18 @@ class IdentityAgent:
     def __init__(self):
         self.font_research_agent = FontResearchAgent()
 
-    def create_identity(self, company_name, industry, values, audience, logo_style, brand_essence=None):
+    def create_identity(self, company_name, industry, values, audience, logo_style, brand_essence=None, logo_color=None):
         # 1. Logo variations
         print(f"Generating logo variations for {company_name}...")
-        logos = generate_logo_variations(company_name, industry, logo_style)
+        logos = generate_logo_variations(company_name, industry, logo_style, logo_color=logo_color)
         
-        # 2. Color palette (enhanced with brand essence insights)
+        # 2. Color palette (enhanced with brand essence insights and logo color)
         print(f"Generating color palette for {company_name}...")
         if brand_essence and brand_essence.get('visual_direction'):
             color_direction = brand_essence['visual_direction'].get('color_direction', [])
-            palette = get_color_palette(industry, logo_style, color_hints=color_direction)
+            palette = get_color_palette(industry, logo_style, color_hints=color_direction, logo_color=logo_color)
         else:
-            palette = get_color_palette(industry, logo_style)
+            palette = get_color_palette(industry, logo_style, logo_color=logo_color)
         
         # 3. Typography (enhanced with comprehensive font research)
         print(f"Researching and generating typography for {company_name}...")
