@@ -562,7 +562,7 @@ class EnhancedPPTXGenerator:
             paragraph.space_after = Pt(8)  # Consistent spacing
         
         # Full-width line separator (same width as index slide)
-        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -571,8 +571,8 @@ class EnhancedPPTXGenerator:
         line_shape.line.color.rgb = primary_color_rgb
         line_shape.line.width = Pt(2)
         
-        # "INTRODUCTION" title in primary color below the line
-        title_top = line_top + Inches(0.3)
+        # "INTRODUCTION" title in primary color at bottom of slide
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
             Inches(4), Inches(0.8)
@@ -650,7 +650,7 @@ class EnhancedPPTXGenerator:
             paragraph.space_after = Pt(8)  # Consistent spacing
         
         # Full-width line separator (same width as introduction slide)
-        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -659,8 +659,8 @@ class EnhancedPPTXGenerator:
         line_shape.line.color.rgb = primary_color_rgb
         line_shape.line.width = Pt(2)
         
-        # "BRAND PURPOSE" title in primary color below the line (same as Introduction)
-        title_top = line_top + Inches(0.3)
+        # "BRAND PURPOSE" title in primary color at bottom of slide
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
             Inches(4), Inches(0.8)
@@ -721,7 +721,7 @@ class EnhancedPPTXGenerator:
                 section_data.append({
                     "name": "Imagery & Visuals",
                     "page": f"{page_num:02d}",
-                    "subsections": ["Iconography", "Merchandise"]
+                    "subsections": ["Illustrations", "Iconography", "Merchandise"]
                 })
             else:
                 section_data.append({
@@ -1118,7 +1118,7 @@ class EnhancedPPTXGenerator:
             paragraph.space_after = Pt(8)
         
         # Full-width line separator (same width as introduction slide)
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1127,8 +1127,8 @@ class EnhancedPPTXGenerator:
         line_shape.line.color.rgb = primary_color_rgb
         line_shape.line.width = Pt(2)
         
-        # Title in primary color below the line (same as Introduction)
-        title_top = line_top + Inches(0.3)
+        # Title in primary color at bottom of slide
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 7, 1, 0.8)[0], title_top,
             Inches(6), Inches(0.8)
@@ -1280,7 +1280,7 @@ Response should be one clear sentence, exactly 10-15 words."""
                 paragraph.space_after = Pt(3)  # Reduced spacing from 4 to 3
         
         # Full-width line separator
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1290,7 +1290,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         line_shape.line.width = Pt(2)
         
         # Title in primary color below the line
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             Inches(0.5), title_top,
             Inches(6), Inches(0.8)
@@ -1359,7 +1359,7 @@ Response should be one clear sentence, exactly 10-15 words."""
                     paragraph.space_after = Pt(3)
         
         # Full-width line separator
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1369,7 +1369,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         line_shape.line.width = Pt(2)
         
         # Title in primary color below the line
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             Inches(0.5), title_top,
             Inches(6), Inches(0.8)
@@ -1413,7 +1413,7 @@ Response should be one clear sentence, exactly 10-15 words."""
             paragraph.space_after = Pt(6)  # Reduced from 8 to 6
         
         # Full-width line separator
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1423,7 +1423,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         line_shape.line.width = Pt(2)
         
         # Title in primary color below the line
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             Inches(0.5), title_top,
             Inches(6), Inches(0.8)
@@ -1467,7 +1467,7 @@ Response should be one clear sentence, exactly 10-15 words."""
             paragraph.space_after = Pt(6)  # Reduced from 8 to 6
         
         # Full-width line separator
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1477,7 +1477,7 @@ Response should be one clear sentence, exactly 10-15 words."""
         line_shape.line.width = Pt(2)
         
         # Title in primary color below the line
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             Inches(0.5), title_top,
             Inches(6), Inches(0.8)
@@ -1638,7 +1638,7 @@ Best Practices:
             paragraph.space_after = Pt(8)  # Consistent spacing
         
         # Full-width line separator (same width as introduction slide)
-        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1648,7 +1648,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # "TYPOGRAPHY" title in primary color below the line (same as Introduction)
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
             Inches(4), Inches(0.8)
@@ -1775,7 +1775,7 @@ Best Practices:
                         continue
         
         # Full-width line separator
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1785,7 +1785,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # "ICONOGRAPHY" title
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
             Inches(4), Inches(0.8)
@@ -1855,7 +1855,7 @@ Best Practices:
             paragraph.space_after = Pt(6)
         
         # Full-width line separator
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -1865,7 +1865,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # "USAGE GUIDELINES" title
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
             Inches(6), Inches(0.8)
@@ -1930,7 +1930,7 @@ Best Practices:
                             continue
                 
                 # Full-width line separator (same as Introduction slide)
-                line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+                line_top = Inches(6.5)  # Move line to bottom with title
                 line_shape = slide.shapes.add_connector(
                     MSO_CONNECTOR.STRAIGHT,
                     Inches(0.5), line_top,
@@ -1940,7 +1940,7 @@ Best Practices:
                 line_shape.line.width = Pt(2)
                 
                 # "BRAND APPAREL" title below the line (same as Introduction pattern)
-                title_top = line_top + Inches(0.3)
+                title_top = Inches(6.8)  # Move to bottom
                 title_textbox = slide.shapes.add_textbox(
                     self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
                     Inches(6), Inches(0.8)
@@ -2013,7 +2013,7 @@ Best Practices:
             shape.line.color.rgb = RGBColor(200, 200, 200)
         
         # Full-width line separator (same as Introduction slide)
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -2023,7 +2023,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # "BRAND APPAREL" title below the line (same as Introduction pattern)
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
             Inches(6), Inches(0.8)
@@ -2090,7 +2090,7 @@ Best Practices:
                             continue
                 
                 # Full-width line separator (same as Introduction slide)
-                line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+                line_top = Inches(6.5)  # Move line to bottom with title
                 line_shape = slide.shapes.add_connector(
                     MSO_CONNECTOR.STRAIGHT,
                     Inches(0.5), line_top,
@@ -2100,7 +2100,7 @@ Best Practices:
                 line_shape.line.width = Pt(2)
                 
                 # "BRAND MUGS" title below the line (same as Introduction pattern)
-                title_top = line_top + Inches(0.3)
+                title_top = Inches(6.8)  # Move to bottom
                 title_textbox = slide.shapes.add_textbox(
                     self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
                     Inches(6), Inches(0.8)
@@ -2173,7 +2173,7 @@ Best Practices:
             shape.line.color.rgb = RGBColor(200, 200, 200)
         
         # Full-width line separator (same as Introduction slide)
-        line_top = self.grid.get_position(1, 6.5, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -2183,7 +2183,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # "BRAND MUGS" title below the line (same as Introduction pattern)
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.8, 1, 0.8)[0], title_top,
             Inches(6), Inches(0.8)
@@ -2196,19 +2196,26 @@ Best Practices:
         
         print(f"  ✅ Fallback brand mugs slide created for {company_name}")
     
+    
     def _create_brand_illustrations_slide(self, prs, company_name, industry, values, audience, brand_essence="", identity_data=None):
         """Create slide displaying AI-generated brand illustrations with improved layout and organization"""
-        print("  🎨 Generating brand illustrations with Fal.ai Ideogram v3...")
+        print("  🎨 Creating brand illustrations slide...")
         
         try:
-            # Generate illustrations using Fal.ai
-            illustrations_data = generate_brand_illustrations(
+            # Always generate fresh professional illustrations using Recraft V3
+            print("  🎨 Generating fresh brand illustrations with Recraft V3...")
+            from tools.fal_image_tool import generate_professional_brand_illustrations
+            
+            primary_color_hex = self._get_primary_color_hex()
+            
+            illustrations_data = generate_professional_brand_illustrations(
                 company_name=company_name,
                 industry=industry,
                 values=values,
                 audience=audience,
                 brand_essence=brand_essence,
-                num_illustrations=6
+                primary_color=primary_color_hex,
+                num_illustrations=4
             )
             
             successful_illustrations = [
@@ -2235,32 +2242,8 @@ Best Practices:
                 horizontal_spacing = Inches(0.5)  # Equal spacing between columns
                 vertical_spacing = Inches(0.3)    # Consistent vertical spacing
                 
-                # Define illustration categories for organized grouping
-                external_concepts = []  # Innovation, excellence, solutions
-                internal_concepts = []  # Strategy, teamwork, technology
-                
-                # Categorize illustrations by concept keywords
-                for ill in successful_illustrations[:6]:
-                    concept_lower = ill.get('concept', '').lower()
-                    if any(keyword in concept_lower for keyword in ['innovation', 'excellence', 'solution', 'growth', 'success', 'achievement']):
-                        external_concepts.append(ill)
-                    else:
-                        internal_concepts.append(ill)
-                
-                # Ensure we have balanced rows (3 per row)
-                organized_illustrations = []
-                # Top row: External-facing themes
-                organized_illustrations.extend(external_concepts[:3])
-                # Bottom row: Internal-facing themes  
-                organized_illustrations.extend(internal_concepts[:3])
-                
-                # Fill remaining slots if needed
-                remaining_slots = 6 - len(organized_illustrations)
-                if remaining_slots > 0:
-                    remaining_illustrations = [ill for ill in successful_illustrations if ill not in organized_illustrations]
-                    organized_illustrations.extend(remaining_illustrations[:remaining_slots])
-                
-                for idx, illustration in enumerate(organized_illustrations[:6]):
+                # Use illustrations directly without complex categorization
+                for idx, illustration in enumerate(successful_illustrations[:6]):
                     if os.path.exists(illustration['local_path']):
                         # Calculate position in organized 2x3 grid
                         col = idx % 3
@@ -2271,26 +2254,28 @@ Best Practices:
                         top = grid_start_top + row * (illustration_height + vertical_spacing + Inches(0.4))  # Space for labels
                         
                         try:
-                            # Add standardized background frame for consistent appearance
+                            # Add illustration image FIRST (so it's not hidden behind frame)
+                            print(f"    📷 Loading image: {illustration['local_path']}")
+                            picture = slide.shapes.add_picture(
+                                illustration['local_path'],
+                                left, top,
+                                width=illustration_width, 
+                                height=illustration_height
+                            )
+                            print(f"    ✅ Image loaded successfully: {picture.name}")
+                            
+                            # Add border frame AFTER image (so it's on top)
                             frame_shape = slide.shapes.add_shape(
                                 MSO_SHAPE.RECTANGLE,
                                 left - Inches(0.05), top - Inches(0.05),
                                 illustration_width + Inches(0.1), illustration_height + Inches(0.1)
                             )
-                            frame_shape.fill.solid()
-                            frame_shape.fill.fore_color.rgb = RGBColor(248, 248, 248)  # Light gray frame for consistency
+                            frame_shape.fill.background()  # Transparent fill
                             frame_shape.line.color.rgb = primary_color_rgb
-                            frame_shape.line.width = Pt(1)
-                            
-                            # Add illustration image with consistent sizing
-                            slide.shapes.add_picture(
-                                illustration['local_path'],
-                                left, top,
-                                illustration_width, illustration_height
-                            )
+                            frame_shape.line.width = Pt(2)
                             
                             # Add category label above each illustration
-                            category_label = "External Focus" if idx < 3 else "Internal Focus"
+                            category_label = f"Visual {idx + 1}"
                             category_top = top - Inches(0.25)
                             category_textbox = slide.shapes.add_textbox(
                                 left, category_top,
@@ -2346,7 +2331,7 @@ Best Practices:
                 guidelines_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
                 
                 # Full-width line separator at bottom (matching introduction slide pattern)
-                line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+                line_top = Inches(6.5)  # Move line to bottom with title
                 line_shape = slide.shapes.add_connector(
                     MSO_CONNECTOR.STRAIGHT,
                     Inches(0.5), line_top,
@@ -2356,7 +2341,7 @@ Best Practices:
                 line_shape.line.width = Pt(2)
                 
                 # "BRAND ILLUSTRATIONS" title in primary color below the line
-                title_top = line_top + Inches(0.3)
+                title_top = Inches(6.8)  # Move to bottom
                 title_textbox = slide.shapes.add_textbox(
                     self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
                     Inches(6), Inches(0.8)
@@ -2371,7 +2356,7 @@ Best Practices:
                 title_frame.paragraphs[0].font.bold = True
                 title_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
                 
-                print(f"  ✅ Enhanced brand illustrations slide created with {len(organized_illustrations)} organized illustrations")
+                print(f"  ✅ Enhanced brand illustrations slide created with {len(successful_illustrations[:6])} illustrations")
                 
             else:
                 # Fallback slide with no illustrations
@@ -2418,7 +2403,7 @@ Best Practices:
             paragraph.space_after = Pt(8)
         
         # Full-width line separator (matching introduction slide pattern)
-        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -2428,7 +2413,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # "BRAND ILLUSTRATIONS" title in primary color below the line
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
             Inches(6), Inches(0.8)
@@ -2654,7 +2639,7 @@ Best Practices:
             paragraph.space_after = Pt(8)  # Consistent spacing
         
         # Full-width line separator (same width as introduction slide)
-        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -2664,7 +2649,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # Title in primary color below the line (same as Introduction)
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
             Inches(6), Inches(0.8)
@@ -2708,7 +2693,7 @@ Best Practices:
             paragraph.space_after = Pt(8)  # Consistent spacing
         
         # Full-width line separator (same width as introduction slide)
-        line_top = self.grid.get_position(1, 6, 1, 0.1)[1]
+        line_top = Inches(6.5)  # Move line to bottom with title
         line_shape = slide.shapes.add_connector(
             MSO_CONNECTOR.STRAIGHT,
             Inches(0.5), line_top,
@@ -2718,7 +2703,7 @@ Best Practices:
         line_shape.line.width = Pt(2)
         
         # Title in primary color below the line (same as Introduction)
-        title_top = line_top + Inches(0.3)
+        title_top = Inches(6.8)  # Move to bottom
         title_textbox = slide.shapes.add_textbox(
             self.grid.get_position(0.5, 6.5, 1, 0.8)[0], title_top,
             Inches(6), Inches(0.8)
@@ -2890,6 +2875,9 @@ Best Practices:
         
         # 10. Typography
         self._create_typography_slide(prs, identity_data.get("typography", {}), identity_data)
+        
+        # 9. Imagery & Visuals - Illustrations subsection  
+        self._create_brand_illustrations_slide(prs, company_name, industry, values, audience, brand_essence, identity_data)
         
         # 9. Imagery & Visuals - Iconography subsection
         print("  🎨 Generating brand iconography with AI research and Fal AI...")

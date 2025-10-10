@@ -16,6 +16,8 @@ When updating slides in the Enhanced PPTX Generator, follow these consistency gu
 - **Margins**: Set all text frame margins to 0 for consistent spacing
 - **Content positioning**: Use grid positioning for proper alignment
 - **Color handling**: Use `primary_color_hex` for text styles, `primary_color_rgb = RGBColor(*self._hex_to_rgb(primary_color_hex))` for line/shape colors
+- **Title positioning**: All slide titles positioned at bottom (`Inches(6.8)`) for consistent layout
+- **Line positioning**: Horizontal separator lines positioned at bottom with titles (`Inches(6.5)`)
 
 ### RGBColor Best Practices:
 - Always convert hex colors to RGBColor using: `RGBColor(*self._hex_to_rgb(hex_color))`
@@ -44,6 +46,8 @@ The AI Brand Book Creator has evolved into a **professional-grade AI creative ag
 - **Multi-Format Output**: Professional PDF, interactive HTML, PPTX, and digital assets
 - **Organized Workflow**: Company-specific folders with complete asset management
 - **Quality Assurance**: Automated scoring and compliance checking
+- **Fresh AI Illustrations**: Always generates new Recraft V3 illustrations for each brand book
+- **Enhanced Color Support**: Extended color palette including "dark green", "light blue", etc.
 
 ---
 
@@ -332,11 +336,21 @@ CLAUDE_API_KEY=your_claude_key          # Advanced reasoning
 5. ✅ **Improved Rate Limiting**: Intelligent retry mechanisms with exponential backoff
 6. ✅ **Enhanced Documentation**: Comprehensive system documentation and architecture overview
 
+### PowerPoint Layout & Illustration Updates (Latest Session):
+7. ✅ **Bottom Title Positioning**: All slide titles moved to bottom (`Inches(6.8)`) for consistent layout
+8. ✅ **Bottom Line Positioning**: Horizontal separator lines moved to bottom with titles (`Inches(6.5)`)
+9. ✅ **Fresh Recraft V3 Illustrations**: Always generates new professional illustrations, no existing file reuse
+10. ✅ **Extended Color Palette**: Added support for "dark green", "light blue", "forest green", etc.
+11. ✅ **Simplified Illustration Loading**: Removed complex categorization, direct image loading with debugging
+12. ✅ **Enhanced Error Debugging**: Added real-time image loading logs and file existence checks
+
 ### Performance Improvements:
 - **Reduced API Calls**: Optimized query count from 10 to 5 per research session
 - **Intelligent Caching**: Fallback research system for reliability
 - **Parallel Processing**: Enhanced multi-format export performance
 - **Error Resilience**: Graceful handling of API failures with detailed reporting
+- **Fresh Content Generation**: Always generates new illustrations ensuring unique brand assets
+- **Real-time Debugging**: Comprehensive logging for illustration generation and PowerPoint assembly
 
 ---
 

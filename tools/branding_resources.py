@@ -341,7 +341,9 @@ def _normalize_color_input(color_input):
         'purple': '#7C3AED', 'orange': '#EA580C', 'pink': '#EC4899', 'teal': '#0891B2',
         'gray': '#6B7280', 'grey': '#6B7280', 'black': '#1F2937', 'white': '#FFFFFF',
         'navy': '#1E40AF', 'burgundy': '#7F1D1D', 'coral': '#FB7185', 'mint': '#6EE7B7',
-        'sage': '#84CC16', 'gold': '#D97706', 'silver': '#9CA3AF', 'brown': '#92400E'
+        'sage': '#84CC16', 'gold': '#D97706', 'silver': '#9CA3AF', 'brown': '#92400E',
+        'dark green': '#065F46', 'dark blue': '#1E3A8A', 'dark red': '#991B1B', 'light green': '#10B981',
+        'light blue': '#3B82F6', 'light red': '#EF4444', 'forest green': '#064E3B', 'olive green': '#365314'
     }
     
     if color_input.lower() in color_names:
