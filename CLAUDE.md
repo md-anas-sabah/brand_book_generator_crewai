@@ -2,6 +2,10 @@
 
 ## 🎨 PowerPoint Styling Best Practices
 
+### 🚨 Current Issues:
+- **Illustration Display Problem**: Images generate but don't appear in slides (debugging layer order, parameters)
+- **Repetitive Content**: Same illustration concepts across different companies (needs industry-specific variation)
+
 When updating slides in the Enhanced PPTX Generator, follow these consistency guidelines:
 
 ### Text Styling Standards:
@@ -343,6 +347,10 @@ CLAUDE_API_KEY=your_claude_key          # Advanced reasoning
 10. ✅ **Extended Color Palette**: Added support for "dark green", "light blue", "forest green", etc.
 11. ✅ **Simplified Illustration Loading**: Removed complex categorization, direct image loading with debugging
 12. ✅ **Enhanced Error Debugging**: Added real-time image loading logs and file existence checks
+
+### Known Issues & Pending Fixes:
+13. ⚠️ **Illustration Display Issue**: Images generate successfully but not showing in PowerPoint slides
+14. ⚠️ **Repetitive Illustration Concepts**: System generating similar illustrations, needs company-specific diversity
 
 ### Performance Improvements:
 - **Reduced API Calls**: Optimized query count from 10 to 5 per research session
