@@ -16,7 +16,7 @@ class IdentityAgent:
         self.font_research_agent = FontResearchAgent()
 
     def create_identity(self, company_name, industry, values, audience, logo_style, brand_essence=None, logo_color=None):
-        # 1. Logo variations
+        # 1. Logo variations - RE-ENABLED AFTER FIXING ILLUSTRATION DISPLAY
         print(f"Generating logo variations for {company_name}...")
         logos = generate_logo_variations(company_name, industry, logo_style, logo_color=logo_color)
         

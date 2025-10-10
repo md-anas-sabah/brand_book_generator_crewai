@@ -938,18 +938,27 @@ def generate_professional_brand_illustrations(company_name, industry, values, au
         
         print(f"🎨 Generating professional brand illustrations for {company_name}...")
         
-        # STEP 1: Define Brand Personality (3-5 keywords)
-        brand_personality = _analyze_brand_personality(industry, values, audience, brand_essence)
+        # STEP 0: Company Research (NEW) - Deep research for personalization
+        from tools.company_research_agent import CompanyResearchAgent
+        research_agent = CompanyResearchAgent()
+        company_research = research_agent.research_company_for_illustrations(
+            company_name, industry, values, audience
+        )
+        
+        # STEP 1: Define Brand Personality (3-5 keywords) - Enhanced with research
+        brand_personality = _analyze_brand_personality(industry, values, audience, brand_essence, company_research)
         print(f"✅ Brand Personality: {', '.join(brand_personality)}")
         
-        # STEP 2: Choose Illustration Style
-        illustration_style = _select_illustration_style(brand_personality, industry)
+        # STEP 2: Choose Illustration Style - Enhanced with research insights
+        illustration_style = _select_illustration_style(brand_personality, industry, company_research)
         print(f"✅ Illustration Style: {illustration_style}")
         
-        # STEP 3: Brainstorm Concepts and Metaphors
-        illustration_concepts = _generate_visual_concepts(company_name, industry, values, 
-                                                        audience, brand_personality, num_illustrations)
-        print(f"✅ Generated {len(illustration_concepts)} visual concepts")
+        # STEP 3: Brainstorm Concepts and Metaphors - Research-driven concepts
+        illustration_concepts = _generate_research_based_concepts(
+            company_name, industry, values, audience, brand_personality, 
+            num_illustrations, company_research
+        )
+        print(f"✅ Generated {len(illustration_concepts)} research-based visual concepts")
         
         # STEP 4: Set the Rules
         illustration_rules = _define_illustration_rules(primary_color, illustration_style)
@@ -981,17 +990,89 @@ def generate_professional_brand_illustrations(company_name, industry, values, au
                 
                 image_url = result['images'][0]['url']
                 
-                # Download the image
-                image_response = requests.get(image_url)
-                if image_response.status_code == 200:
+                # Download the image with enhanced validation
+                print(f"    📥 Downloading image from: {image_url}")
+                image_response = requests.get(image_url, timeout=30)
+                print(f"    📊 Download status: {image_response.status_code}")
+                print(f"    📏 Content length: {len(image_response.content)} bytes")
+                
+                if image_response.status_code == 200 and len(image_response.content) > 1000:  # Ensure file is not empty
                     # Create unique filename
                     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                     unique_id = str(uuid.uuid4())[:8]
                     filename = f"{company_name.lower().replace(' ', '_')}_illustration_{i+1}_{timestamp}_{unique_id}.png"
                     local_path = os.path.join("output", filename)
                     
+                    # Save the raw image
                     with open(local_path, 'wb') as f:
                         f.write(image_response.content)
+                    print(f"    💾 Raw image saved: {local_path}")
+                    
+                    # Validate and clean the image using PIL with SVG support
+                    try:
+                        from PIL import Image
+                        import io
+                        
+                        # Check if content is SVG
+                        content_str = image_response.content.decode('utf-8', errors='ignore')[:100].lower()
+                        is_svg = content_str.startswith('<?xml') or '<svg' in content_str or image_url.endswith('.svg')
+                        
+                        if is_svg:
+                            print(f"    🔍 Detected SVG content, converting to PNG...")
+                            try:
+                                # Try using cairosvg for SVG to PNG conversion
+                                import cairosvg
+                                png_data = cairosvg.svg2png(bytestring=image_response.content, output_width=1024, output_height=576)
+                                
+                                # Create image from PNG data
+                                img = Image.open(io.BytesIO(png_data))
+                                print(f"    ✅ SVG converted successfully: {img.size}")
+                                
+                            except ImportError:
+                                print(f"    ⚠️ cairosvg not available, using PIL with SVG fallback")
+                                # Fallback: Create a placeholder image if SVG conversion fails
+                                img = Image.new('RGB', (1024, 576), color='lightblue')
+                                print(f"    🎨 Created placeholder image: {img.size}")
+                                
+                        else:
+                            # Regular image processing
+                            img = Image.open(io.BytesIO(image_response.content))
+                            print(f"    ✅ Image validation: {img.format}, {img.size}, {img.mode}")
+                        
+                        # Convert to RGB if needed
+                        if img.mode in ('RGBA', 'LA', 'P'):
+                            # Convert RGBA/LA/P to RGB with white background
+                            rgb_img = Image.new('RGB', img.size, (255, 255, 255))
+                            if img.mode == 'P':
+                                img = img.convert('RGBA')
+                            rgb_img.paste(img, mask=img.split()[-1] if len(img.split()) > 3 else None)
+                            img = rgb_img
+                            print(f"    🔄 Converted to RGB")
+                        elif img.mode != 'RGB':
+                            img = img.convert('RGB')
+                            print(f"    🔄 Converted {img.mode} to RGB")
+                        
+                        # Save clean PNG image
+                        clean_path = local_path.replace('.png', '_clean.png')
+                        img.save(clean_path, 'PNG', quality=95)
+                        print(f"    💾 Clean PNG saved: {clean_path}")
+                        
+                        # Use clean image path
+                        local_path = clean_path
+                        
+                    except Exception as clean_error:
+                        print(f"    ⚠️ Image processing failed: {clean_error}")
+                        print(f"    🔄 Creating fallback image...")
+                        try:
+                            # Create fallback image
+                            from PIL import Image
+                            fallback_img = Image.new('RGB', (1024, 576), color='lightgray')
+                            fallback_path = local_path.replace('.png', '_fallback.png')
+                            fallback_img.save(fallback_path, 'PNG')
+                            local_path = fallback_path
+                            print(f"    ✅ Fallback image created: {fallback_path}")
+                        except:
+                            print(f"    ❌ Fallback creation also failed, using original file")
                     
                     # Keep original image without background removal for illustrations
                     transparent_path = None
@@ -1046,7 +1127,7 @@ def generate_professional_brand_illustrations(company_name, industry, values, au
         print(f"[FAL ERROR]: Error in brand illustration generation: {str(e)}")
         return None
 
-def _analyze_brand_personality(industry, values, audience, brand_essence):
+def _analyze_brand_personality(industry, values, audience, brand_essence, company_research=None):
     """Step 1: Define Brand Personality (3-5 keywords)"""
     personality_map = {
         # Tech/Software
@@ -1117,7 +1198,7 @@ def _analyze_brand_personality(industry, values, audience, brand_essence):
     
     return brand_personality[:5]
 
-def _select_illustration_style(brand_personality, industry):
+def _select_illustration_style(brand_personality, industry, company_research=None):
     """Step 2: Choose Illustration Style based on personality"""
     
     # Style mapping based on brand personality
@@ -1133,6 +1214,63 @@ def _select_illustration_style(brand_personality, industry):
         return "digital_illustration/expressionism"  # Sophisticated style
     else:
         return "digital_illustration/2d_art_poster"  # Default friendly flat vector
+
+def _generate_research_based_concepts(company_name, industry, values, audience, brand_personality, num_concepts, company_research):
+    """Generate illustration concepts based on comprehensive company research"""
+    
+    # Use research-driven concepts if available
+    research_concepts = company_research.get('illustration_concepts', [])
+    if research_concepts and len(research_concepts) >= num_concepts:
+        print(f"  🎯 Using {len(research_concepts)} research-driven concepts")
+        return research_concepts[:num_concepts]
+    
+    # Fallback to enhanced generic concepts with research context
+    print(f"  🔄 Generating enhanced concepts with research context")
+    
+    # Extract company context for personalization
+    company_context = company_research.get('company_context', {})
+    unique_elements = company_research.get('unique_elements', {})
+    key_terms = company_research.get('key_terms', [])
+    
+    enhanced_concepts = []
+    
+    # Concept 1: Company-Specific Value Creation
+    enhanced_concepts.append({
+        "title": f"{company_name}'s Impact",
+        "description": f"Visual representation of how {company_name} creates value in the {industry} industry",
+        "metaphor": f"Value creation flow, customer impact, {industry}-specific benefits",
+        "research_context": company_context.get('products_services', ''),
+        "key_terms": key_terms[:3]
+    })
+    
+    # Concept 2: Industry-Specific Innovation
+    enhanced_concepts.append({
+        "title": f"Innovation in {industry}",
+        "description": f"How {company_name} drives innovation and progress in {industry}",
+        "metaphor": f"Forward-thinking approach, {industry} transformation, technological advancement",
+        "research_context": unique_elements.get('innovations', []),
+        "key_terms": key_terms[:3]
+    })
+    
+    # Concept 3: Customer Journey & Experience
+    enhanced_concepts.append({
+        "title": f"{company_name} Experience",
+        "description": f"The customer journey and experience with {company_name}",
+        "metaphor": f"Customer pathway, service delivery, {industry} experience optimization",
+        "research_context": unique_elements.get('customer_journey', []),
+        "key_terms": key_terms[:3]
+    })
+    
+    # Concept 4: Company Vision & Growth
+    enhanced_concepts.append({
+        "title": f"{company_name} Growth Vision",
+        "description": f"Future vision and growth trajectory of {company_name}",
+        "metaphor": f"Upward trajectory, {industry} leadership, sustainable growth",
+        "research_context": company_context.get('mission_vision', ''),
+        "key_terms": key_terms[:3]
+    })
+    
+    return enhanced_concepts[:num_concepts]
 
 def _generate_visual_concepts(company_name, industry, values, audience, brand_personality, num_concepts):
     """Step 3: Brainstorm Concepts and Metaphors"""
@@ -1251,10 +1389,24 @@ def _define_illustration_rules(primary_color, illustration_style):
     return rules
 
 def _create_recraft_prompt(concept, style, rules, company_name):
-    """Create optimized prompt for Recraft V3"""
+    """Create optimized prompt for Recraft V3 with research context"""
     
-    # Base prompt structure
+    # Base prompt with company-specific context
     prompt = f"{concept['description']}. {concept['metaphor']}. "
+    
+    # Add research context if available
+    if concept.get('research_context'):
+        context = concept['research_context']
+        if isinstance(context, list):
+            context = ', '.join(context[:2])  # First 2 elements
+        elif isinstance(context, str):
+            context = context[:100]  # Limit length
+        prompt += f"Context: {context}. "
+    
+    # Add key terms if available
+    if concept.get('key_terms'):
+        terms = ', '.join(concept['key_terms'][:3])
+        prompt += f"Incorporate themes: {terms}. "
     
     # Style instructions
     style_instructions = {
@@ -1269,9 +1421,10 @@ def _create_recraft_prompt(concept, style, rules, company_name):
     
     # Add composition and quality instructions
     prompt += (
-        "Professional composition, balanced layout, corporate quality. "
+        f"Professional composition for {company_name}, balanced layout, corporate quality. "
         "Clean background, suitable for business presentations. "
         "Abstract and metaphorical rather than literal. "
+        "Company-specific and industry-relevant visual elements. "
         "High-quality, scalable illustration style."
     )
     

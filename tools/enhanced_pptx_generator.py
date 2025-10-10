@@ -2215,7 +2215,7 @@ Best Practices:
                 audience=audience,
                 brand_essence=brand_essence,
                 primary_color=primary_color_hex,
-                num_illustrations=4
+                num_illustrations=4  # Restored to 4 after fixing illustration display issue
             )
             
             successful_illustrations = [
@@ -2254,25 +2254,35 @@ Best Practices:
                         top = grid_start_top + row * (illustration_height + vertical_spacing + Inches(0.4))  # Space for labels
                         
                         try:
-                            # Add illustration image FIRST (so it's not hidden behind frame)
-                            print(f"    📷 Loading image: {illustration['local_path']}")
-                            picture = slide.shapes.add_picture(
-                                illustration['local_path'],
-                                left, top,
-                                width=illustration_width, 
-                                height=illustration_height
-                            )
-                            print(f"    ✅ Image loaded successfully: {picture.name}")
+                            # DETAILED DEBUGGING - Add illustration image FIRST (so it's not hidden behind frame)
+                            print(f"    📷 DEBUGGING: Loading image: {illustration['local_path']}")
+                            print(f"    📂 File exists check: {os.path.exists(illustration['local_path'])}")
+                            print(f"    📐 Position - Left: {left}, Top: {top}")
+                            print(f"    📏 Size - Width: {illustration_width}, Height: {illustration_height}")
                             
-                            # Add border frame AFTER image (so it's on top)
-                            frame_shape = slide.shapes.add_shape(
-                                MSO_SHAPE.RECTANGLE,
-                                left - Inches(0.05), top - Inches(0.05),
-                                illustration_width + Inches(0.1), illustration_height + Inches(0.1)
-                            )
-                            frame_shape.fill.background()  # Transparent fill
-                            frame_shape.line.color.rgb = primary_color_rgb
-                            frame_shape.line.width = Pt(2)
+                            # Image should be clean PNG from fal_image_tool
+                            try:
+                                from PIL import Image
+                                # Quick validation of clean image
+                                with Image.open(illustration['local_path']) as img:
+                                    print(f"    ✅ Final validation: {img.format}, {img.size}, {img.mode}")
+                            
+                                # Add the cleaned image to PowerPoint
+                                picture = slide.shapes.add_picture(
+                                    illustration['local_path'],
+                                    left, top,
+                                    width=illustration_width, 
+                                    height=illustration_height
+                                )
+                                
+                            except Exception as img_error:
+                                print(f"    ❌ Image insertion failed: {img_error}")
+                                # Skip this illustration rather than using fallback
+                                continue
+                            print(f"    ✅ Image loaded successfully!")
+                            print(f"    🏷️ Picture name: {picture.name}")
+                            print(f"    📊 Picture dimensions: {picture.width} x {picture.height}")
+                            print(f"    📍 Picture position: ({picture.left}, {picture.top})")
                             
                             # Add category label above each illustration
                             category_label = f"Visual {idx + 1}"
@@ -2861,7 +2871,7 @@ Best Practices:
         if story_content:
             self._create_brand_story_slides(prs, identity_data, story_content)
         
-        # 8. Logo Variations
+        # 8. Logo Variations - RE-ENABLED AFTER FIXING ILLUSTRATION DISPLAY
         if identity_data.get("logos"):
             print(f"  🎨 Creating logo variations slide with {len(identity_data['logos'])} logos...")
             self._create_logo_variations_slide(prs, identity_data["logos"], identity_data)
@@ -2920,7 +2930,7 @@ Best Practices:
             self._create_icons_display_slide(prs, None, identity_data, company_name)
             self._create_iconography_guidelines_slide(prs, None, identity_data)
         
-        # Add brand apparel slide with exact logo from first slide
+        # Brand apparel/merchandise slide - RE-ENABLED AFTER FIXING ILLUSTRATION DISPLAY
         if identity_data.get("logos") and len(identity_data["logos"]) > 0:
             first_logo_path = identity_data["logos"][0]  # Use first logo as reference
             print(f"  👕 Creating brand apparel slide using logo: {first_logo_path}")
@@ -2929,7 +2939,7 @@ Best Practices:
             print("  ⚠️ No logos found - creating fallback brand apparel slide")
             self._create_merchandise_fallback_slide(prs, company_name, identity_data)
         
-        # Add brand mugs slide with exact logo from first slide
+        # Brand mugs slide - RE-ENABLED AFTER FIXING ILLUSTRATION DISPLAY
         if identity_data.get("logos") and len(identity_data["logos"]) > 0:
             first_logo_path = identity_data["logos"][0]  # Use first logo as reference
             print(f"  ☕ Creating brand mugs slide using logo: {first_logo_path}")

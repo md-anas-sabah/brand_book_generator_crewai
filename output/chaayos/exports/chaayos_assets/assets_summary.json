@@ -3,19 +3,19 @@
   "assets": {
     "logos": [],
     "colors": {
-      "primary": "#1F2937",
-      "secondary": "#4B5563",
-      "accent": "#1F2937",
+      "primary": "#065F46",
+      "secondary": "#F3F4F6",
+      "accent": "#0F172A",
       "supporting": [
-        "#0F172A",
-        "#111827"
+        "#1F2937",
+        "#030712"
       ],
       "hex_codes": [
-        "#1F2937",
-        "#4B5563",
-        "#1F2937",
+        "#065F46",
+        "#F3F4F6",
         "#0F172A",
-        "#111827"
+        "#1F2937",
+        "#030712"
       ]
     },
     "typography": {
@@ -34,7 +34,7 @@
         "Body: Source Sans Pro Regular 16px",
         "Caption: Source Sans Pro Regular 14px"
       ],
-      "description": "Inter selected as primary font (scored 21 points from 25 fonts evaluated) for its professional appeal and excellent readability in Food & Beverage / QSR (Quick Service Tea Caf\u00e9) sector. Source Sans Pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. Font colors optimized for readability and brand consistency. Font choices align with brand personality traits: reliable, premium.",
+      "description": "Inter selected as primary font (scored 21 points from 25 fonts evaluated) for its professional appeal and excellent readability in Food & Beverage / Quick Service Tea Caf\u00e9 sector. Source Sans Pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. Font colors optimized for readability and brand consistency. Font choices align with brand personality traits: reliable, premium.",
       "research_based": true,
       "font_research_insights": {
         "industry_fonts": [
