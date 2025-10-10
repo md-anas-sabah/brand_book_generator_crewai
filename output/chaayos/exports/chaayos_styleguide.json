@@ -2,19 +2,19 @@
   "company": "Chaayos",
   "version": "1.0",
   "colors": {
-    "primary": "#059669",
-    "secondary": "#6D28D9",
-    "accent": "#0F172A",
+    "primary": "#810eb1",
+    "secondary": "#030712",
+    "accent": "#4B5563",
     "supporting": [
-      "#F87171",
-      "#000000"
+      "#030712",
+      "#111827"
     ],
     "hex_codes": [
-      "#059669",
-      "#6D28D9",
-      "#0F172A",
-      "#F87171",
-      "#000000"
+      "#810eb1",
+      "#030712",
+      "#4B5563",
+      "#030712",
+      "#111827"
     ]
   },
   "typography": {
@@ -33,7 +33,7 @@
       "Body: Source Sans Pro Regular 16px",
       "Caption: Source Sans Pro Regular 14px"
     ],
-    "description": "Inter selected as primary font (scored 22 points from 9 fonts evaluated) for its professional appeal and excellent readability in Food & Beverage (Tea Caf\u00e9s, Quick-service Restaurants) sector. Source Sans Pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. Font colors optimized for readability and brand consistency. Font choices align with brand personality traits: innovative, forward-thinking.",
+    "description": "Inter selected as primary font (scored 21 points from 25 fonts evaluated) for its professional appeal and excellent readability in Food & Beverage / QSR (Quick Service Tea Caf\u00e9) sector. Source Sans Pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. Font colors optimized for readability and brand consistency. Font choices align with brand personality traits: reliable, premium.",
     "research_based": true,
     "font_research_insights": {
       "industry_fonts": [
@@ -41,20 +41,20 @@
         "Source Sans Pro"
       ],
       "personality_alignment": [
-        "Inter",
         "Source Sans Pro",
-        "Poppins",
-        "Montserrat"
+        "Open Sans",
+        "Lato",
+        "Inter"
       ],
       "competitor_analysis": {
         "search_performed": true,
         "trends_found": [],
-        "common_fonts": [
-          "Inter"
-        ]
+        "common_fonts": []
       },
       "typography_trends": {
-        "current_trends": [],
+        "current_trends": [
+          "sans-serif"
+        ],
         "recommended_styles": []
       }
     }

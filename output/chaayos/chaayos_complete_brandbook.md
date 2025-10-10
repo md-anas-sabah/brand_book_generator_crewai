@@ -11,84 +11,80 @@
 
 **name**: Chaayos
 
-**industry**: Food & Beverage (Tea Cafés, Quick-service Restaurants)
+**industry**: Food & Beverage / QSR (Quick Service Tea Café)
 
 **core_values**:
-- Warmth
-- Innovation
-- Authenticity
-- Customer Delight
-- Community
-- Quality
 - Personalization
+- Quality
+- Innovation
+- Hygiene
+- Customer Experience
+- Tradition
+- Relaxation
 
-**target_audience**: Urban youth, Working professionals, Tea enthusiasts, Families, Students, Millennials
+**target_audience**: Urban working professionals, college students, middle-to-upper class tea lovers, health-conscious & tech-savvy customers who seek a hygienic, customizable chai experience
 
 ## market_analysis
 
 **industry_trends**:
-- New Brand by gogocreative 106 Please click save favorites before adding more liked design
-- Trending Food Brand Names Design
-- Trends Waitlist AI Powered WhatsApp Messaging Loyalty Suite Shift management Pay At Table Eat App for Host Stand Dine-in Experience Marketing Integrations Event Management Customers Customers Eat App for Restaurants Enterprise Hospitality Groups Hotels Bars & Breweries Nightlife Cafes How it works How it works Resources Resources Learn Blogs Guides & Tools Help Center Case Studies AI Prompt Guides Pricing Pricing Log in All blogs Marketing 30 Best Restaurant Websites: Winning Design
+- new logo design
 
 ## competitor_insights
 
 **notable_competitors**:
-- Keep Guests
-- AI
-- From
-- That Will
-- Restaurants
-- Menu Website
+- Beverage Website
+- Find
 - Unsupported
-- Psychology
-- Size
-- Canva This
+- The
+- Dining Trends
+- You
+- Enable JavaScript
+- From
+- Keep Guests
+- Please
 
 **common_design_patterns**:
 
 ## design_trends
 
 **popular_colors**:
-- red
 - black
-- purple
-- green
+- grey
 
 **typography_trends**:
 - modern
 - classic
+- bold
 
 **design_styles**:
+- modern
 - creative
 - professional
-- organic
-- modern
 - elegant
+- bold
 
 ## brand_positioning
 
-**unique_value_proposition**: Distinctive Food & Beverage (Tea Cafés, Quick-service Restaurants) solution focused on Urban youth, Working professionals, Tea enthusiasts, Families, Students, Millennials
+**unique_value_proposition**: Distinctive Food & Beverage / QSR (Quick Service Tea Café) solution focused on Urban working professionals, college students, middle-to-upper class tea lovers, health-conscious & tech-savvy customers who seek a hygienic, customizable chai experience
 
 **brand_personality**:
-- innovative
-- forward-thinking
-- creative
 - reliable
 - premium
+- trustworthy
+- innovative
+- forward-thinking
 
 **competitive_advantage**: User-centric design approach
 
-**brand_promise**: Empowering Urban youth, Working professionals, Tea enthusiasts, Families, Students, Millennials through innovative Food & Beverage (Tea Cafés, Quick-service Restaurants) solutions
+**brand_promise**: Empowering Urban working professionals, college students, middle-to-upper class tea lovers, health-conscious & tech-savvy customers who seek a hygienic, customizable chai experience through innovative Food & Beverage / QSR (Quick Service Tea Café) solutions
 
 ## visual_direction
 
-**recommended_style**: creative
+**recommended_style**: modern
 
 **color_direction**:
-- red
 - black
-- purple
+- grey
 
 **typography_approach**: clean and professional
 
@@ -98,44 +94,44 @@
 - ample whitespace
 
 **research_citations**:
-- {'title': 'Top Restaurant Design Trends of 2025 - WebstaurantStore', 'url': 'https://www.webstaurantstore.com/blog/2374/top-restaurant-design-trends.html?srsltid=AfmBOoprHLll9V_gxxKGkj23bDQHni2MdGwA3U25mrEJCj_ipW3Z1si4', 'domain': 'www.webstaurantstore.com'}
-- {'title': 'Beverage trends: The forces shaping the coffee sector in 2025', 'url': 'https://www.restaurantdive.com/news/2025-restaurant-coffee-trends-cold-matcha-small-chains/749877/', 'domain': 'www.restaurantdive.com'}
+- {'title': 'Top Coffee and Tea Trends of 2025', 'url': 'https://www.webstaurantstore.com/blog/2356/top-coffee-trends.html?srsltid=AfmBOoo_TfS-gCoM6nFDNWdKyR5BYO_JbDGsvKL6m2ioqKxfdG1mkrhn', 'domain': 'www.webstaurantstore.com'}
 - {'title': '2025 Dining Trends That Will Keep Guests Coming Back', 'url': 'https://www.qsrmagazine.com/food/2025-dining-trends-that-will-keep-guests-coming-back/', 'domain': 'www.qsrmagazine.com'}
-- {'title': 'Free printable, customizable restaurant logo templates - Canva', 'url': 'https://www.canva.com/logos/templates/restaurant/', 'domain': 'www.canva.com'}
-- {'title': 'Food and beverage logos - 99Designs', 'url': 'https://99designs.com/inspiration/logos/food-and-beverage', 'domain': '99designs.com'}
-- {'title': 'Delicious Logo Designs for Food Businesses - Karen Johsnon in 2025', 'url': 'https://www.pinterest.com/pin/logo-food-design-inspiration-for-branding-in-2025--1072138255047138669/', 'domain': 'www.pinterest.com'}
-- {'title': 'How Restaurant Color Schemes Affect Your Customers', 'url': 'https://www.webstaurantstore.com/blog/1884/interior-color-choices-and-your-restaurants-message.html?srsltid=AfmBOorVzHFQpriGSLhPPMlHN3oqAjqM92QrthHg82tJ3OJIvgFAgW7I', 'domain': 'www.webstaurantstore.com'}
-- {'title': 'Understanding Colour Psychology for Restaurants & Brands - Medium', 'url': 'https://medium.com/@ashley_howell/understanding-colour-psychology-for-restaurants-brands-dbb7ffbcecae', 'domain': 'medium.com'}
-- {'title': 'How do Restaurant Color Schemes Affect Customers?', 'url': 'https://www.restaurantware.com/blogs/restaurant-management/how-do-restaurant-color-schemes-affect-customers?srsltid=AfmBOoqQ4D1QkBexKIUh0SbMwh7Glh8pBJWeP1YtFocTf2fPU-VR80h_', 'domain': 'www.restaurantware.com'}
-- {'title': 'Millennials and Gen Z drive 21st-Century Tea Preferences', 'url': 'https://www.worldteanews.com/Insights/millennials-and-gen-z-drive-21st-century-tea-preferences', 'domain': 'www.worldteanews.com'}
+- {'title': 'Beverage trends: The forces shaping the coffee sector in ...', 'url': 'https://www.restaurantdive.com/news/2025-restaurant-coffee-trends-cold-matcha-small-chains/749877/', 'domain': 'www.restaurantdive.com'}
+- {'title': 'Tea Cafe Logos royalty-free images', 'url': 'https://www.shutterstock.com/search/tea-cafe-logos', 'domain': 'www.shutterstock.com'}
+- {'title': 'Free printable and customizable cafe logo templates - Canva', 'url': 'https://www.canva.com/logos/templates/cafe/?continuation=750', 'domain': 'www.canva.com'}
+- {'title': 'Design a powerful logo for a tea cafe | Logo design contest', 'url': 'https://99designs.com/logo-design/contests/design-powerful-logo-tea-cafe-1212345', 'domain': '99designs.com'}
+- {'title': '29 Tea Brand Color Palettes', 'url': 'https://colorany.com/color-palettes/tea-brand-color-palettes/', 'domain': 'colorany.com'}
+- {'title': 'Best Colors for Food Businesses - FLIP Blog', 'url': 'https://www.fliprogram.com/blog/10-what-color-should-your-food-business-be', 'domain': 'www.fliprogram.com'}
+- {'title': 'How Restaurant Color Schemes Affect Your Customers', 'url': 'https://www.webstaurantstore.com/blog/1884/interior-color-choices-and-your-restaurants-message.html?srsltid=AfmBOopt8YmmOVb70Lcw-jpnsaWHE2wjhqwmp8NwUVfCJc1sAppI5uP6', 'domain': 'www.webstaurantstore.com'}
+- {'title': 'Chaayos Disrupted the Way Modern Indians Consume Tea', 'url': 'https://futurevisioncomputers.com/case-study-chaayos-disrupted-the-way-modern-indians-consume-tea/', 'domain': 'futurevisioncomputers.com'}
 
 
 
 ## Visual Identity System
 
 **logos**:
-- output/chaayos_logo_1_20250904_022851_3cb662a1.png
-- output/chaayos_logo_2_20250904_022906_819b3c22.png
-- output/chaayos_logo_3_20250904_022920_c3bf13fe.png
+- output/chaayos_logo_1_20251010_133827_0294b6a2.png
+- output/chaayos_logo_2_20251010_133840_a7b6afc1.png
+- output/chaayos_logo_3_20251010_133852_16ece7d4.png
 
 ## palette
 
-**primary**: #059669
+**primary**: #810eb1
 
-**secondary**: #6D28D9
+**secondary**: #030712
 
-**accent**: #0F172A
+**accent**: #4B5563
 
 **supporting**:
-- #F87171
-- #000000
+- #030712
+- #111827
 
 **hex_codes**:
-- #059669
-- #6D28D9
-- #0F172A
-- #F87171
-- #000000
+- #810eb1
+- #030712
+- #4B5563
+- #030712
+- #111827
 
 ## typography
 
@@ -161,7 +157,7 @@
 - Body: Source Sans Pro Regular 16px
 - Caption: Source Sans Pro Regular 14px
 
-**description**: Inter selected as primary font (scored 22 points from 9 fonts evaluated) for its professional appeal and excellent readability in Food & Beverage (Tea Cafés, Quick-service Restaurants) sector. Source Sans Pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. Font colors optimized for readability and brand consistency. Font choices align with brand personality traits: innovative, forward-thinking.
+**description**: Inter selected as primary font (scored 21 points from 25 fonts evaluated) for its professional appeal and excellent readability in Food & Beverage / QSR (Quick Service Tea Café) sector. Source Sans Pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. Font colors optimized for readability and brand consistency. Font choices align with brand personality traits: reliable, premium.
 
 **research_based**: True
 
@@ -172,10 +168,10 @@
 - Source Sans Pro
 
 **personality_alignment**:
-- Inter
 - Source Sans Pro
-- Poppins
-- Montserrat
+- Open Sans
+- Lato
+- Inter
 
 ## competitor_analysis
 
@@ -184,65 +180,64 @@
 **trends_found**:
 
 **common_fonts**:
-- Inter
 
 ## typography_trends
 
 **current_trends**:
+- sans-serif
 
 **recommended_styles**:
 
-**visual_style**: Visual style for Chaayos in Food & Beverage (Tea Cafés, Quick-service Restaurants): elegant aesthetic, values: Warmth, Innovation, Authenticity, Customer Delight, Community, Quality, Personalization, audience: Urban youth, Working professionals, Tea enthusiasts, Families, Students, Millennials. Use whitespace, on-brand accent color, modern design cues.
+**visual_style**: Visual style for Chaayos in Food & Beverage / QSR (Quick Service Tea Café): Modern aesthetic, values: Personalization, Quality, Innovation, Hygiene, Customer Experience, Tradition, Relaxation, audience: Urban working professionals, college students, middle-to-upper class tea lovers, health-conscious & tech-savvy customers who seek a hygienic, customizable chai experience. Use whitespace, on-brand accent color, modern design cues.
 
-**photography_style**: Photography style for Chaayos: elegant and Food & Beverage (Tea Cafés, Quick-service Restaurants) feel. Show diversity, authenticity, and lighting that supports brand values: Warmth, Innovation, Authenticity, Customer Delight, Community, Quality, Personalization. Images should resonate with Urban youth, Working professionals, Tea enthusiasts, Families, Students, Millennials.
+**photography_style**: Photography style for Chaayos: Modern and Food & Beverage / QSR (Quick Service Tea Café) feel. Show diversity, authenticity, and lighting that supports brand values: Personalization, Quality, Innovation, Hygiene, Customer Experience, Tradition, Relaxation. Images should resonate with Urban working professionals, college students, middle-to-upper class tea lovers, health-conscious & tech-savvy customers who seek a hygienic, customizable chai experience.
 
 
 
 ## Brand Narrative & Messaging
 
-**brand_story**: In the bustling streets of modern cities, where the rhythm of life never seems to slow down, there exists a sanctuary for the urban youth, working professionals, tea enthusiasts, families, students, and millennials - Chaayos. Born out of a deep passion for tea and a desire to revolutionize the way people experience this beloved beverage, Chaayos stands as a beacon of warmth, innovation, and authenticity in a sea of generic cafes and restaurants.
+**brand_story**: In the bustling streets of urban India, where the aroma of freshly brewed chai dances in the air, there stands a haven for tea aficionados – Chaayos. Born out of a passion for chai and a desire to revolutionize the way we experience this beloved beverage, Chaayos is not just a tea café; it's a sanctuary for those who seek comfort, innovation, and a touch of tradition in every sip.
 
-At the heart of Chaayos lies a commitment to customer delight, where every sip of tea is crafted with precision and care, ensuring a moment of pure bliss with each cup. Our mission is simple yet profound - to empower individuals through our innovative food and beverage solutions, creating a space where communities thrive and connections are forged over a steaming cup of chai.
+Picture this: You, a busy urban professional, tired from a long day at work, craving for a moment of respite. You step into Chaayos, greeted by the warm and inviting aroma of masala chai and freshly baked snacks. The ambiance is modern yet cozy, a perfect blend of old-world charm and contemporary sophistication. As you approach the counter, you are met with a plethora of options to customize your chai – from the strength of the brew to the choice of spices and sweeteners. This is not just tea; this is your tea, tailored to suit your taste buds and rejuvenate your senses.
 
-Step into a Chaayos outlet, and you will be greeted by the aroma of freshly brewed teas, the sound of laughter and conversation, and the sight of vibrant decor that invites you to unwind and relax. Our menu, carefully curated to cater to the diverse tastes of our patrons, offers a unique blend of traditional and contemporary flavors, each dish prepared with the finest ingredients to guarantee an unforgettable culinary experience.
+At Chaayos, we understand that tea is not just a beverage; it's an experience. That's why we source the finest tea leaves, herbs, and spices, ensuring that every cup we serve is a symphony of flavors and aromas. Our commitment to quality and hygiene is unwavering, giving you the peace of mind that every sip is not just delicious but also safe.
 
-What sets Chaayos apart is our unwavering commitment to quality and personalization. From our signature desi chai to our innovative fusion teas, each offering is a testament to our dedication to crafting the perfect cup of tea that speaks to the soul of our customers. Whether you prefer a classic masala chai or a quirky kulhad chai, our extensive menu has something for everyone, ensuring that every visit to Chaayos is a journey of discovery and delight.
+But what truly sets Chaayos apart is our spirit of innovation. We are constantly pushing the boundaries of what chai can be, introducing new and exciting flavors that tantalize the palate. From the classic adrak chai to the adventurous paan kulfi chai, there is always something new to discover at Chaayos. We are not just a tea café; we are a hub of creativity and experimentation, inviting you to embark on a journey of flavor exploration.
 
-But Chaayos is more than just a place to enjoy a cup of tea; it is a hub of creativity, a haven for the forward-thinking and the free-spirited. Our brand exudes innovation and reliability, inviting customers to explore new flavors, experiment with unique combinations, and embark on a culinary adventure unlike any
+As you sit back in our cozy corner, taking in the soothing ambiance and savoring every sip
 
-**voice_tone**: Chaayos' brand voice is friendly, inviting, and approachable, reflecting its core values of Warmth, Innovation, Authenticity, Customer Delight, Community, Quality, and Personalization. The tone is engaging, inclusive, and dynamic, resonating with Urban youth, Working professionals, Tea enthusiasts, Families, Students, and Millennials.
+**voice_tone**: The brand voice and tone for Chaayos should be friendly, approachable, and customer-centric, reflecting the values of personalization, quality, innovation, hygiene, customer experience, tradition, and relaxation. The tone should be engaging, informative, and welcoming, resonating with urban working professionals, college students, middle-to-upper class tea lovers, health-conscious individuals, and tech-savvy customers.
 
-The brand voice is warm and welcoming, creating a sense of familiarity and comfort for customers. It is also innovative and forward-thinking, showcasing Chaayos' commitment to creating unique tea experiences. Authenticity is key, as the brand aims to connect with customers
+The language should convey a sense of warmth and authenticity, making customers feel valued and understood. It should also highlight the brand's commitment to providing a hygienic and customizable chai experience that caters to
 
-**messaging_arch**: Messaging Architecture for Chaayos in Food & Beverage:
-
-Key Value Propositions:
-1. Urban Youth: "Chaayos - Where Tradition Meets Trend. Discover unique tea concoctions and cozy ambience perfect for catching up with friends or working on your next big project."
+**messaging_arch**: **Messaging Architecture for Chaayos:**
+1. **Customizable Chai Experience:** Choose from a wide range of fresh ingredients and spices to create your own unique blend of chai, tailored to your taste preferences.
    
-2. Working Professionals: "Elevate your tea break with Chaayos. Enjoy quick-service, personalized tea options, and comfortable spaces to recharge and refuel during your busy workday."
+2. **Hygienic Preparation:** Our teas are brewed using high-quality, hygienic practices to ensure a safe and clean drinking experience for all our customers.
    
-3. Tea Enthusiasts: "For tea lovers by tea lovers. Chaayos offers a diverse range of handcrafted teas, using high-quality ingredients and innovative brewing techniques to satisfy your tea cravings."
+3. **Tech-Savvy Ordering:** Order your favorite chai seamlessly through our user-friendly app or website, for a convenient and efficient tea experience on-the-go.
    
-4. Families: "Create lasting memories over a pot of tea at Chaayos. Our welcoming atmosphere, kid-friendly menu, and variety of snacks ensure a delightful experience for the whole family."
+4. **Health-Conscious Options:** Discover our range of organic and health-focused teas, designed to cater to your wellness needs while still delivering on flavor.
    
-5
+5. **Urban Oasis for Tea Lovers:** Chaayos offers a cozy and modern environment perfect for urban professionals, college students, and tea enthusiasts to unwind and enjoy a premium
 
 ## marketing_copy
 
-**website**: Headline: Experience the perfect blend of warmth and innovation at Chaayos
-Subheadline: Where authenticity meets customer delight, creating a vibrant community of quality tea enthusiasts for a personalized experience that caters to urban youth, working professionals, families, students, and millennials.
+**website**: Headline: Elevate Your Chai Experience with Chaayos - Where Tradition Meets Innovation
 
-**email**: Subject: Experience the Perfect Blend of Warmth, Innovation, and Authenticity at Chaayos!
+Subheadline: Crafted for Urban Tea Aficionados Seeking Personalized, Quality Tea in a Hygienic & Innovative Setting
 
-Preview text: Indulge in a cup of quality tea tailored to your taste, and immerse yourself in a community of tea enthusiasts who value customer delight and personalization. Join us at Chaayos today!
+**email**: Subject: Elevate Your Chai Experience with Chaayos - Personalized, Innovative, and Hygienic!
 
-**social_media**: "Indulge in a cup of warmth and innovation at Chaayos! 🍵❤️ From authentic chai blends to personalized snacks, we're here to delight your taste buds. Join our community of tea enthusiasts and experience quality like never before. Whether you're a student, working professional, or family, there's something for everyone at Chaayos. Come on over and let us treat you to a cozy tea experience! #Chaayos #Warmth #Innovation #CustomerDelight"
+Preview: Indulge in a tradition with a twist at Chaayos - where quality meets innovation for a customizable, hygienic, and relaxing tea experience. Perfect for urban professionals, students, tea lovers, and health-conscious customers seeking a personalized touch to their daily chai ritual.
 
-**ad_copy**: "Craving a perfect cup of chai? Head to Chaayos now! 🍵 Whether you're a busy professional, tea lover, or just looking for a cozy spot to hang out with friends and family, Chaayos has got you covered. Sip, relax, and enjoy the best chai in town. Time to chai it, don't delay it! #ChaiTimeGoals"
+**social_media**: "Unwind in style with a cup of personalized perfection at Chaayos! 🍵✨ From classic to quirky, we've got your chai cravings covered. Quality, innovation, and hygiene - all in one sip! Experience tradition with a touch of modern relaxation. Your go-to spot for a tea-riffic time! #Chaayos #TeaLovers #HygienicSips #CustomizableBliss"
+
+**ad_copy**: "Craving a fresh, customizable chai fix? Look no further than Chaayos! Dive into our delicious range of premium teas, crafted to your taste. Perfect for busy urbanites, students, tea aficionados, health-conscious individuals, and tech-savvy customers. Experience the ultimate chai indulgence today! Order now and elevate your tea game with Chaayos."
 
 ## collaterals
 
-**business_card**: Simple, clean business card layout for Chaayos in Food & Beverage (Tea Cafés, Quick-service Restaurants). Emphasize clarity, logo, and minimal info.
+**business_card**: Simple, clean business card layout for Chaayos in Food & Beverage / QSR (Quick Service Tea Café). Emphasize clarity, logo, and minimal info.
 
 **letterhead**: Letterhead with Chaayos branding, address, and subtle color accent from brand palette.
 
@@ -260,25 +255,25 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 **wcag_aa_compliant**: True
 
-**wcag_aaa_compliant**: False
+**wcag_aaa_compliant**: True
 
 ## contrast_ratios
 
 ## primary
 
-**vs_white**: 3.7681843718971657
+**vs_white**: 7.981435797025158
 
-**vs_black**: 5.572975716532453
+**vs_black**: 2.6311055471782563
 
 **aa_compliant**: True
 
-**aaa_compliant**: False
+**aaa_compliant**: True
 
 ## secondary
 
-**vs_white**: 7.104892978519159
+**vs_white**: 20.13426959741477
 
-**vs_black**: 2.9557095460116187
+**vs_black**: 1.0429978548959324
 
 **aa_compliant**: True
 
@@ -286,9 +281,9 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 ## accent
 
-**vs_white**: 17.85253496299567
+**vs_white**: 7.557378129674007
 
-**vs_black**: 1.1763035358019647
+**vs_black**: 2.7787414682274014
 
 **aa_compliant**: True
 
@@ -296,9 +291,9 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 ## supporting_0
 
-**vs_white**: 2.766144779174141
+**vs_white**: 20.13426959741477
 
-**vs_black**: 7.5917935164152
+**vs_black**: 1.0429978548959324
 
 **aa_compliant**: True
 
@@ -306,9 +301,9 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 ## supporting_1
 
-**vs_white**: 21.0
+**vs_white**: 17.73971700407407
 
-**vs_black**: 1.0
+**vs_black**: 1.183784385916482
 
 **aa_compliant**: True
 
@@ -316,19 +311,19 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 ## hex_codes_0
 
-**vs_white**: 3.7681843718971657
+**vs_white**: 7.981435797025158
 
-**vs_black**: 5.572975716532453
+**vs_black**: 2.6311055471782563
 
 **aa_compliant**: True
 
-**aaa_compliant**: False
+**aaa_compliant**: True
 
 ## hex_codes_1
 
-**vs_white**: 7.104892978519159
+**vs_white**: 20.13426959741477
 
-**vs_black**: 2.9557095460116187
+**vs_black**: 1.0429978548959324
 
 **aa_compliant**: True
 
@@ -336,9 +331,9 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 ## hex_codes_2
 
-**vs_white**: 17.85253496299567
+**vs_white**: 7.557378129674007
 
-**vs_black**: 1.1763035358019647
+**vs_black**: 2.7787414682274014
 
 **aa_compliant**: True
 
@@ -346,9 +341,9 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 ## hex_codes_3
 
-**vs_white**: 2.766144779174141
+**vs_white**: 20.13426959741477
 
-**vs_black**: 7.5917935164152
+**vs_black**: 1.0429978548959324
 
 **aa_compliant**: True
 
@@ -356,9 +351,9 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 
 ## hex_codes_4
 
-**vs_white**: 21.0
+**vs_white**: 17.73971700407407
 
-**vs_black**: 1.0
+**vs_black**: 1.183784385916482
 
 **aa_compliant**: True
 
@@ -383,6 +378,8 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 - Consider adding more hue diversity to improve color blind accessibility
 - Consider adding more hue diversity to improve color blind accessibility
 - Consider adding more hue diversity to improve color blind accessibility
+- Consider adding more hue diversity to improve color blind accessibility
+- Consider adding more hue diversity to improve color blind accessibility
 
 ## licensing_audit
 
@@ -393,7 +390,7 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 - Font 'h2: inter medium 24px' may require licensing verification
 - Font 'body: source sans pro regular 16px' may require licensing verification
 - Font 'caption: source sans pro regular 14px' may require licensing verification
-- Font 'inter selected as primary font (scored 22 points from 9 fonts evaluated) for its professional appeal and excellent readability in food & beverage (tea cafés, quick-service restaurants) sector. source sans pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. font colors optimized for readability and brand consistency. font choices align with brand personality traits: innovative, forward-thinking.' may require licensing verification
+- Font 'inter selected as primary font (scored 21 points from 25 fonts evaluated) for its professional appeal and excellent readability in food & beverage / qsr (quick service tea café) sector. source sans pro chosen as secondary font to provide visual hierarchy and complement the primary typeface. font colors optimized for readability and brand consistency. font choices align with brand personality traits: reliable, premium.' may require licensing verification
 
 **recommendations**:
 - Consider using Google Fonts for guaranteed free licensing
@@ -407,7 +404,6 @@ Preview text: Indulge in a cup of quality tea tailored to your taste, and immers
 **readability_score**: good
 
 **consistency_issues**:
-- brand_story content may be too lengthy
 
 **missing_elements**:
 

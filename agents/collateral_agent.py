@@ -45,39 +45,53 @@ class CollateralAgent:
         # Generate all collateral types
         collateral_files = {}
         
+        # Business card design
         try:
-            # Business card design
             print("  Creating business card mockup...")
             business_card_path = self._create_business_card(company_name, palette, typography)
             collateral_files["business_card"] = business_card_path
-            
-            # Letterhead design
+        except Exception as e:
+            print(f"  Warning: Error creating business card: {e}")
+        
+        # Letterhead design  
+        try:
             print("  Creating letterhead template...")
             letterhead_path = self._create_letterhead(company_name, palette, typography)
             collateral_files["letterhead"] = letterhead_path
-            
-            # Social media templates
+        except Exception as e:
+            print(f"  Warning: Error creating letterhead: {e}")
+        
+        # Social media templates
+        try:
             print("  Creating social media templates...")
             social_templates = self._create_social_templates(company_name, palette, typography, literature_data)
             collateral_files.update(social_templates)
-            
-            # Presentation template
+        except Exception as e:
+            print(f"  Warning: Error creating social templates: {e}")
+        
+        # Presentation template
+        try:
             print("  Creating presentation template...")
             presentation_path = self._create_presentation_template(company_name, palette, typography)
             collateral_files["presentation"] = presentation_path
-            
-            # Email signature template
+        except Exception as e:
+            print(f"  Warning: Error creating presentation template: {e}")
+        
+        # Email signature template
+        try:
             print("  Creating email signature template...")
             email_sig_path = self._create_email_signature(company_name, palette, typography)
             collateral_files["email_signature"] = email_sig_path
-            
-            # Logo lockup variations
+        except Exception as e:
+            print(f"  Warning: Error creating email signature: {e}")
+        
+        # Logo lockup variations
+        try:
             print("  Creating logo lockup variations...")
             lockup_path = self._create_logo_lockups(company_name, palette, typography)
             collateral_files["logo_lockups"] = lockup_path
-            
         except Exception as e:
-            print(f"  Warning: Error creating some collateral: {e}")
+            print(f"  Warning: Error creating logo lockups: {e}")
         
         # Generate usage guidelines
         usage_guidelines = self._create_usage_guidelines(company_name, identity_data)
@@ -108,9 +122,18 @@ class CollateralAgent:
         img = Image.new('RGB', (width, height), color='white')
         draw = ImageDraw.Draw(img)
         
-        # Get colors
-        primary_color = self._hex_to_rgb(palette.get("primary", "#333333"))
-        accent_color = self._hex_to_rgb(palette.get("accent", "#0066CC"))
+        # Get colors - handle nested palette structure
+        if "enhanced_palette" in palette:
+            base_colors = palette["enhanced_palette"].get("base_colors", {})
+            primary_color = self._hex_to_rgb(base_colors.get("primary", "#333333"))
+            accent_color = self._hex_to_rgb(base_colors.get("accent", "#0066CC"))
+        elif "base_colors" in palette:
+            base_colors = palette["base_colors"]
+            primary_color = self._hex_to_rgb(base_colors.get("primary", "#333333"))
+            accent_color = self._hex_to_rgb(base_colors.get("accent", "#0066CC"))
+        else:
+            primary_color = self._hex_to_rgb(palette.get("primary", "#333333"))
+            accent_color = self._hex_to_rgb(palette.get("accent", "#0066CC"))
         
         # Background accent
         draw.rectangle([0, 0, width//4, height], fill=accent_color)
@@ -145,9 +168,18 @@ class CollateralAgent:
         img = Image.new('RGB', (width, height), color='white')
         draw = ImageDraw.Draw(img)
         
-        # Get colors
-        primary_color = self._hex_to_rgb(palette.get("primary", "#333333"))
-        accent_color = self._hex_to_rgb(palette.get("accent", "#0066CC"))
+        # Get colors - handle nested palette structure
+        if "enhanced_palette" in palette:
+            base_colors = palette["enhanced_palette"].get("base_colors", {})
+            primary_color = self._hex_to_rgb(base_colors.get("primary", "#333333"))
+            accent_color = self._hex_to_rgb(base_colors.get("accent", "#0066CC"))
+        elif "base_colors" in palette:
+            base_colors = palette["base_colors"]
+            primary_color = self._hex_to_rgb(base_colors.get("primary", "#333333"))
+            accent_color = self._hex_to_rgb(base_colors.get("accent", "#0066CC"))
+        else:
+            primary_color = self._hex_to_rgb(palette.get("primary", "#333333"))
+            accent_color = self._hex_to_rgb(palette.get("accent", "#0066CC"))
         
         # Header section with accent
         header_height = height // 8

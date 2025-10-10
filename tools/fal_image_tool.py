@@ -25,17 +25,63 @@ def generate_logo_variations(company_name, industry, style, num_variations=3, lo
             try:
                 # Create logo prompt with aggressive white background and strong color enforcement
                 color_instruction = ""
-                if logo_color:
-                    color_instruction = f"ALL logo elements MUST be {logo_color} color ONLY. No orange, no black, ONLY {logo_color}. "
+                negative_color_restrictions = "No yellow, no orange, no cream, no gray backgrounds allowed. "
+                
+                # Make the last variation black and white, others use the preferred color
+                is_last_variation = (i == num_variations - 1)
+                
+                if is_last_variation:
+                    # Last variation: black and white only
+                    color_instruction = "Black and white logo ONLY. Logo elements in BLACK color on white background. Monochrome design. "
+                    negative_color_restrictions += "No colored elements. No purple, no blue, no green, no red elements. "
+                elif logo_color:
+                    # Other variations: use the user's preferred color
+                    color_instruction = f"ALL logo elements MUST be {logo_color} color ONLY. Logo text and symbols in {logo_color}. "
+                    # Don't restrict the user's chosen color in negative prompt
+                    if logo_color.lower() not in ["#000000", "#000", "black"]:
+                        negative_color_restrictions += "No black text or elements. "
+                else:
+                    negative_color_restrictions += "No black text. "
                 
                 prompt = (
                     f"Logo for {company_name} on PLAIN SOLID WHITE BACKGROUND. {industry} industry. "
                     f"Style: {style}. Simple flat vector logo design. {color_instruction}"
                     f"PLAIN WHITE BACKGROUND ONLY. Pure white (#FFFFFF) background, completely plain, no patterns, no designs, no textures. "
-                    f"No yellow, no orange, no black text, no cream, no gray backgrounds allowed. "
+                    f"{negative_color_restrictions}"
                     f"Flat design, no shadows, no 3D effects, no gradients anywhere. "
                     f"Clean simple logo on completely plain white background, vector quality."
                 )
+                
+                # Create dynamic negative prompt that doesn't conflict with user's color choice
+                negative_prompt_parts = [
+                    "yellow background", "orange background", "gold background", "cream background", 
+                    "beige background", "gray background", "grey background", "dark background", 
+                    "colored background", "gradient background", "textured background", 
+                    "shadows", "glow effects", "lighting effects", "reflections", "gradients", 
+                    "any colored lighting", "dark themes"
+                ]
+                
+                if is_last_variation:
+                    # For black and white variation, restrict all colors
+                    negative_prompt_parts.extend([
+                        "purple elements", "blue elements", "green elements", "red elements", 
+                        "colored text", "colored logo", "purple background", "blue background", 
+                        "green background", "red background"
+                    ])
+                else:
+                    # Add specific background color restrictions, but avoid the user's chosen color
+                    if not logo_color or not any(color in logo_color.lower() for color in ["blue", "#0000ff", "#00f"]):
+                        negative_prompt_parts.append("blue background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["green", "#00ff00", "#0f0"]):
+                        negative_prompt_parts.append("green background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["red", "#ff0000", "#f00"]):
+                        negative_prompt_parts.append("red background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["purple", "#800080", "#810eb1"]):
+                        negative_prompt_parts.append("purple background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["black", "#000000", "#000"]):
+                        negative_prompt_parts.append("black background")
+                
+                dynamic_negative_prompt = ", ".join(negative_prompt_parts)
                 
                 # Submit request to Ideogram V2A Turbo - enforce white/transparent background
                 result = fal.run(
@@ -45,7 +91,7 @@ def generate_logo_variations(company_name, industry, style, num_variations=3, lo
                         "aspect_ratio": "1:1",  # Square format for logos
                         "expand_prompt": True,
                         "style": "auto",
-                        "negative_prompt": "yellow background, orange background, gold background, cream background, beige background, gray background, grey background, black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, any colored lighting, dark themes, blue background, green background, red background, purple background"
+                        "negative_prompt": dynamic_negative_prompt
                     }
                 )
                 
@@ -133,7 +179,7 @@ def generate_logo_variations(company_name, industry, style, num_variations=3, lo
         print(f"[FAL ERROR]: Error in logo generation process: {str(e)}")
         return []
 
-def generate_logo_variations_detailed(company_name, industry, style, num_variations=3):
+def generate_logo_variations_detailed(company_name, industry, style, num_variations=3, logo_color=None):
     """
     Same as generate_logo_variations but returns detailed JSON response
     matching the pattern from the first code.
@@ -149,14 +195,65 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
         
         for i in range(num_variations):
             try:
+                # Create logo prompt with color enforcement (same logic as main function)
+                color_instruction = ""
+                negative_color_restrictions = "No yellow, no orange, no cream, no gray backgrounds allowed. "
+                
+                # Make the last variation black and white, others use the preferred color
+                is_last_variation = (i == num_variations - 1)
+                
+                if is_last_variation:
+                    # Last variation: black and white only
+                    color_instruction = "Black and white logo ONLY. Logo elements in BLACK color on white background. Monochrome design. "
+                    negative_color_restrictions += "No colored elements. No purple, no blue, no green, no red elements. "
+                elif logo_color:
+                    # Other variations: use the user's preferred color
+                    color_instruction = f"ALL logo elements MUST be {logo_color} color ONLY. Logo text and symbols in {logo_color}. "
+                    # Don't restrict the user's chosen color in negative prompt
+                    if logo_color.lower() not in ["#000000", "#000", "black"]:
+                        negative_color_restrictions += "No black text or elements. "
+                else:
+                    negative_color_restrictions += "No black text. "
+                
                 prompt = (
                     f"Logo for {company_name} on SOLID WHITE BACKGROUND. {industry} industry. "
-                    f"Style: {style}. Simple flat vector logo design. "
+                    f"Style: {style}. Simple flat vector logo design. {color_instruction}"
                     f"WHITE BACKGROUND ONLY. Pure white (#FFFFFF) background, no other colors. "
-                    f"No yellow, no orange, no cream, no gray backgrounds allowed. "
+                    f"{negative_color_restrictions}"
                     f"Flat design, no shadows, no 3D effects, no gradients anywhere. "
                     f"Clean simple logo on pure white background, vector quality."
                 )
+                
+                # Create dynamic negative prompt that doesn't conflict with user's color choice
+                negative_prompt_parts = [
+                    "yellow background", "orange background", "gold background", "cream background", 
+                    "beige background", "gray background", "grey background", "dark background", 
+                    "colored background", "gradient background", "textured background", 
+                    "shadows", "glow effects", "lighting effects", "reflections", "gradients", 
+                    "any colored lighting", "dark themes"
+                ]
+                
+                if is_last_variation:
+                    # For black and white variation, restrict all colors
+                    negative_prompt_parts.extend([
+                        "purple elements", "blue elements", "green elements", "red elements", 
+                        "colored text", "colored logo", "purple background", "blue background", 
+                        "green background", "red background"
+                    ])
+                else:
+                    # Add specific background color restrictions, but avoid the user's chosen color
+                    if not logo_color or not any(color in logo_color.lower() for color in ["blue", "#0000ff", "#00f"]):
+                        negative_prompt_parts.append("blue background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["green", "#00ff00", "#0f0"]):
+                        negative_prompt_parts.append("green background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["red", "#ff0000", "#f00"]):
+                        negative_prompt_parts.append("red background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["purple", "#800080", "#810eb1"]):
+                        negative_prompt_parts.append("purple background")
+                    if not logo_color or not any(color in logo_color.lower() for color in ["black", "#000000", "#000"]):
+                        negative_prompt_parts.append("black background")
+                
+                dynamic_negative_prompt = ", ".join(negative_prompt_parts)
                 
                 result = fal.run(
                     "fal-ai/ideogram/v2a/turbo",
@@ -165,7 +262,7 @@ def generate_logo_variations_detailed(company_name, industry, style, num_variati
                         "aspect_ratio": "1:1",
                         "expand_prompt": True,
                         "style": "auto",
-                        "negative_prompt": "yellow background, orange background, gold background, cream background, beige background, gray background, grey background, black background, dark background, colored background, gradient background, textured background, shadows, glow effects, lighting effects, reflections, gradients, any colored lighting, dark themes, blue background, green background, red background, purple background"
+                        "negative_prompt": dynamic_negative_prompt
                     }
                 )
                 

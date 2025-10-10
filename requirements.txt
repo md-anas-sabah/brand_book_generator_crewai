@@ -18,5 +18,7 @@ svglib
 reportlab
 weasyprint
 colorthief
+cairosvg
 
 anthropic
+rembg
